@@ -1,0 +1,21 @@
+package com.foodcourt.foodcourt.infrastructure.config;
+
+import com.foodcourt.foodcourt.domain.gateways.RestaurantRepositoryGateway;
+import com.foodcourt.foodcourt.domain.gateways.UserServiceGateway;
+import com.foodcourt.foodcourt.domain.ports.CreateRestaurantPort;
+import com.foodcourt.foodcourt.domain.usecases.CreateRestaurantUseCase;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class RestaurantBeanConfig {
+	
+	@Bean
+	public CreateRestaurantPort createRestaurantPort(RestaurantRepositoryGateway restaurantRepositoryGateway, UserServiceGateway userServiceGateway) {
+		return new CreateRestaurantUseCase(
+			restaurantRepositoryGateway,
+			userServiceGateway
+		);
+	}
+	
+}

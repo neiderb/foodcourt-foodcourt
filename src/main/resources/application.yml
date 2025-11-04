@@ -1,0 +1,30 @@
+server:
+  port: ${PORT}
+
+spring:
+  application:
+    name: ms-foodcourt
+
+adapters:
+  db:
+    host: ${DB_HOST}
+    port: ${DB_PORT}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    database: ${DB_NAME}
+
+logging:
+  level:
+    com:
+      foodcourt: ${LOG_LEVEL:-INFO}
+    org:
+      hibernate:
+        orm:
+          connections:
+            pooling: ERROR
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health

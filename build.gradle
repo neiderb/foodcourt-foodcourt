@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.5.7'
     id 'io.spring.dependency-management' version '1.1.7'
+    id 'jacoco'
 }
 
 group = 'com.foodcourt'
@@ -31,15 +32,48 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.flywaydb:flyway-core'
     implementation 'org.flywaydb:flyway-database-postgresql'
+    implementation 'org.mapstruct:mapstruct:1.6.3'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13'
+    implementation 'org.apache.commons:commons-lang3:3.18.0'
+
     compileOnly 'org.projectlombok:lombok'
+
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
     runtimeOnly 'org.postgresql:postgresql'
+
     annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+tasks.named('jacocoTestReport') {
+    dependsOn tasks.test
+}
+
+jacocoTestReport {
+    sourceSets sourceSets.main
+
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    'com/foodcourt/foodcourt/FoodCourtApplication.class',
+                    '**/mappers/*Impl.class',
+                    'com/foodcourt/users/infrastructure/config/**',
+                    'com/foodcourt/users/infrastructure/adapters/persistence/config/**',
+//                    'com/foodcourt/users/infrastructure/rest/config/**',
+//                    'com/foodcourt/users/infrastructure/rest/docapi/**',
+                    '**/*$*.*',
+            ])
+        }))
+    }
 }
