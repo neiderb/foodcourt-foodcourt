@@ -28,7 +28,7 @@ public class CreateRestaurantUseCase implements CreateRestaurantPort {
 	}
 	
 	private void validateName(String name) {
-		if (JUST_NUMBERS.matches(name)) throw new InvalidRestaurantException(RESTAURANT_NAME_CANNOT_BE_ONLY_NUMBERS);
+		if (name.matches(JUST_NUMBERS)) throw new InvalidRestaurantException(RESTAURANT_NAME_CANNOT_BE_ONLY_NUMBERS);
 	}
 	
 	private void validateUser(Long userId) {

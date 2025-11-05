@@ -7,6 +7,7 @@ public class ErrorMessage {
 	
 	public static final String GENERIC_ERROR = "An unexpected error occurred, please try again later";
 	
+	public static final String USER_NOT_FOUND = "User not found with the provided ID";
 	public static final String INVALID_ROLE = "The provided role is invalid";
 	
 	public static final String RESTAURANT_NAME_CANNOT_BE_ONLY_NUMBERS = "Restaurant name cannot contain only numbers";

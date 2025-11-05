@@ -28,3 +28,7 @@ management:
     web:
       exposure:
         include: health
+
+external-api:
+   auth-service:
+     url: ${AUTH_API_URL}
