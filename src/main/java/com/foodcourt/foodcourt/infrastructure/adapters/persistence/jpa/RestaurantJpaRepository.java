@@ -1,4 +1,4 @@
-package com.foodcourt.foodcourt.infrastructure.adapters.persistence;
+package com.foodcourt.foodcourt.infrastructure.adapters.persistence.jpa;
 
 import com.foodcourt.foodcourt.infrastructure.adapters.persistence.entities.RestaurantData;
 import org.springframework.data.jpa.repository.JpaRepository;

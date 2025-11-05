@@ -3,6 +3,7 @@ package com.foodcourt.foodcourt.infrastructure.adapters.persistence;
 import com.foodcourt.foodcourt.domain.exception.InvalidRestaurantException;
 import com.foodcourt.foodcourt.domain.model.Restaurant;
 import com.foodcourt.foodcourt.infrastructure.adapters.persistence.entities.RestaurantData;
+import com.foodcourt.foodcourt.infrastructure.adapters.persistence.jpa.RestaurantJpaRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

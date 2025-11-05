@@ -8,4 +8,6 @@ public interface RestaurantRepositoryGateway {
 	
 	Restaurant findByName(String name);
 	
+	Restaurant findById(Long id);
+	
 }

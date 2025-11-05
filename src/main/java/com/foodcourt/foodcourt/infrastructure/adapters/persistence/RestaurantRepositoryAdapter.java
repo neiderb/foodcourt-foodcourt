@@ -3,6 +3,7 @@ package com.foodcourt.foodcourt.infrastructure.adapters.persistence;
 import com.foodcourt.foodcourt.domain.exception.InvalidRestaurantException;
 import com.foodcourt.foodcourt.domain.gateways.RestaurantRepositoryGateway;
 import com.foodcourt.foodcourt.domain.model.Restaurant;
+import com.foodcourt.foodcourt.infrastructure.adapters.persistence.jpa.RestaurantJpaRepository;
 import com.foodcourt.foodcourt.infrastructure.adapters.persistence.mappers.RestaurantMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -32,6 +33,13 @@ public class RestaurantRepositoryAdapter implements RestaurantRepositoryGateway 
 	public Restaurant findByName(String name) {
 		return RestaurantMapper.INSTANCE.toDomain(
 			restaurantJpaRepository.findByName(name)
+		);
+	}
+	
+	@Override
+	public Restaurant findById(Long id) {
+		return RestaurantMapper.INSTANCE.toDomain(
+			restaurantJpaRepository.findById(id).orElse(null)
 		);
 	}
 }
