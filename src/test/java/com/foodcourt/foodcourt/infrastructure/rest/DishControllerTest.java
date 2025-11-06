@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static com.foodcourt.foodcourt.infrastructure.rest.constants.paths.DishPath.BASE;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -77,6 +78,40 @@ class DishControllerTest {
 			""";
 		
 		mockMvc.perform(post(BASE)
+			.contentType(MediaType.APPLICATION_JSON.toString())
+			.content(jsonBody)
+		)
+		.andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	void shouldUpdateDish() throws Exception {
+		String jsonBody = """
+				{
+					"id": 1,
+				    "description": "Updated description.",
+				    "price": 15000
+				}
+			""";
+		
+		mockMvc.perform(patch(BASE)
+			.contentType(MediaType.APPLICATION_JSON.toString())
+			.content(jsonBody)
+		)
+		.andExpect(status().isNoContent());
+	}
+	
+	@Test
+	void shouldReturnBadRequestWhenUpdatingDishWithInvalidData() throws Exception {
+		String jsonBody = """
+				{
+					"id": -1,
+				    "description": "",
+				    "price": -1000
+				}
+			""";
+		
+		mockMvc.perform(patch(BASE)
 			.contentType(MediaType.APPLICATION_JSON.toString())
 			.content(jsonBody)
 		)

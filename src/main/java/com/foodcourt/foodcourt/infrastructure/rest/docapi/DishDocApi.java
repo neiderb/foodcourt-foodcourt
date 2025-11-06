@@ -10,4 +10,7 @@ public class DishDocApi {
 	public static final String CREATE_DISH_SUMMARY = "Create a new dish";
 	public static final String CREATE_DISH_DESCRIPTION = "Dish created successfully";
 	
+	public static final String UPDATE_DISH_SUMMARY = "Update an existing dish";
+	public static final String UPDATE_DISH_DESCRIPTION = "Dish updated successfully";
+	
 }

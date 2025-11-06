@@ -12,6 +12,7 @@ public record CreateDishRequest(
 	String name,
 	
 	@NotNull(message = CATEGORY_ID_REQUIRED)
+	@Positive(message = CATEGORY_ID_MUST_BE_MORE_THAN_ZERO)
 	Long idCategory,
 	
 	@NotNull(message = DESCRIPTION_REQUIRED)
@@ -23,6 +24,7 @@ public record CreateDishRequest(
 	Long price,
 	
 	@NotNull(message = RESTAURANT_ID_REQUIRED)
+	@Positive(message = RESTAURANT_ID_MUST_BE_MORE_THAN_ZERO)
 	Long idRestaurant,
 	
 	@NotNull(message = IMAGE_URL_REQUIRED)

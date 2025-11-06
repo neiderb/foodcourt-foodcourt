@@ -6,4 +6,6 @@ public interface DishRepositoryGateway {
 	
 	Dish save(Dish dish);
 	
+	Dish findById(Long idDish);
+	
 }

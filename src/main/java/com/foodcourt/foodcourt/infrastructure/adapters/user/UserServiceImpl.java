@@ -2,7 +2,7 @@ package com.foodcourt.foodcourt.infrastructure.adapters.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.foodcourt.foodcourt.domain.exception.BusinessException;
-import com.foodcourt.foodcourt.domain.exception.InvalidUserException;
+import com.foodcourt.foodcourt.domain.exception.user.InvalidUserException;
 import com.foodcourt.foodcourt.domain.exception.TechnicalException;
 import com.foodcourt.foodcourt.domain.gateways.UserServiceGateway;
 import com.foodcourt.foodcourt.domain.model.User;
@@ -17,7 +17,7 @@ import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
-import static com.foodcourt.foodcourt.domain.constants.ErrorMessage.USER_NOT_FOUND;
+import static com.foodcourt.foodcourt.domain.constants.UserErrorMessage.USER_NOT_FOUND;
 import static com.foodcourt.foodcourt.infrastructure.adapters.user.constants.ErrorMessage.EXTERNAL_SERVICE_ERROR;
 import static com.foodcourt.foodcourt.infrastructure.adapters.user.constants.ErrorMessage.UNMAPPING_RESPONSE;
 import static java.util.Objects.isNull;

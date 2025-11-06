@@ -1,9 +1,11 @@
 package com.foodcourt.foodcourt.application.handler.impl;
 
 import com.foodcourt.foodcourt.application.dto.request.CreateDishRequest;
+import com.foodcourt.foodcourt.application.dto.request.UpdateDishRequest;
 import com.foodcourt.foodcourt.application.dto.response.CreateDishResponse;
 import com.foodcourt.foodcourt.domain.model.Dish;
 import com.foodcourt.foodcourt.domain.ports.CreateDishPort;
+import com.foodcourt.foodcourt.domain.ports.UpdateDishPort;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -12,7 +14,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -23,6 +26,9 @@ class DishHandlerImplTest {
 	
 	@Mock
 	private CreateDishPort createDishPort;
+	
+	@Mock
+	private UpdateDishPort updateDishPort;
 	
 	@Test
 	void shouldCreateDishSuccessfully() {
@@ -62,5 +68,26 @@ class DishHandlerImplTest {
 		assertNotNull(response);
 		assertEquals(expectedDish.getId(), response.id());
 		assertEquals(expectedDish.getName(), response.name());
+	}
+	
+	@Test
+	void shouldUpdateDishSuccessfully() {
+		final Long dishIdToUpdate = 5L;
+		final Long updatedPrice = 2000L;
+		final String updatedDescription = "Updated delicious dish description";
+		
+		UpdateDishRequest updateRequest = new UpdateDishRequest(
+			dishIdToUpdate,
+			updatedPrice,
+			updatedDescription
+		);
+		
+		dishHandlerImpl.updateDish(updateRequest);
+		
+		verify(updateDishPort).execute(assertArg(dish -> {
+			assertEquals(dishIdToUpdate, dish.getId());
+			assertEquals(updatedPrice, dish.getPrice());
+			assertEquals(updatedDescription, dish.getDescription());
+		}), any(Long.class));
 	}
 }

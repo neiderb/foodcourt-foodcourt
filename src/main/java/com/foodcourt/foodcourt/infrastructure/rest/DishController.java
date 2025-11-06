@@ -1,6 +1,7 @@
 package com.foodcourt.foodcourt.infrastructure.rest;
 
 import com.foodcourt.foodcourt.application.dto.request.CreateDishRequest;
+import com.foodcourt.foodcourt.application.dto.request.UpdateDishRequest;
 import com.foodcourt.foodcourt.application.dto.response.CreateDishResponse;
 import com.foodcourt.foodcourt.application.handler.DishHandler;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,10 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static com.foodcourt.foodcourt.infrastructure.rest.constants.paths.DishPath.BASE;
 import static com.foodcourt.foodcourt.infrastructure.rest.docapi.DishDocApi.*;
@@ -43,6 +41,17 @@ public class DishController {
 	@PostMapping
 	ResponseEntity<CreateDishResponse> createDish(@RequestBody @Valid CreateDishRequest createDishRequest) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(dishHandler.createDish(createDishRequest));
+	}
+	
+	@Operation(summary = UPDATE_DISH_SUMMARY)
+	@ApiResponse(
+		responseCode = "204",
+		description = UPDATE_DISH_DESCRIPTION
+	)
+	@PatchMapping
+	ResponseEntity<Void> updateDish(@RequestBody @Valid UpdateDishRequest updateDishRequest) {
+		dishHandler.updateDish(updateDishRequest);
+		return ResponseEntity.noContent().build();
 	}
 	
 }

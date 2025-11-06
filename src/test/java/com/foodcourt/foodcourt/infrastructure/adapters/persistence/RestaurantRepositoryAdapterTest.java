@@ -1,6 +1,6 @@
 package com.foodcourt.foodcourt.infrastructure.adapters.persistence;
 
-import com.foodcourt.foodcourt.domain.exception.InvalidRestaurantException;
+import com.foodcourt.foodcourt.domain.exception.restaurant.InvalidRestaurantException;
 import com.foodcourt.foodcourt.domain.model.Restaurant;
 import com.foodcourt.foodcourt.infrastructure.adapters.persistence.entities.RestaurantData;
 import com.foodcourt.foodcourt.infrastructure.adapters.persistence.jpa.RestaurantJpaRepository;

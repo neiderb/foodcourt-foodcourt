@@ -12,8 +12,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -51,7 +54,7 @@ class DishRepositoryAdapterTest {
 			.isAvailable(DISH_IS_AVAILABLE)
 			.build();
 		
-		when(categoryJpaRepository.existsById(DISH_ID_CATEGORY)).thenReturn(true);
+		when(categoryJpaRepository.existsById(any(Long.class))).thenReturn(true);
 		when(dishJpaRepository.save(any(DishData.class))).thenReturn(expectedDishData);
 		
 		Dish savedDish = dishRepositoryAdapter.save(dishToSave);
@@ -65,6 +68,8 @@ class DishRepositoryAdapterTest {
 		assertEquals(expectedDishData.getIdRestaurant(), savedDish.getIdRestaurant());
 		assertEquals(expectedDishData.getImageUrl(), savedDish.getImageUrl());
 		assertEquals(expectedDishData.getIsAvailable(), savedDish.getIsAvailable());
+		
+		verify(categoryJpaRepository).existsById(assertArg(idCategory -> assertEquals(DISH_ID_CATEGORY, idCategory)));
 	}
 	
 	@Test
@@ -74,6 +79,47 @@ class DishRepositoryAdapterTest {
 		when(categoryJpaRepository.existsById(any(Long.class))).thenReturn(false);
 		
 		assertThrows(TechnicalException.class, () -> dishRepositoryAdapter.save(dishToSave));
+	}
+	
+	@Test
+	void shouldFindDishByIdSuccessfully() {
+		DishData expectedDishData = DishData.builder()
+			.id(DISH_ID)
+			.name(DISH_NAME)
+			.category(CategoryData.builder().id(DISH_ID_CATEGORY).build())
+			.description(DISH_DESCRIPTION)
+			.price(DISH_PRICE)
+			.idRestaurant(DISH_ID_RESTAURANT)
+			.imageUrl(DISH_IMAGE_URL)
+			.isAvailable(DISH_IS_AVAILABLE)
+			.build();
+		
+		when(dishJpaRepository.findById(any(Long.class))).thenReturn(Optional.of(expectedDishData));
+		
+		Dish foundDish = dishRepositoryAdapter.findById(DISH_ID);
+		
+		assertNotNull(foundDish);
+		assertEquals(expectedDishData.getId(), foundDish.getId());
+		assertEquals(expectedDishData.getName(), foundDish.getName());
+		assertEquals(expectedDishData.getCategory().getId(), foundDish.getIdCategory());
+		assertEquals(expectedDishData.getDescription(), foundDish.getDescription());
+		assertEquals(expectedDishData.getPrice(), foundDish.getPrice());
+		assertEquals(expectedDishData.getIdRestaurant(), foundDish.getIdRestaurant());
+		assertEquals(expectedDishData.getImageUrl(), foundDish.getImageUrl());
+		assertEquals(expectedDishData.getIsAvailable(), foundDish.getIsAvailable());
+		
+		verify(dishJpaRepository).findById(assertArg(idDish -> assertEquals(DISH_ID, idDish)));
+	}
+	
+	@Test
+	void shouldReturnNullWhenDishNotFoundById() {
+		when(dishJpaRepository.findById(any(Long.class))).thenReturn(Optional.empty());
+		
+		Dish foundDish = dishRepositoryAdapter.findById(DISH_ID);
+		
+		assertNull(foundDish);
+		
+		verify(dishJpaRepository).findById(assertArg(idDish -> assertEquals(DISH_ID, idDish)));
 	}
 	
 	private Dish validDishToCreate() {

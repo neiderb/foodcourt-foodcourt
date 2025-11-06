@@ -2,8 +2,8 @@ package com.foodcourt.foodcourt.infrastructure.adapters.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.foodcourt.foodcourt.domain.exception.BusinessException;
-import com.foodcourt.foodcourt.domain.exception.InvalidRoleException;
-import com.foodcourt.foodcourt.domain.exception.InvalidUserException;
+import com.foodcourt.foodcourt.domain.exception.user.InvalidRoleException;
+import com.foodcourt.foodcourt.domain.exception.user.InvalidUserException;
 import com.foodcourt.foodcourt.domain.exception.TechnicalException;
 import com.foodcourt.foodcourt.domain.model.User;
 import com.foodcourt.foodcourt.domain.model.UserRole;

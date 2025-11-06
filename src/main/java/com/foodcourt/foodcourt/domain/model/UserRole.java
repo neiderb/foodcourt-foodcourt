@@ -1,8 +1,8 @@
 package com.foodcourt.foodcourt.domain.model;
 
-import com.foodcourt.foodcourt.domain.exception.InvalidRoleException;
+import com.foodcourt.foodcourt.domain.exception.user.InvalidRoleException;
 
-import static com.foodcourt.foodcourt.domain.constants.ErrorMessage.INVALID_ROLE;
+import static com.foodcourt.foodcourt.domain.constants.UserErrorMessage.INVALID_ROLE;
 
 public enum UserRole {
 	

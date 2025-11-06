@@ -1,6 +1,6 @@
 package com.foodcourt.foodcourt.domain.usecases;
 
-import com.foodcourt.foodcourt.domain.exception.RestaurantNotFoundException;
+import com.foodcourt.foodcourt.domain.exception.restaurant.RestaurantNotFoundException;
 import com.foodcourt.foodcourt.domain.gateways.DishRepositoryGateway;
 import com.foodcourt.foodcourt.domain.gateways.RestaurantRepositoryGateway;
 import com.foodcourt.foodcourt.domain.model.Dish;

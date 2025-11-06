@@ -1,6 +1,6 @@
 package com.foodcourt.foodcourt.infrastructure.adapters.persistence;
 
-import com.foodcourt.foodcourt.domain.exception.InvalidRestaurantException;
+import com.foodcourt.foodcourt.domain.exception.restaurant.InvalidRestaurantException;
 import com.foodcourt.foodcourt.domain.gateways.RestaurantRepositoryGateway;
 import com.foodcourt.foodcourt.domain.model.Restaurant;
 import com.foodcourt.foodcourt.infrastructure.adapters.persistence.jpa.RestaurantJpaRepository;
@@ -8,7 +8,7 @@ import com.foodcourt.foodcourt.infrastructure.adapters.persistence.mappers.Resta
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import static com.foodcourt.foodcourt.domain.constants.ErrorMessage.RESTAURANT_ALREADY_EXISTS;
+import static com.foodcourt.foodcourt.domain.constants.RestaurantErrorMessage.RESTAURANT_ALREADY_EXISTS;
 import static java.util.Objects.nonNull;
 
 @Repository

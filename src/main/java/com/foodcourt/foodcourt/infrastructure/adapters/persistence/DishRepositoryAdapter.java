@@ -9,7 +9,7 @@ import com.foodcourt.foodcourt.infrastructure.adapters.persistence.mappers.DishM
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import static com.foodcourt.foodcourt.domain.constants.ErrorMessage.INVALID_CATEGORY;
+import static com.foodcourt.foodcourt.domain.constants.DishErrorMessage.INVALID_CATEGORY;
 
 @Repository
 @RequiredArgsConstructor
@@ -28,4 +28,10 @@ public class DishRepositoryAdapter implements DishRepositoryGateway {
 		);
 	}
 	
+	@Override
+	public Dish findById(Long idDish) {
+		return DishMapper.INSTANCE.toDomain(
+			dishJpaRepository.findById(idDish).orElse(null)
+		);
+	}
 }
