@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Pattern;
 
 import static com.foodcourt.foodcourt.domain.constants.Regex.JUST_NUMBERS;
 import static com.foodcourt.foodcourt.domain.constants.Regex.JUST_NUMBERS_AND_SYMBOL_PLUS;
-import static com.foodcourt.foodcourt.domain.constants.ValidationMessage.*;
+import static com.foodcourt.foodcourt.domain.constants.RestaurantValidationMessage.*;
 
 public record CreateRestaurantRequest(
 	@NotNull(message = NAME_REQUIRED)

@@ -3,7 +3,7 @@ package com.foodcourt.foodcourt.domain.constants;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
-public class ValidationMessage {
+public class RestaurantValidationMessage {
 	
 	public static final String NAME_REQUIRED = "Name is required";
 	public static final String NIT_REQUIRED = "Nit is required";

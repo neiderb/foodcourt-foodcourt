@@ -10,6 +10,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -34,6 +36,7 @@ class RestaurantRepositoryAdapterTest {
 	@Test
 	void shouldSaveRestaurantSuccessfully() {
 		Restaurant restaurantToSave = validRestaurant();
+		restaurantToSave.setId(null);
 		RestaurantData testRestaurantData = validRestaurantData();
 		
 		when(restaurantJpaRepository.findByName(restaurantToSave.getName())).thenReturn(null);
@@ -84,6 +87,33 @@ class RestaurantRepositoryAdapterTest {
 		when(restaurantJpaRepository.findByName("NonExistentRestaurant")).thenReturn(null);
 		
 		Restaurant foundRestaurant = restaurantRepositoryAdapter.findByName("NonExistentRestaurant");
+		
+		assertNull(foundRestaurant);
+	}
+	
+	@Test
+	void shouldFindRestaurantByIdSuccessfully() {
+		RestaurantData testRestaurantData = validRestaurantData();
+		
+		when(restaurantJpaRepository.findById(RESTAURANT_ID)).thenReturn(Optional.of(testRestaurantData));
+		
+		Restaurant foundRestaurant = restaurantRepositoryAdapter.findById(RESTAURANT_ID);
+		
+		assertNotNull(foundRestaurant);
+		assertEquals(foundRestaurant.getId(), testRestaurantData.getId());
+		assertEquals(foundRestaurant.getName(), testRestaurantData.getName());
+		assertEquals(foundRestaurant.getNit(), testRestaurantData.getNit());
+		assertEquals(foundRestaurant.getAddress(), testRestaurantData.getAddress());
+		assertEquals(foundRestaurant.getPhoneNumber(), testRestaurantData.getPhone());
+		assertEquals(foundRestaurant.getUrlLogo(), testRestaurantData.getUrlLogo());
+		assertEquals(foundRestaurant.getOwnerId(), testRestaurantData.getOwnerId());
+	}
+	
+	@Test
+	void shouldReturnNullWhenRestaurantNotFoundById() {
+		when(restaurantJpaRepository.findById(999L)).thenReturn(Optional.empty());
+		
+		Restaurant foundRestaurant = restaurantRepositoryAdapter.findById(999L);
 		
 		assertNull(foundRestaurant);
 	}
