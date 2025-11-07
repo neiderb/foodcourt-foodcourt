@@ -2,8 +2,8 @@ package com.foodcourt.foodcourt.infrastructure.adapters.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.foodcourt.foodcourt.domain.exception.BusinessException;
-import com.foodcourt.foodcourt.domain.exception.user.InvalidUserException;
 import com.foodcourt.foodcourt.domain.exception.TechnicalException;
+import com.foodcourt.foodcourt.domain.exception.user.InvalidUserException;
 import com.foodcourt.foodcourt.domain.gateways.UserServiceGateway;
 import com.foodcourt.foodcourt.domain.model.User;
 import com.foodcourt.foodcourt.domain.model.UserRole;
@@ -12,10 +12,14 @@ import com.foodcourt.foodcourt.infrastructure.adapters.user.dto.UserExternalResp
 import com.foodcourt.foodcourt.infrastructure.adapters.user.mappers.UserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
+
+import java.util.function.Consumer;
 
 import static com.foodcourt.foodcourt.domain.constants.UserErrorMessage.USER_NOT_FOUND;
 import static com.foodcourt.foodcourt.infrastructure.adapters.user.constants.ErrorMessage.EXTERNAL_SERVICE_ERROR;
@@ -42,6 +46,7 @@ public class UserServiceImpl implements UserServiceGateway {
 	public User findById(Long id) {
 		UserExternalResponse response = restClient.get()
 			.uri("/api/v1/user/{id}", id)
+			.headers(buildHeaders())
 			.retrieve()
 			.onStatus(HttpStatusCode::is4xxClientError, (req, res) -> {
 				ErrorExternalResponse error = mapErrorResponse(res);
@@ -73,5 +78,24 @@ public class UserServiceImpl implements UserServiceGateway {
 		User user = UserMapper.INSTANCE.toDomain(response);
 		user.setRole(role);
 		return user;
+	}
+	
+	private Consumer<HttpHeaders> buildHeaders() {
+		return headers -> {
+			String token = getToken();
+			if (token != null) {
+				headers.set(HttpHeaders.AUTHORIZATION, token);
+			}
+		};
+	}
+	
+	private String getToken() {
+		String token = null;
+		Object credentials = SecurityContextHolder.getContext().getAuthentication().getCredentials();
+		if (credentials instanceof String strToken) {
+			token = "Bearer ".concat(strToken);
+		}
+		
+		return token;
 	}
 }

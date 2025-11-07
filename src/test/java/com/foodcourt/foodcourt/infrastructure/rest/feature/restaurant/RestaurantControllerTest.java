@@ -1,12 +1,13 @@
-package com.foodcourt.foodcourt.infrastructure.rest;
+package com.foodcourt.foodcourt.infrastructure.rest.feature.restaurant;
 
 import com.foodcourt.foodcourt.application.dto.request.CreateRestaurantRequest;
 import com.foodcourt.foodcourt.application.dto.response.CreateRestaurantResponse;
 import com.foodcourt.foodcourt.application.handler.RestaurantHandler;
-import com.foodcourt.foodcourt.infrastructure.rest.config.SecurityConfig;
+import com.foodcourt.foodcourt.infrastructure.rest.config.TestSecurityConfig;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.TestPropertySource;
@@ -21,10 +22,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(RestaurantController.class)
+@AutoConfigureMockMvc(addFilters = false)
 @TestPropertySource(properties = {
 	"server.port=0"
 })
-@Import(SecurityConfig.class)
+@Import(TestSecurityConfig.class)
 class RestaurantControllerTest {
 	
 	@Autowired

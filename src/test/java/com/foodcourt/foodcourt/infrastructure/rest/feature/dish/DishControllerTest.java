@@ -1,11 +1,14 @@
-package com.foodcourt.foodcourt.infrastructure.rest;
+package com.foodcourt.foodcourt.infrastructure.rest.feature.dish;
 
 import com.foodcourt.foodcourt.application.dto.request.CreateDishRequest;
 import com.foodcourt.foodcourt.application.dto.response.CreateDishResponse;
 import com.foodcourt.foodcourt.application.handler.DishHandler;
-import com.foodcourt.foodcourt.infrastructure.rest.config.SecurityConfig;
+import com.foodcourt.foodcourt.domain.exception.BusinessException;
+import com.foodcourt.foodcourt.domain.exception.TechnicalException;
+import com.foodcourt.foodcourt.infrastructure.rest.config.TestSecurityConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
@@ -22,10 +25,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(DishController.class)
+@AutoConfigureMockMvc(addFilters = false)
 @TestPropertySource(properties = {
 	"server.port=0"
 })
-@Import(SecurityConfig.class)
+@Import(TestSecurityConfig.class)
 class DishControllerTest {
 	
 	@Autowired
@@ -116,5 +120,69 @@ class DishControllerTest {
 			.content(jsonBody)
 		)
 		.andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	void shouldReturnBadRequestWhenHandlerThrowsBusinessException() throws Exception {
+		String jsonBody = validJsonDishRequest();
+		
+		when(dishHandler.createDish(any(CreateDishRequest.class)))
+			.thenThrow(new BusinessException("Business exception occurred"));
+		
+		mockMvc.perform(post(BASE)
+			.contentType(MediaType.APPLICATION_JSON.toString())
+			.content(jsonBody)
+		)
+		.andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	void shouldReturnInternalServerErrorWhenHandlerThrowsUnexpectedException() throws Exception {
+		String jsonBody = validJsonDishRequest();
+		
+		when(dishHandler.createDish(any(CreateDishRequest.class)))
+			.thenThrow(new RuntimeException("Unexpected error"));
+		
+		mockMvc.perform(post(BASE)
+			.contentType(MediaType.APPLICATION_JSON.toString())
+			.content(jsonBody)
+		)
+		.andExpect(status().isInternalServerError());
+	}
+	
+	@Test
+	void shouldReturnInternalServerErrorWhenHandlerThrowsTechnicalException() throws Exception {
+		String jsonBody = validJsonDishRequest();
+		
+		when(dishHandler.createDish(any(CreateDishRequest.class)))
+			.thenThrow(new TechnicalException("Technical error"));
+		
+		mockMvc.perform(post(BASE)
+			.contentType(MediaType.APPLICATION_JSON.toString())
+			.content(jsonBody)
+		)
+		.andExpect(status().isInternalServerError());
+	}
+	
+	@Test
+	void shouldReturnNotFoundWhenPathIsInvalid() throws Exception {
+		mockMvc.perform(post("/invalid-path")
+			.contentType(MediaType.APPLICATION_JSON.toString())
+			.content(validJsonDishRequest())
+		)
+		.andExpect(status().isNotFound());
+	}
+	
+	private String validJsonDishRequest() {
+		return """
+				{
+					"name": "Spaghetti Carbonara",
+					"idCategory": 2,
+				    "description": "Classic Italian pasta dish with eggs, cheese, pancetta, and pepper.",
+				    "price": 12000,
+				    "idRestaurant": 3,
+				    "imageUrl": "http://example.com/dish.png"
+				}
+			""";
 	}
 }

@@ -6,11 +6,12 @@ import com.foodcourt.foodcourt.domain.model.Restaurant;
 import com.foodcourt.foodcourt.infrastructure.adapters.persistence.jpa.RestaurantJpaRepository;
 import com.foodcourt.foodcourt.infrastructure.adapters.persistence.mappers.RestaurantMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import static com.foodcourt.foodcourt.domain.constants.RestaurantErrorMessage.RESTAURANT_ALREADY_EXISTS;
-import static java.util.Objects.nonNull;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class RestaurantRepositoryAdapter implements RestaurantRepositoryGateway {
@@ -19,9 +20,11 @@ public class RestaurantRepositoryAdapter implements RestaurantRepositoryGateway 
 	
 	@Override
 	public Restaurant save(Restaurant restaurant) {
-		Restaurant existingRestaurant = findByName(restaurant.getName());
-		if (nonNull(existingRestaurant)) throw new InvalidRestaurantException(RESTAURANT_ALREADY_EXISTS);
+		log.trace("Validating restaurant before saving: {}", restaurant);
+		if (existByNameOrNit(restaurant.getName(), restaurant.getNit()))
+			throw new InvalidRestaurantException(RESTAURANT_ALREADY_EXISTS);
 		
+		log.trace("Saving restaurant");
 		return RestaurantMapper.INSTANCE.toDomain(
 			restaurantJpaRepository.save(
 				RestaurantMapper.INSTANCE.toData(restaurant)
@@ -30,14 +33,14 @@ public class RestaurantRepositoryAdapter implements RestaurantRepositoryGateway 
 	}
 	
 	@Override
-	public Restaurant findByName(String name) {
-		return RestaurantMapper.INSTANCE.toDomain(
-			restaurantJpaRepository.findByName(name)
-		);
+	public boolean existByNameOrNit(String name, String nit) {
+		log.trace("Checking existence of restaurant by name: {} or NIT: {}", name, nit);
+		return restaurantJpaRepository.existsByNameIgnoreCaseOrNit(name, nit);
 	}
 	
 	@Override
 	public Restaurant findById(Long id) {
+		log.trace("Finding restaurant by ID: {}", id);
 		return RestaurantMapper.INSTANCE.toDomain(
 			restaurantJpaRepository.findById(id).orElse(null)
 		);

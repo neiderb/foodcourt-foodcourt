@@ -32,16 +32,23 @@ class UpdateDishUseCaseTest {
 	
 	@Test
 	void shouldUpdateDishSuccessfully() {
-		Dish dishToUpdate = validDishUpdatable();
+		final Long idDish = 1L;
+		final Long idUserCreator = 2L;
+		Dish dishToUpdate = validDishUpdatable(idDish);
 		Dish existingDish = Dish.builder()
 			.id(dishToUpdate.getId())
 			.description("Old description")
 			.price(1200L)
 			.build();
 		
+		Restaurant existingRestaurant = Restaurant.builder()
+			.id(dishToUpdate.getIdRestaurant())
+			.ownerId(idUserCreator)
+			.build();
+		
 		when(dishRepositoryGateway.findById(any(Long.class))).thenReturn(existingDish);
-		when(restaurantRepositoryGateway.findById(existingDish.getIdRestaurant())).thenReturn(new Restaurant());
-		updateDishUseCase.execute(dishToUpdate, 10L);
+		when(restaurantRepositoryGateway.findById(existingDish.getIdRestaurant())).thenReturn(existingRestaurant);
+		updateDishUseCase.execute(dishToUpdate, idUserCreator);
 		
 		verify(dishRepositoryGateway).save(argThat(dish ->
 			dish.getDescription().equals(dishToUpdate.getDescription()) &&
@@ -51,7 +58,8 @@ class UpdateDishUseCaseTest {
 	
 	@Test
 	void shouldThrowExceptionWhenDishNotFound() {
-		Dish dishToUpdate = validDishUpdatable();
+		final Long idDish = 1L;
+		Dish dishToUpdate = validDishUpdatable(idDish);
 		
 		when(dishRepositoryGateway.findById(any(Long.class))).thenReturn(null);
 	
@@ -60,7 +68,8 @@ class UpdateDishUseCaseTest {
 	
 	@Test
 	void shouldThrowExceptionWhenRestaurantNotFound() {
-		Dish dishToUpdate = validDishUpdatable();
+		final Long idDish = 1L;
+		Dish dishToUpdate = validDishUpdatable(idDish);
 		Dish existingDish = Dish.builder()
 			.id(dishToUpdate.getId())
 			.description("Old description")
@@ -74,9 +83,9 @@ class UpdateDishUseCaseTest {
 		assertThrows(RestaurantNotFoundException.class, () -> updateDishUseCase.execute(dishToUpdate, 10L));
 	}
 	
-	private Dish validDishUpdatable() {
+	private Dish validDishUpdatable(Long idExist) {
 		return Dish.builder()
-			.id(1L)
+			.id(idExist)
 			.description("Updated description")
 			.price(1500L)
 			.build();

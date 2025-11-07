@@ -1,4 +1,4 @@
-package com.foodcourt.foodcourt.infrastructure.rest;
+package com.foodcourt.foodcourt.infrastructure.rest.feature.restaurant;
 
 import com.foodcourt.foodcourt.application.dto.request.CreateRestaurantRequest;
 import com.foodcourt.foodcourt.application.dto.response.CreateRestaurantResponse;
@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import static com.foodcourt.foodcourt.infrastructure.rest.constants.paths.RestaurantPath.BASE;
 import static com.foodcourt.foodcourt.infrastructure.rest.docapi.RestaurantDocApi.*;
 
+@Slf4j
 @Tag(name = TAG_RESTAURANT)
 @RestController
 @RequiredArgsConstructor
@@ -42,6 +44,7 @@ public class RestaurantController {
 	)
 	@PostMapping
 	ResponseEntity<CreateRestaurantResponse> createUser(@RequestBody @Valid CreateRestaurantRequest createRestaurantRequest) {
+		log.trace("createRestaurant: {}", createRestaurantRequest);
 		return ResponseEntity.status(HttpStatus.CREATED).body(restaurantHandler.createRestaurant(createRestaurantRequest));
 	}
 	

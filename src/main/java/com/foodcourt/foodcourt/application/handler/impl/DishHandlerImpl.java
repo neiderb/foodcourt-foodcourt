@@ -7,9 +7,11 @@ import com.foodcourt.foodcourt.application.handler.DishHandler;
 import com.foodcourt.foodcourt.application.mappers.CreateDishRequestMapper;
 import com.foodcourt.foodcourt.application.mappers.UpdateDishRequestMapper;
 import com.foodcourt.foodcourt.domain.model.Dish;
+import com.foodcourt.foodcourt.domain.model.UserClaims;
 import com.foodcourt.foodcourt.domain.ports.CreateDishPort;
 import com.foodcourt.foodcourt.domain.ports.UpdateDishPort;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,16 +23,23 @@ public class DishHandlerImpl implements DishHandler {
 	
 	@Override
 	public CreateDishResponse createDish(CreateDishRequest request) {
-		Long idUserCreator = 1L; // TODO: get from security context
 		Dish dishToSave = CreateDishRequestMapper.INSTANCE.toDomain(request);
-		Dish savedDish = createDishPort.execute(dishToSave, idUserCreator);
+		Dish savedDish = createDishPort.execute(dishToSave, getIdUserCreator());
 		return new CreateDishResponse(savedDish.getId(), savedDish.getName());
 	}
 	
 	@Override
 	public void updateDish(UpdateDishRequest request) {
-		Long idUserCreator = 1L; // TODO: get from security context
 		Dish dishToUpdate = UpdateDishRequestMapper.INSTANCE.toDomain(request);
-		updateDishPort.execute(dishToUpdate, idUserCreator);
+		updateDishPort.execute(dishToUpdate, getIdUserCreator());
+	}
+	
+	private Long getIdUserCreator() {
+		Long idUserCreator = null;
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (principal instanceof UserClaims userClaims) {
+			idUserCreator = userClaims.id();
+		}
+		return idUserCreator;
 	}
 }

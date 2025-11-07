@@ -6,7 +6,7 @@ public interface RestaurantRepositoryGateway {
 	
 	Restaurant save(Restaurant restaurant);
 	
-	Restaurant findByName(String name);
+	boolean existByNameOrNit(String name, String nit);
 	
 	Restaurant findById(Long id);
 	

@@ -4,19 +4,25 @@ import com.foodcourt.foodcourt.application.dto.request.CreateDishRequest;
 import com.foodcourt.foodcourt.application.dto.request.UpdateDishRequest;
 import com.foodcourt.foodcourt.application.dto.response.CreateDishResponse;
 import com.foodcourt.foodcourt.domain.model.Dish;
+import com.foodcourt.foodcourt.domain.model.UserClaims;
+import com.foodcourt.foodcourt.domain.model.UserRole;
 import com.foodcourt.foodcourt.domain.ports.CreateDishPort;
 import com.foodcourt.foodcourt.domain.ports.UpdateDishPort;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.assertArg;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class DishHandlerImplTest {
@@ -29,6 +35,11 @@ class DishHandlerImplTest {
 	
 	@Mock
 	private UpdateDishPort updateDishPort;
+	
+	@BeforeEach
+	void setUp() {
+		initSecurityContext();
+	}
 	
 	@Test
 	void shouldCreateDishSuccessfully() {
@@ -90,4 +101,20 @@ class DishHandlerImplTest {
 			assertEquals(updatedDescription, dish.getDescription());
 		}), any(Long.class));
 	}
+	
+	private void initSecurityContext() {
+		UserClaims userClaims = new UserClaims(
+			999L,
+			"test.user@mail.com",
+			UserRole.OWNER
+		);
+		Authentication authentication = mock(Authentication.class);
+		when(authentication.getPrincipal()).thenReturn(userClaims);
+		
+		SecurityContext securityContext = mock(SecurityContext.class);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		
+		SecurityContextHolder.setContext(securityContext);
+	}
+	
 }

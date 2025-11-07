@@ -4,6 +4,9 @@ server:
 spring:
   application:
     name: ms-foodcourt
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
 
 adapters:
   db:
@@ -32,3 +35,6 @@ management:
 external-api:
    auth-service:
      url: ${AUTH_API_URL}
+
+jwt:
+  secret: ${JWT_SECRET}

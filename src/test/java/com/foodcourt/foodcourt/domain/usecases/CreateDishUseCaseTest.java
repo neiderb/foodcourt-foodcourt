@@ -30,15 +30,21 @@ class CreateDishUseCaseTest {
 	@Test
 	void shouldCreateDishSuccessfully() {
 		final Long idDish = 1L;
+		final Long idUserCreator = 2L;
 		Dish dishToCreate = validDish();
 		Dish expectedDish = validDish();
 		expectedDish.setId(idDish);
 		expectedDish.setIsAvailable(true);
 		
-		when(restaurantRepositoryGateway.findById(any(Long.class))).thenReturn(new Restaurant());
+		Restaurant existingRestaurant = Restaurant.builder()
+			.id(dishToCreate.getIdRestaurant())
+			.ownerId(idUserCreator)
+			.build();
+		
+		when(restaurantRepositoryGateway.findById(any(Long.class))).thenReturn(existingRestaurant);
 		when(dishRepositoryGateway.save(any(Dish.class))).thenReturn(expectedDish);
 		
-		Dish dishCreated = createDishUseCase.execute(dishToCreate, 1L);
+		Dish dishCreated = createDishUseCase.execute(dishToCreate, idUserCreator);
 		
 		assertNotNull(dishCreated);
 		assertEquals(idDish, dishCreated.getId());
@@ -65,10 +71,10 @@ class CreateDishUseCaseTest {
 	private Dish validDish() {
 		return Dish.builder()
 			.name("Pizza Margherita")
-			.idCategory(1L)
+			.idCategory(10L)
 			.description("Classic pizza with tomato sauce, mozzarella, and fresh basil.")
 			.price(13_000L)
-			.idRestaurant(1L)
+			.idRestaurant(20L)
 			.imageUrl("https://example.com/images/pizza_margherita.jpg")
 			.build();
 	}

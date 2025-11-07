@@ -1,4 +1,4 @@
-package com.foodcourt.foodcourt.infrastructure.rest;
+package com.foodcourt.foodcourt.infrastructure.rest.feature.dish;
 
 import com.foodcourt.foodcourt.application.dto.request.CreateDishRequest;
 import com.foodcourt.foodcourt.application.dto.request.UpdateDishRequest;
