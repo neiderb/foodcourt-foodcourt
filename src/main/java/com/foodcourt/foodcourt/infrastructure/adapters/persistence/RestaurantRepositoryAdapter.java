@@ -3,6 +3,7 @@ package com.foodcourt.foodcourt.infrastructure.adapters.persistence;
 import com.foodcourt.foodcourt.domain.exception.restaurant.InvalidRestaurantException;
 import com.foodcourt.foodcourt.domain.gateways.RestaurantRepositoryGateway;
 import com.foodcourt.foodcourt.domain.model.Restaurant;
+import com.foodcourt.foodcourt.infrastructure.adapters.persistence.entities.RestaurantData;
 import com.foodcourt.foodcourt.infrastructure.adapters.persistence.jpa.RestaurantJpaRepository;
 import com.foodcourt.foodcourt.infrastructure.adapters.persistence.mappers.RestaurantMapper;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import static com.foodcourt.foodcourt.domain.constants.RestaurantErrorMessage.RESTAURANT_ALREADY_EXISTS;
+import static java.util.Objects.isNull;
 
 @Slf4j
 @Repository
@@ -44,5 +46,12 @@ public class RestaurantRepositoryAdapter implements RestaurantRepositoryGateway 
 		return RestaurantMapper.INSTANCE.toDomain(
 			restaurantJpaRepository.findById(id).orElse(null)
 		);
+	}
+	
+	@Override
+	public boolean isRestaurantOwner(Long idRestaurant, Long idUser) {
+		RestaurantData existingRestaurant = restaurantJpaRepository.findById(idRestaurant).orElse(null);
+		if (isNull(existingRestaurant)) return false;
+		return existingRestaurant.getOwnerId().equals(idUser);
 	}
 }

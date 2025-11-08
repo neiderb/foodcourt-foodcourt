@@ -9,6 +9,7 @@ import com.foodcourt.foodcourt.application.mappers.UpdateDishRequestMapper;
 import com.foodcourt.foodcourt.domain.model.Dish;
 import com.foodcourt.foodcourt.domain.model.UserClaims;
 import com.foodcourt.foodcourt.domain.ports.CreateDishPort;
+import com.foodcourt.foodcourt.domain.ports.ToggleDishAvailabilityPort;
 import com.foodcourt.foodcourt.domain.ports.UpdateDishPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,6 +21,7 @@ public class DishHandlerImpl implements DishHandler {
 	
 	private final CreateDishPort createDishPort;
 	private final UpdateDishPort updateDishPort;
+	private final ToggleDishAvailabilityPort toggleDishAvailabilityPort;
 	
 	@Override
 	public CreateDishResponse createDish(CreateDishRequest request) {
@@ -32,6 +34,11 @@ public class DishHandlerImpl implements DishHandler {
 	public void updateDish(UpdateDishRequest request) {
 		Dish dishToUpdate = UpdateDishRequestMapper.INSTANCE.toDomain(request);
 		updateDishPort.execute(dishToUpdate, getIdUserCreator());
+	}
+	
+	@Override
+	public void toggleDishAvailability(Long idDish) {
+		toggleDishAvailabilityPort.execute(idDish, getIdUserCreator());
 	}
 	
 	private Long getIdUserCreator() {

@@ -1,12 +1,10 @@
 package com.foodcourt.foodcourt.domain.usecases;
 
 import com.foodcourt.foodcourt.domain.exception.dish.DishNotFoundException;
-import com.foodcourt.foodcourt.domain.exception.restaurant.RestaurantNotFoundException;
 import com.foodcourt.foodcourt.domain.exception.user.InvalidUserException;
 import com.foodcourt.foodcourt.domain.gateways.DishRepositoryGateway;
 import com.foodcourt.foodcourt.domain.gateways.RestaurantRepositoryGateway;
 import com.foodcourt.foodcourt.domain.model.Dish;
-import com.foodcourt.foodcourt.domain.model.Restaurant;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -40,15 +38,11 @@ class UpdateDishUseCaseTest {
 			.id(dishToUpdate.getId())
 			.description("Old description")
 			.price(1200L)
-			.build();
-		
-		Restaurant existingRestaurant = Restaurant.builder()
-			.id(dishToUpdate.getIdRestaurant())
-			.ownerId(idUserCreator)
+			.idRestaurant(40L)
 			.build();
 		
 		when(dishRepositoryGateway.findById(any(Long.class))).thenReturn(existingDish);
-		when(restaurantRepositoryGateway.findById(existingDish.getIdRestaurant())).thenReturn(existingRestaurant);
+		when(restaurantRepositoryGateway.isRestaurantOwner(any(Long.class), any(Long.class))).thenReturn(true);
 		updateDishUseCase.execute(dishToUpdate, idUserCreator);
 		
 		verify(dishRepositoryGateway).save(argThat(dish ->
@@ -68,23 +62,6 @@ class UpdateDishUseCaseTest {
 	}
 	
 	@Test
-	void shouldThrowExceptionWhenRestaurantNotFound() {
-		final Long idDish = 1L;
-		Dish dishToUpdate = validDishUpdatable(idDish);
-		Dish existingDish = Dish.builder()
-			.id(dishToUpdate.getId())
-			.description("Old description")
-			.price(1200L)
-			.idRestaurant(5L)
-			.build();
-		
-		when(dishRepositoryGateway.findById(any(Long.class))).thenReturn(existingDish);
-		when(restaurantRepositoryGateway.findById(existingDish.getIdRestaurant())).thenReturn(null);
-	
-		assertThrows(RestaurantNotFoundException.class, () -> updateDishUseCase.execute(dishToUpdate, 10L));
-	}
-	
-	@Test
 	void shouldThrowExceptionWhenUserIsNotOwnerOfRestaurant() {
 		final Long idDish = 1L;
 		final Long idUserCreator = 2L;
@@ -96,13 +73,8 @@ class UpdateDishUseCaseTest {
 			.idRestaurant(5L)
 			.build();
 		
-		Restaurant existingRestaurant = Restaurant.builder()
-			.id(existingDish.getIdRestaurant())
-			.ownerId(99L)
-			.build();
-		
 		when(dishRepositoryGateway.findById(any(Long.class))).thenReturn(existingDish);
-		when(restaurantRepositoryGateway.findById(existingDish.getIdRestaurant())).thenReturn(existingRestaurant);
+		when(restaurantRepositoryGateway.isRestaurantOwner(any(Long.class), any(Long.class))).thenReturn(false);
 	
 		assertThrows(InvalidUserException.class, () -> updateDishUseCase.execute(dishToUpdate, idUserCreator));
 	}

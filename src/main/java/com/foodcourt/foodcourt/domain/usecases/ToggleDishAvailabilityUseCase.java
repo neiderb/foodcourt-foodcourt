@@ -4,8 +4,7 @@ import com.foodcourt.foodcourt.domain.exception.dish.DishNotFoundException;
 import com.foodcourt.foodcourt.domain.exception.user.InvalidUserException;
 import com.foodcourt.foodcourt.domain.gateways.DishRepositoryGateway;
 import com.foodcourt.foodcourt.domain.gateways.RestaurantRepositoryGateway;
-import com.foodcourt.foodcourt.domain.model.Dish;
-import com.foodcourt.foodcourt.domain.ports.UpdateDishPort;
+import com.foodcourt.foodcourt.domain.ports.ToggleDishAvailabilityPort;
 import lombok.RequiredArgsConstructor;
 
 import static com.foodcourt.foodcourt.domain.constants.DishErrorMessage.DISH_NOT_FOUND;
@@ -13,20 +12,17 @@ import static com.foodcourt.foodcourt.domain.constants.UserErrorMessage.UNAUTHOR
 import static java.util.Objects.isNull;
 
 @RequiredArgsConstructor
-public class UpdateDishUseCase implements UpdateDishPort {
+public class ToggleDishAvailabilityUseCase implements ToggleDishAvailabilityPort {
 	
 	private final DishRepositoryGateway dishRepositoryGateway;
 	private final RestaurantRepositoryGateway restaurantRepositoryGateway;
 	
 	@Override
-	public void execute(Dish newDish, Long idUserCreator) {
-		Dish existingDish = dishRepositoryGateway.findById(newDish.getId());
+	public void execute(Long idDish, Long idUserCreator) {
+		var existingDish = dishRepositoryGateway.findById(idDish);
 		if (isNull(existingDish)) throw new DishNotFoundException(DISH_NOT_FOUND);
-		
 		validateRestaurantOwner(existingDish.getIdRestaurant(), idUserCreator);
-		
-		existingDish.setPrice(newDish.getPrice());
-		existingDish.setDescription(newDish.getDescription());
+		existingDish.setIsAvailable(!existingDish.getIsAvailable());
 		dishRepositoryGateway.save(existingDish);
 	}
 	

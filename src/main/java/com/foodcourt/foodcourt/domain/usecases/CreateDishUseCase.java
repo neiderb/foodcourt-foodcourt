@@ -1,15 +1,12 @@
 package com.foodcourt.foodcourt.domain.usecases;
 
-import com.foodcourt.foodcourt.domain.exception.restaurant.RestaurantNotFoundException;
 import com.foodcourt.foodcourt.domain.exception.user.InvalidUserException;
 import com.foodcourt.foodcourt.domain.gateways.DishRepositoryGateway;
 import com.foodcourt.foodcourt.domain.gateways.RestaurantRepositoryGateway;
 import com.foodcourt.foodcourt.domain.model.Dish;
-import com.foodcourt.foodcourt.domain.model.Restaurant;
 import com.foodcourt.foodcourt.domain.ports.CreateDishPort;
 import lombok.RequiredArgsConstructor;
 
-import static com.foodcourt.foodcourt.domain.constants.RestaurantErrorMessage.RESTAURANT_NOT_FOUND;
 import static com.foodcourt.foodcourt.domain.constants.UserErrorMessage.UNAUTHORIZED_ACTION;
 import static java.util.Objects.isNull;
 
@@ -22,16 +19,13 @@ public class CreateDishUseCase implements CreateDishPort {
 	@Override
 	public Dish execute(Dish dish, Long idUserCreator) {
 		if (isNull(dish.getIsAvailable())) dish.setIsAvailable(true);
-		validateRestaurant(dish.getIdRestaurant(), idUserCreator);
+		isRestaurantOwner(dish.getIdRestaurant(), idUserCreator);
 		return dishRepositoryGateway.save(dish);
 	}
 	
-	private void validateRestaurant(Long idRestaurant, Long idUserCreator) {
-		Restaurant restaurant = restaurantRepositoryGateway.findById(idRestaurant);
-		if (isNull(restaurant)) throw new RestaurantNotFoundException(RESTAURANT_NOT_FOUND);
-		if (!restaurant.getOwnerId().equals(idUserCreator)) {
+	private void isRestaurantOwner(Long idRestaurant, Long idUserCreator) {
+		if (!restaurantRepositoryGateway.isRestaurantOwner(idRestaurant, idUserCreator))
 			throw new InvalidUserException(UNAUTHORIZED_ACTION);
-		}
 	}
 	
 }

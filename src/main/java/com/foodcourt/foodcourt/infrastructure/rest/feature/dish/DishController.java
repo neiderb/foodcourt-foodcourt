@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import static com.foodcourt.foodcourt.infrastructure.rest.constants.paths.DishPath.BASE;
+import static com.foodcourt.foodcourt.infrastructure.rest.constants.paths.DishPath.TOGGLE_AVAILABILITY;
 import static com.foodcourt.foodcourt.infrastructure.rest.docapi.DishDocApi.*;
 
 @Tag(name = TAG_DISH)
@@ -51,6 +52,17 @@ public class DishController {
 	@PatchMapping
 	ResponseEntity<Void> updateDish(@RequestBody @Valid UpdateDishRequest updateDishRequest) {
 		dishHandler.updateDish(updateDishRequest);
+		return ResponseEntity.noContent().build();
+	}
+	
+	@Operation(summary = TOGGLE_DISH_AVAILABILITY_SUMMARY)
+	@ApiResponse(
+		responseCode = "204",
+		description = TOGGLE_DISH_AVAILABILITY_DESCRIPTION
+	)
+	@PatchMapping(TOGGLE_AVAILABILITY)
+	ResponseEntity<Void> toggleAvailability(@PathVariable Long idDish) {
+		dishHandler.toggleDishAvailability(idDish);
 		return ResponseEntity.noContent().build();
 	}
 	

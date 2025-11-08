@@ -102,9 +102,7 @@ class RestaurantControllerTest {
 		
 		when(restaurantHandler.getRestaurantById(restaurantId)).thenReturn(expectedRestaurant);
 		
-		mockMvc.perform(get(BASE.concat(FIND_BY_ID), restaurantId)
-			.contentType(MediaType.APPLICATION_JSON.toString())
-		)
+		mockMvc.perform(get(BASE.concat(FIND_BY_ID), restaurantId))
 		.andExpect(status().isOk())
 		.andExpect(jsonPath("$.id").value(expectedRestaurant.id()))
 		.andExpect(jsonPath("$.name").value(expectedRestaurant.name()))

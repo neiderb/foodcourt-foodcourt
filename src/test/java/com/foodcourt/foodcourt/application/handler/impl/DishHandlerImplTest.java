@@ -7,6 +7,7 @@ import com.foodcourt.foodcourt.domain.model.Dish;
 import com.foodcourt.foodcourt.domain.model.UserClaims;
 import com.foodcourt.foodcourt.domain.model.UserRole;
 import com.foodcourt.foodcourt.domain.ports.CreateDishPort;
+import com.foodcourt.foodcourt.domain.ports.ToggleDishAvailabilityPort;
 import com.foodcourt.foodcourt.domain.ports.UpdateDishPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,6 +36,9 @@ class DishHandlerImplTest {
 	
 	@Mock
 	private UpdateDishPort updateDishPort;
+	
+	@Mock
+	private ToggleDishAvailabilityPort toggleDishAvailabilityPort;
 	
 	@BeforeEach
 	void setUp() {
@@ -100,6 +104,13 @@ class DishHandlerImplTest {
 			assertEquals(updatedPrice, dish.getPrice());
 			assertEquals(updatedDescription, dish.getDescription());
 		}), any(Long.class));
+	}
+	
+	@Test
+	void shouldToggleDishAvailabilitySuccessfully() {
+		final Long dishIdToToggle = 7L;
+		dishHandlerImpl.toggleDishAvailability(dishIdToToggle);
+		verify(toggleDishAvailabilityPort).execute(assertArg(id -> assertEquals(dishIdToToggle, id)), any(Long.class));
 	}
 	
 	private void initSecurityContext() {

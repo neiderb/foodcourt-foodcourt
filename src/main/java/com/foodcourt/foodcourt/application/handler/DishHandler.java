@@ -10,4 +10,6 @@ public interface DishHandler {
 	
 	void updateDish(UpdateDishRequest request);
 	
+	void toggleDishAvailability(Long idDish);
+	
 }

@@ -10,4 +10,6 @@ public interface RestaurantRepositoryGateway {
 	
 	Restaurant findById(Long id);
 	
+	boolean isRestaurantOwner(Long idRestaurant, Long idUser);
+	
 }

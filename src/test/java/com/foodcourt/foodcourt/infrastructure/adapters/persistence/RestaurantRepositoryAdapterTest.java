@@ -90,6 +90,27 @@ class RestaurantRepositoryAdapterTest {
 		assertNull(foundRestaurant);
 	}
 	
+	@Test
+	void shouldVerifyRestaurantOwnershipSuccessfully() {
+		RestaurantData testRestaurantData = validRestaurantData();
+		
+		when(restaurantJpaRepository.findById(RESTAURANT_ID)).thenReturn(Optional.of(testRestaurantData));
+		
+		boolean isOwner = restaurantRepositoryAdapter.isRestaurantOwner(RESTAURANT_ID, RESTAURANT_OWNER_ID);
+		
+		assertTrue(isOwner);
+	}
+	
+	@Test
+	void shouldReturnFalseWhenRestaurantNotFound() {
+		final Long idRestaurant = RESTAURANT_ID;
+		when(restaurantJpaRepository.findById(idRestaurant)).thenReturn(Optional.empty());
+
+		boolean isOwner = restaurantRepositoryAdapter.isRestaurantOwner(idRestaurant, 999L);
+
+		assertFalse(isOwner);
+	}
+	
 	private Restaurant validRestaurant() {
 		return Restaurant.builder()
 			.id(RESTAURANT_ID)

@@ -13,4 +13,7 @@ public class DishDocApi {
 	public static final String UPDATE_DISH_SUMMARY = "Update an existing dish";
 	public static final String UPDATE_DISH_DESCRIPTION = "Dish updated successfully";
 	
+	public static final String TOGGLE_DISH_AVAILABILITY_SUMMARY = "Toggle dish availability";
+	public static final String TOGGLE_DISH_AVAILABILITY_DESCRIPTION = "Dish availability toggled successfully";
+	
 }

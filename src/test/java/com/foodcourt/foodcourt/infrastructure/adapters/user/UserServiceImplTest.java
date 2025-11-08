@@ -35,7 +35,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@SuppressWarnings("rawtypes")
+@SuppressWarnings({"rawtypes", "unchecked"})
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
 
@@ -100,7 +100,6 @@ class UserServiceImplTest {
 		Long id = 1L;
 		UserExternalResponse externalResponse = validUserExternalResponse();
 		
-		// capture the Consumer<HttpHeaders> passed to headers(...)
 		AtomicReference<Consumer<HttpHeaders>> headersConsumer = new AtomicReference<>();
 		when(restClient.get()).thenReturn(requestHeadersUriSpec);
 		when(requestHeadersUriSpec.uri("/api/v1/user/{id}", id)).thenReturn(requestHeadersSpec);
@@ -112,13 +111,11 @@ class UserServiceImplTest {
 		when(responseSpec.onStatus(any(), any())).thenReturn(responseSpec);
 		when(responseSpec.body(UserExternalResponse.class)).thenReturn(externalResponse);
 		
-		// call method under test so the capture happens
 		userServiceImpl.findById(id);
 		
-		// apply captured consumer to a real HttpHeaders and assert Authorization header present
 		HttpHeaders headers = new HttpHeaders();
 		Consumer<HttpHeaders> consumer = headersConsumer.get();
-		assertNotNull(consumer, "headers consumer should be captured");
+		assertNotNull(consumer);
 		consumer.accept(headers);
 		assertEquals("Bearer dummy-token", headers.getFirst(HttpHeaders.AUTHORIZATION));
 	}
@@ -128,10 +125,9 @@ class UserServiceImplTest {
 		Long id = 1L;
 		UserExternalResponse externalResponse = validUserExternalResponse();
 		
-		// set authentication credentials to a non-String
 		UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
 			"test-user",
-			12345, // non-string credentials
+			12345,
 			Collections.emptyList()
 		);
 		SecurityContextHolder.getContext().setAuthentication(auth);
@@ -174,11 +170,11 @@ class UserServiceImplTest {
 		final int code = 404;
 		final String errorMessage = "User not found";
 		String errorBodyJson = String.format("""
-					{
-						"code": %d,
-						"message": "%s"
-					}
-					""", code, errorMessage);
+				{
+					"code": %d,
+					"message": "%s"
+				}
+			""", code, errorMessage);
 		Long id = 1L;
 		ClientHttpResponse clientHttpResponse = mock(ClientHttpResponse.class);
 		ErrorExternalResponse errorResponse = new ErrorExternalResponse(code, errorMessage);
@@ -202,11 +198,11 @@ class UserServiceImplTest {
 	@Test
 	void shouldThrowExceptionOnMappingErrorResponse() throws Exception {
 		String errorBodyJson = """
-							{
-							"prop": "someThing",
-							"otherProp": "any"
-							}
-					""";
+				{
+				"prop": "someThing",
+				"otherProp": "any"
+				}
+			""";
 		Long id = 1L;
 		ClientHttpResponse clientHttpResponse = mock(ClientHttpResponse.class);
 		

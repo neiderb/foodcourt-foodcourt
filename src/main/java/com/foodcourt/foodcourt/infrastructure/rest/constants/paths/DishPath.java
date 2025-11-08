@@ -7,4 +7,6 @@ public class DishPath {
 	
 	public static final String BASE = "/api/v1/dish";
 	
+	public static final String TOGGLE_AVAILABILITY = "/{idDish}/toggle-availability";
+	
 }

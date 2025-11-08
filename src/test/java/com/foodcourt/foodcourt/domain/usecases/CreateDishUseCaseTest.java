@@ -1,11 +1,9 @@
 package com.foodcourt.foodcourt.domain.usecases;
 
-import com.foodcourt.foodcourt.domain.exception.restaurant.RestaurantNotFoundException;
 import com.foodcourt.foodcourt.domain.exception.user.InvalidUserException;
 import com.foodcourt.foodcourt.domain.gateways.DishRepositoryGateway;
 import com.foodcourt.foodcourt.domain.gateways.RestaurantRepositoryGateway;
 import com.foodcourt.foodcourt.domain.model.Dish;
-import com.foodcourt.foodcourt.domain.model.Restaurant;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -37,12 +35,7 @@ class CreateDishUseCaseTest {
 		expectedDish.setId(idDish);
 		expectedDish.setIsAvailable(true);
 		
-		Restaurant existingRestaurant = Restaurant.builder()
-			.id(dishToCreate.getIdRestaurant())
-			.ownerId(idUserCreator)
-			.build();
-		
-		when(restaurantRepositoryGateway.findById(any(Long.class))).thenReturn(existingRestaurant);
+		when(restaurantRepositoryGateway.isRestaurantOwner(any(Long.class), any(Long.class))).thenReturn(true);
 		when(dishRepositoryGateway.save(any(Dish.class))).thenReturn(expectedDish);
 		
 		Dish dishCreated = createDishUseCase.execute(dishToCreate, idUserCreator);
@@ -61,24 +54,10 @@ class CreateDishUseCaseTest {
 	}
 	
 	@Test
-	void shouldThrowExceptionWhenRestaurantNotFound() {
-		Dish dishToCreate = validDish();
-		
-		when(restaurantRepositoryGateway.findById(any(Long.class))).thenReturn(null);
-		
-		assertThrows(RestaurantNotFoundException.class, () -> createDishUseCase.execute(dishToCreate, 1L));
-	}
-	
-	@Test
 	void shouldThrowExceptionWhenUserIsNotOwnerOfRestaurant() {
 		Dish dishToCreate = validDish();
 		
-		Restaurant existingRestaurant = Restaurant.builder()
-			.id(dishToCreate.getIdRestaurant())
-			.ownerId(99L)
-			.build();
-		
-		when(restaurantRepositoryGateway.findById(any(Long.class))).thenReturn(existingRestaurant);
+		when(restaurantRepositoryGateway.isRestaurantOwner(any(Long.class), any(Long.class))).thenReturn(false);
 		
 		assertThrows(InvalidUserException.class, () -> createDishUseCase.execute(dishToCreate, 1L));
 	}

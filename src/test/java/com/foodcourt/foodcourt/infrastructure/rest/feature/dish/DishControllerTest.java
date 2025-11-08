@@ -17,6 +17,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static com.foodcourt.foodcourt.infrastructure.rest.constants.paths.DishPath.BASE;
+import static com.foodcourt.foodcourt.infrastructure.rest.constants.paths.DishPath.TOGGLE_AVAILABILITY;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -171,6 +172,14 @@ class DishControllerTest {
 			.content(validJsonDishRequest())
 		)
 		.andExpect(status().isNotFound());
+	}
+	
+	@Test
+	void shouldReturnNoContentWhenTogglingDishAvailability() throws Exception {
+		final Long dishIdToToggle = 1L;
+		
+		mockMvc.perform(patch(BASE.concat(TOGGLE_AVAILABILITY), dishIdToToggle))
+		.andExpect(status().isNoContent());
 	}
 	
 	private String validJsonDishRequest() {
