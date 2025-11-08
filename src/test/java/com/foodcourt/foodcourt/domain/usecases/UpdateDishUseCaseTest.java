@@ -2,6 +2,7 @@ package com.foodcourt.foodcourt.domain.usecases;
 
 import com.foodcourt.foodcourt.domain.exception.dish.DishNotFoundException;
 import com.foodcourt.foodcourt.domain.exception.restaurant.RestaurantNotFoundException;
+import com.foodcourt.foodcourt.domain.exception.user.InvalidUserException;
 import com.foodcourt.foodcourt.domain.gateways.DishRepositoryGateway;
 import com.foodcourt.foodcourt.domain.gateways.RestaurantRepositoryGateway;
 import com.foodcourt.foodcourt.domain.model.Dish;
@@ -81,6 +82,29 @@ class UpdateDishUseCaseTest {
 		when(restaurantRepositoryGateway.findById(existingDish.getIdRestaurant())).thenReturn(null);
 	
 		assertThrows(RestaurantNotFoundException.class, () -> updateDishUseCase.execute(dishToUpdate, 10L));
+	}
+	
+	@Test
+	void shouldThrowExceptionWhenUserIsNotOwnerOfRestaurant() {
+		final Long idDish = 1L;
+		final Long idUserCreator = 2L;
+		Dish dishToUpdate = validDishUpdatable(idDish);
+		Dish existingDish = Dish.builder()
+			.id(dishToUpdate.getId())
+			.description("Old description")
+			.price(1200L)
+			.idRestaurant(5L)
+			.build();
+		
+		Restaurant existingRestaurant = Restaurant.builder()
+			.id(existingDish.getIdRestaurant())
+			.ownerId(99L)
+			.build();
+		
+		when(dishRepositoryGateway.findById(any(Long.class))).thenReturn(existingDish);
+		when(restaurantRepositoryGateway.findById(existingDish.getIdRestaurant())).thenReturn(existingRestaurant);
+	
+		assertThrows(InvalidUserException.class, () -> updateDishUseCase.execute(dishToUpdate, idUserCreator));
 	}
 	
 	private Dish validDishUpdatable(Long idExist) {

@@ -2,10 +2,13 @@ package com.foodcourt.foodcourt.application.handler.impl;
 
 import com.foodcourt.foodcourt.application.dto.request.CreateRestaurantRequest;
 import com.foodcourt.foodcourt.application.dto.response.CreateRestaurantResponse;
+import com.foodcourt.foodcourt.application.dto.response.RestaurantResponse;
 import com.foodcourt.foodcourt.application.handler.RestaurantHandler;
 import com.foodcourt.foodcourt.application.mappers.CreateRestaurantRequestMapper;
+import com.foodcourt.foodcourt.application.mappers.RestaurantResponseMapper;
 import com.foodcourt.foodcourt.domain.model.Restaurant;
 import com.foodcourt.foodcourt.domain.ports.CreateRestaurantPort;
+import com.foodcourt.foodcourt.domain.ports.GetRestaurantByIdPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,6 +19,7 @@ import org.springframework.stereotype.Service;
 public class RestaurantHandlerImpl implements RestaurantHandler {
 	
 	private final CreateRestaurantPort createRestaurantPort;
+	private final GetRestaurantByIdPort getRestaurantByIdPort;
 	
 	@Override
 	public CreateRestaurantResponse createRestaurant(CreateRestaurantRequest request) {
@@ -26,4 +30,11 @@ public class RestaurantHandlerImpl implements RestaurantHandler {
 		return new CreateRestaurantResponse(savedRestaurant.getId(), savedRestaurant.getName());
 	}
 	
+	@Override
+	public RestaurantResponse getRestaurantById(Long id) {
+		log.trace("Getting restaurant by ID: {}", id);
+		return RestaurantResponseMapper.INSTANCE.toResponse(
+			getRestaurantByIdPort.execute(id)
+		);
+	}
 }

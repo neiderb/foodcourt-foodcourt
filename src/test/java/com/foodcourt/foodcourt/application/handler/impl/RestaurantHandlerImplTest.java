@@ -4,6 +4,7 @@ import com.foodcourt.foodcourt.application.dto.request.CreateRestaurantRequest;
 import com.foodcourt.foodcourt.application.dto.response.CreateRestaurantResponse;
 import com.foodcourt.foodcourt.domain.model.Restaurant;
 import com.foodcourt.foodcourt.domain.ports.CreateRestaurantPort;
+import com.foodcourt.foodcourt.domain.ports.GetRestaurantByIdPort;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,6 +23,9 @@ class RestaurantHandlerImplTest {
 	
 	@Mock
 	private CreateRestaurantPort createRestaurantPort;
+	
+	@Mock
+	private GetRestaurantByIdPort getRestaurantByIdPort;
 	
 	private static final Long RESTAURANT_ID = 1L;
 	private static final String VALID_RESTAURANT_NAME = "Pizza Place";
@@ -54,6 +58,27 @@ class RestaurantHandlerImplTest {
 		assertNotNull(actualResponse);
 		assertEquals(expectedResponse.id(), actualResponse.id());
 		assertEquals(expectedResponse.name(), actualResponse.name());
+		
+	}
+	
+	@Test
+	void shouldReturnRestaurantWhenGetRestaurantById() {
+		final Long idRestaurant = 20L;
+		Restaurant expectedRestaurant = validRestaurant();
+		expectedRestaurant.setId(idRestaurant);
+		
+		when(getRestaurantByIdPort.execute(any(Long.class))).thenReturn(expectedRestaurant);
+		
+		var actualResponse = restaurantHandlerImpl.getRestaurantById(idRestaurant);
+		
+		assertNotNull(actualResponse);
+		assertEquals(idRestaurant, actualResponse.id());
+		assertEquals(expectedRestaurant.getName(), actualResponse.name());
+		assertEquals(expectedRestaurant.getNit(), actualResponse.nit());
+		assertEquals(expectedRestaurant.getAddress(), actualResponse.address());
+		assertEquals(expectedRestaurant.getPhoneNumber(), actualResponse.phoneNumber());
+		assertEquals(expectedRestaurant.getUrlLogo(), actualResponse.urlLogo());
+		assertEquals(expectedRestaurant.getOwnerId(), actualResponse.ownerId());
 		
 	}
 	

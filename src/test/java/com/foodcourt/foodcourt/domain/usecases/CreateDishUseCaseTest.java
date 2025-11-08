@@ -1,6 +1,7 @@
 package com.foodcourt.foodcourt.domain.usecases;
 
 import com.foodcourt.foodcourt.domain.exception.restaurant.RestaurantNotFoundException;
+import com.foodcourt.foodcourt.domain.exception.user.InvalidUserException;
 import com.foodcourt.foodcourt.domain.gateways.DishRepositoryGateway;
 import com.foodcourt.foodcourt.domain.gateways.RestaurantRepositoryGateway;
 import com.foodcourt.foodcourt.domain.model.Dish;
@@ -66,6 +67,20 @@ class CreateDishUseCaseTest {
 		when(restaurantRepositoryGateway.findById(any(Long.class))).thenReturn(null);
 		
 		assertThrows(RestaurantNotFoundException.class, () -> createDishUseCase.execute(dishToCreate, 1L));
+	}
+	
+	@Test
+	void shouldThrowExceptionWhenUserIsNotOwnerOfRestaurant() {
+		Dish dishToCreate = validDish();
+		
+		Restaurant existingRestaurant = Restaurant.builder()
+			.id(dishToCreate.getIdRestaurant())
+			.ownerId(99L)
+			.build();
+		
+		when(restaurantRepositoryGateway.findById(any(Long.class))).thenReturn(existingRestaurant);
+		
+		assertThrows(InvalidUserException.class, () -> createDishUseCase.execute(dishToCreate, 1L));
 	}
 	
 	private Dish validDish() {
