@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import static com.foodcourt.foodcourt.domain.constants.Regex.JUST_NUMBERS;
 import static com.foodcourt.foodcourt.domain.constants.RestaurantErrorMessage.RESTAURANT_NAME_CANNOT_BE_ONLY_NUMBERS;
-import static com.foodcourt.foodcourt.domain.constants.UserErrorMessage.INVALID_ROLE;
+import static com.foodcourt.foodcourt.domain.constants.UserErrorMessage.USER_HAS_NO_VALID_ROLE;
 import static com.foodcourt.foodcourt.domain.model.UserRole.OWNER;
 
 @Slf4j
@@ -38,7 +38,7 @@ public class CreateRestaurantUseCase implements CreateRestaurantPort {
 		log.trace("Validating role owner with user ID: {}", userId);
 		User user = userServiceGateway.findById(userId);
 		
-		if (!OWNER.equals(user.getRole())) throw new InvalidRoleException(INVALID_ROLE);
+		if (!OWNER.equals(user.getRole())) throw new InvalidRoleException(USER_HAS_NO_VALID_ROLE);
 	}
 	
 }
