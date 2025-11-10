@@ -1,9 +1,15 @@
 package com.foodcourt.foodcourt.application.handler.impl;
 
 import com.foodcourt.foodcourt.application.dto.request.CreateRestaurantRequest;
+import com.foodcourt.foodcourt.application.dto.request.GetAllRestaurantRequest;
 import com.foodcourt.foodcourt.application.dto.response.CreateRestaurantResponse;
+import com.foodcourt.foodcourt.domain.model.PaginationResponse;
 import com.foodcourt.foodcourt.domain.model.restaurant.Restaurant;
+import com.foodcourt.foodcourt.domain.model.restaurant.RestaurantPaginationFilter;
+import com.foodcourt.foodcourt.domain.model.restaurant.RestaurantSortBy;
+import com.foodcourt.foodcourt.domain.model.restaurant.RestaurantSummary;
 import com.foodcourt.foodcourt.domain.ports.CreateRestaurantPort;
+import com.foodcourt.foodcourt.domain.ports.GetAllRestaurantPort;
 import com.foodcourt.foodcourt.domain.ports.GetRestaurantByIdPort;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,8 +17,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collections;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.assertArg;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -26,6 +36,9 @@ class RestaurantHandlerImplTest {
 	
 	@Mock
 	private GetRestaurantByIdPort getRestaurantByIdPort;
+	
+	@Mock
+	private GetAllRestaurantPort getAllRestaurantPort;
 	
 	private static final Long RESTAURANT_ID = 1L;
 	private static final String VALID_RESTAURANT_NAME = "Pizza Place";
@@ -80,6 +93,45 @@ class RestaurantHandlerImplTest {
 		assertEquals(expectedRestaurant.getUrlLogo(), actualResponse.urlLogo());
 		assertEquals(expectedRestaurant.getOwnerId(), actualResponse.ownerId());
 		
+	}
+	
+	@Test
+	void shouldReturnPaginationWhenGetAllRestaurants() {
+		final int page = 0;
+		final int size = 10;
+		var expectedReq = new GetAllRestaurantRequest(
+			page,
+			size,
+			"name",
+			"asc"
+		);
+		
+		var expectedResponse = PaginationResponse.<RestaurantSummary>builder()
+			.pageSize(size)
+			.pageNumber(page)
+			.content(Collections.emptyList())
+			.totalElements(0L)
+			.totalPages(0)
+			.build();
+		
+		when(getAllRestaurantPort.execute(any(RestaurantPaginationFilter.class)))
+			.thenReturn(expectedResponse);
+		
+		var actualResponse = restaurantHandlerImpl.getAllRestaurants(expectedReq);
+		
+		assertNotNull(actualResponse);
+		assertEquals(expectedResponse.getPageNumber(), actualResponse.getPageNumber());
+		assertEquals(expectedResponse.getPageSize(), actualResponse.getPageSize());
+		assertEquals(expectedResponse.getTotalElements(), actualResponse.getTotalElements());
+		assertEquals(expectedResponse.getTotalPages(), actualResponse.getTotalPages());
+		assertEquals(expectedResponse.getContent().size(), actualResponse.getContent().size());
+		
+		verify(getAllRestaurantPort).execute(assertArg(filter -> {
+			assertEquals(expectedReq.page(), filter.getPage());
+			assertEquals(expectedReq.size(), filter.getSize());
+			assertEquals(RestaurantSortBy.of(expectedReq.sortBy()), filter.getSortBy());
+			assertTrue(filter.isAscending());
+		}));
 	}
 	
 	private Restaurant validRestaurant() {

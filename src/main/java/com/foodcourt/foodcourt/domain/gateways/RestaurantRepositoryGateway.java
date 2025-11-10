@@ -1,8 +1,8 @@
 package com.foodcourt.foodcourt.domain.gateways;
 
-import com.foodcourt.foodcourt.domain.model.PaginationFilter;
 import com.foodcourt.foodcourt.domain.model.PaginationResponse;
 import com.foodcourt.foodcourt.domain.model.restaurant.Restaurant;
+import com.foodcourt.foodcourt.domain.model.restaurant.RestaurantPaginationFilter;
 import com.foodcourt.foodcourt.domain.model.restaurant.RestaurantSummary;
 
 public interface RestaurantRepositoryGateway {
@@ -15,6 +15,6 @@ public interface RestaurantRepositoryGateway {
 	
 	boolean isRestaurantOwner(Long idRestaurant, Long idUser);
 	
-	PaginationResponse<RestaurantSummary> getAllRestaurantSummaries(PaginationFilter filter);
+	PaginationResponse<RestaurantSummary> getAllRestaurantSummaries(RestaurantPaginationFilter filter);
 	
 }

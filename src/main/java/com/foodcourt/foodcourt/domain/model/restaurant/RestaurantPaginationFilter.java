@@ -1,34 +1,30 @@
 package com.foodcourt.foodcourt.domain.model.restaurant;
 
-import com.foodcourt.foodcourt.domain.model.PaginationFilter;
 import com.foodcourt.foodcourt.domain.model.SortDirection;
 import lombok.Builder;
+import lombok.Getter;
 
 @Builder
-public class RestaurantPaginationFilter extends PaginationFilter {
+public class RestaurantPaginationFilter{
 	
+	@Getter
 	private Integer size;
+	
+	@Getter
 	private Integer page;
+	
 	private String sortBy;
 	private String sortDirection;
 	
-	@Override
-	public int getSize() {
-		return this.size;
+	public RestaurantSortBy getSortBy() {
+		return RestaurantSortBy.of(this.sortBy);
 	}
 	
-	@Override
-	public int getPage() {
-		return this.page;
+	public boolean isAscending() {
+		return getSortDirection() == SortDirection.ASC;
 	}
 	
-	@Override
-	public String getSortBy() {
-		return this.sortBy;
-	}
-	
-	@Override
-	public SortDirection getSortDirection() {
+	private SortDirection getSortDirection() {
 		return SortDirection.of(this.sortDirection);
 	}
 	

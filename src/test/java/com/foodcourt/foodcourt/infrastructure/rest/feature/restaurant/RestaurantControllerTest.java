@@ -1,9 +1,12 @@
 package com.foodcourt.foodcourt.infrastructure.rest.feature.restaurant;
 
 import com.foodcourt.foodcourt.application.dto.request.CreateRestaurantRequest;
+import com.foodcourt.foodcourt.application.dto.request.GetAllRestaurantRequest;
 import com.foodcourt.foodcourt.application.dto.response.CreateRestaurantResponse;
 import com.foodcourt.foodcourt.application.dto.response.RestaurantResponse;
 import com.foodcourt.foodcourt.application.handler.RestaurantHandler;
+import com.foodcourt.foodcourt.domain.model.PaginationResponse;
+import com.foodcourt.foodcourt.domain.model.restaurant.RestaurantSummary;
 import com.foodcourt.foodcourt.infrastructure.rest.config.TestSecurityConfig;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.MediaType;
@@ -14,6 +17,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.Collections;
 
 import static com.foodcourt.foodcourt.infrastructure.rest.constants.paths.RestaurantPath.BASE;
 import static com.foodcourt.foodcourt.infrastructure.rest.constants.paths.RestaurantPath.FIND_BY_ID;
@@ -111,6 +116,45 @@ class RestaurantControllerTest {
 		.andExpect(jsonPath("$.phoneNumber").value(expectedRestaurant.phoneNumber()))
 		.andExpect(jsonPath("$.urlLogo").value(expectedRestaurant.urlLogo()))
 		.andExpect(jsonPath("$.ownerId").value(expectedRestaurant.ownerId()));
+	}
+	
+	@Test
+	void shouldReturnPaginationResponseWhenGetAllRestaurants() throws Exception {
+		final int page = 0;
+		final int size = 10;
+		final String sortBy = "name";
+		final String sortDirection = "asc";
+		
+		var expectedReq = new GetAllRestaurantRequest(
+			page,
+			size,
+			sortBy,
+			sortDirection
+		);
+		var expectedResponse = PaginationResponse.<RestaurantSummary>builder()
+			.pageSize(size)
+			.pageNumber(page)
+			.content(Collections.emptyList())
+			.totalElements(0L)
+			.totalPages(0)
+			.build();
+		
+		when(restaurantHandler.getAllRestaurants(any(GetAllRestaurantRequest.class)))
+			.thenReturn(expectedResponse);
+		
+		mockMvc.perform(get(BASE)
+			.param("page", String.valueOf(expectedReq.page()))
+			.param("size",  String.valueOf(expectedReq.size()))
+			.param("sortBy", expectedReq.sortBy())
+			.param("sortDirection", expectedReq.sortDirection())
+		)
+		.andExpect(status().isOk())
+		.andExpect(jsonPath("$.content").isArray())
+		.andExpect(jsonPath("$.content").isEmpty())
+		.andExpect(jsonPath("$.pageNumber").value(expectedResponse.getPageNumber()))
+		.andExpect(jsonPath("$.pageSize").value(expectedResponse.getPageSize()))
+		.andExpect(jsonPath("$.totalElements").value(expectedResponse.getTotalElements()))
+		.andExpect(jsonPath("$.totalPages").value(expectedResponse.getTotalPages()));
 	}
 	
 }
