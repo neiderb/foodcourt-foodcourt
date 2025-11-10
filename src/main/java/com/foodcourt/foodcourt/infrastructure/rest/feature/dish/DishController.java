@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import static com.foodcourt.foodcourt.infrastructure.rest.constants.paths.DishPa
 import static com.foodcourt.foodcourt.infrastructure.rest.constants.paths.DishPath.TOGGLE_AVAILABILITY;
 import static com.foodcourt.foodcourt.infrastructure.rest.docapi.DishDocApi.*;
 
+@Slf4j
 @Tag(name = TAG_DISH)
 @RestController
 @RequiredArgsConstructor
@@ -41,6 +43,7 @@ public class DishController {
 	)
 	@PostMapping
 	ResponseEntity<CreateDishResponse> createDish(@RequestBody @Valid CreateDishRequest createDishRequest) {
+		log.trace("createDish called with: {}", createDishRequest);
 		return ResponseEntity.status(HttpStatus.CREATED).body(dishHandler.createDish(createDishRequest));
 	}
 	
@@ -51,6 +54,7 @@ public class DishController {
 	)
 	@PatchMapping
 	ResponseEntity<Void> updateDish(@RequestBody @Valid UpdateDishRequest updateDishRequest) {
+		log.trace("updateDish called with: {}", updateDishRequest);
 		dishHandler.updateDish(updateDishRequest);
 		return ResponseEntity.noContent().build();
 	}
@@ -62,6 +66,7 @@ public class DishController {
 	)
 	@PatchMapping(TOGGLE_AVAILABILITY)
 	ResponseEntity<Void> toggleAvailability(@PathVariable Long idDish) {
+		log.trace("toggleAvailability called with idDish: {}", idDish);
 		dishHandler.toggleDishAvailability(idDish);
 		return ResponseEntity.noContent().build();
 	}

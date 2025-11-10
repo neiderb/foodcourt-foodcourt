@@ -8,12 +8,14 @@ import com.foodcourt.foodcourt.domain.model.Restaurant;
 import com.foodcourt.foodcourt.domain.model.User;
 import com.foodcourt.foodcourt.domain.ports.CreateRestaurantPort;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import static com.foodcourt.foodcourt.domain.constants.Regex.JUST_NUMBERS;
 import static com.foodcourt.foodcourt.domain.constants.RestaurantErrorMessage.RESTAURANT_NAME_CANNOT_BE_ONLY_NUMBERS;
 import static com.foodcourt.foodcourt.domain.constants.UserErrorMessage.INVALID_ROLE;
 import static com.foodcourt.foodcourt.domain.model.UserRole.OWNER;
 
+@Slf4j
 @RequiredArgsConstructor
 public class CreateRestaurantUseCase implements CreateRestaurantPort {
 	
@@ -28,10 +30,12 @@ public class CreateRestaurantUseCase implements CreateRestaurantPort {
 	}
 	
 	private void validateName(String name) {
+		log.trace("Validating restaurant name: {}", name);
 		if (name.matches(JUST_NUMBERS)) throw new InvalidRestaurantException(RESTAURANT_NAME_CANNOT_BE_ONLY_NUMBERS);
 	}
 	
 	private void validateUser(Long userId) {
+		log.trace("Validating role owner with user ID: {}", userId);
 		User user = userServiceGateway.findById(userId);
 		
 		if (!OWNER.equals(user.getRole())) throw new InvalidRoleException(INVALID_ROLE);

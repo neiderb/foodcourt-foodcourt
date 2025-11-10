@@ -12,9 +12,11 @@ import com.foodcourt.foodcourt.domain.ports.CreateDishPort;
 import com.foodcourt.foodcourt.domain.ports.ToggleDishAvailabilityPort;
 import com.foodcourt.foodcourt.domain.ports.UpdateDishPort;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class DishHandlerImpl implements DishHandler {
@@ -25,20 +27,26 @@ public class DishHandlerImpl implements DishHandler {
 	
 	@Override
 	public CreateDishResponse createDish(CreateDishRequest request) {
+		log.trace("Creating dish with name: {}", request.name());
 		Dish dishToSave = CreateDishRequestMapper.INSTANCE.toDomain(request);
 		Dish savedDish = createDishPort.execute(dishToSave, getIdUserCreator());
+		log.debug("Created dish with ID: {}", savedDish.getId());
 		return new CreateDishResponse(savedDish.getId(), savedDish.getName());
 	}
 	
 	@Override
 	public void updateDish(UpdateDishRequest request) {
+		log.trace("Updating dish with ID: {}", request.id());
 		Dish dishToUpdate = UpdateDishRequestMapper.INSTANCE.toDomain(request);
 		updateDishPort.execute(dishToUpdate, getIdUserCreator());
+		log.debug("Updated dish with ID: {}", dishToUpdate.getId());
 	}
 	
 	@Override
 	public void toggleDishAvailability(Long idDish) {
+		log.trace("Toggling availability for dish with ID: {}", idDish);
 		toggleDishAvailabilityPort.execute(idDish, getIdUserCreator());
+		log.debug("Toggled availability for dish with ID: {}", idDish);
 	}
 	
 	private Long getIdUserCreator() {

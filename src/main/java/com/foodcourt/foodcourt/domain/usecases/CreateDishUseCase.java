@@ -6,10 +6,12 @@ import com.foodcourt.foodcourt.domain.gateways.RestaurantRepositoryGateway;
 import com.foodcourt.foodcourt.domain.model.Dish;
 import com.foodcourt.foodcourt.domain.ports.CreateDishPort;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import static com.foodcourt.foodcourt.domain.constants.UserErrorMessage.UNAUTHORIZED_ACTION;
 import static java.util.Objects.isNull;
 
+@Slf4j
 @RequiredArgsConstructor
 public class CreateDishUseCase implements CreateDishPort {
 	
@@ -24,6 +26,7 @@ public class CreateDishUseCase implements CreateDishPort {
 	}
 	
 	private void isRestaurantOwner(Long idRestaurant, Long idUserCreator) {
+		log.trace("Validating if user with ID: {} is owner of restaurant with ID: {}", idUserCreator, idRestaurant);
 		if (!restaurantRepositoryGateway.isRestaurantOwner(idRestaurant, idUserCreator))
 			throw new InvalidUserException(UNAUTHORIZED_ACTION);
 	}

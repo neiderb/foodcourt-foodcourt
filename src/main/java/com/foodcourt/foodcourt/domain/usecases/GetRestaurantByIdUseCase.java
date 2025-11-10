@@ -5,10 +5,12 @@ import com.foodcourt.foodcourt.domain.gateways.RestaurantRepositoryGateway;
 import com.foodcourt.foodcourt.domain.model.Restaurant;
 import com.foodcourt.foodcourt.domain.ports.GetRestaurantByIdPort;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import static com.foodcourt.foodcourt.domain.constants.RestaurantErrorMessage.RESTAURANT_NOT_FOUND;
 import static java.util.Objects.isNull;
 
+@Slf4j
 @RequiredArgsConstructor
 public class GetRestaurantByIdUseCase implements GetRestaurantByIdPort {
 	
@@ -18,6 +20,7 @@ public class GetRestaurantByIdUseCase implements GetRestaurantByIdPort {
 	public Restaurant execute(Long id) {
 		Restaurant existingRestaurant = restaurantRepositoryGateway.findById(id);
 		if (isNull(existingRestaurant)) throw new RestaurantNotFoundException(RESTAURANT_NOT_FOUND);
+		log.debug("Found restaurant with ID: {}", id);
 		return existingRestaurant;
 	}
 	

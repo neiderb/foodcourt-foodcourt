@@ -50,8 +50,10 @@ public class RestaurantRepositoryAdapter implements RestaurantRepositoryGateway 
 	
 	@Override
 	public boolean isRestaurantOwner(Long idRestaurant, Long idUser) {
+		log.trace("Checking if user with ID: {} is owner of restaurant with ID: {}", idUser, idRestaurant);
 		RestaurantData existingRestaurant = restaurantJpaRepository.findById(idRestaurant).orElse(null);
 		if (isNull(existingRestaurant)) return false;
+		log.debug("Found restaurant: {}", existingRestaurant);
 		return existingRestaurant.getOwnerId().equals(idUser);
 	}
 }
