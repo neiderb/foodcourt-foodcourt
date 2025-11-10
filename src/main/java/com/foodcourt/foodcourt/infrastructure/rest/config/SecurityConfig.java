@@ -54,6 +54,7 @@ public class SecurityConfig {
 				.requestMatchers(POST, RestaurantPath.BASE).hasRole(ADMIN.name())
 				.requestMatchers(POST, DishPath.BASE).hasRole(OWNER.name())
 				.requestMatchers(PATCH, DishPath.BASE).hasRole(OWNER.name())
+				.requestMatchers(PATCH, DishPath.TOGGLE_AVAILABILITY).hasRole(OWNER.name())
 				.anyRequest().authenticated())
 			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
