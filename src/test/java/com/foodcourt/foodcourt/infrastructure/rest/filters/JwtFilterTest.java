@@ -2,7 +2,7 @@ package com.foodcourt.foodcourt.infrastructure.rest.filters;
 
 import com.foodcourt.foodcourt.domain.exception.user.InvalidTokenException;
 import com.foodcourt.foodcourt.domain.gateways.TokenServiceGateway;
-import com.foodcourt.foodcourt.domain.model.UserClaims;
+import com.foodcourt.foodcourt.domain.model.auth.UserClaims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,7 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.io.IOException;
 
-import static com.foodcourt.foodcourt.domain.model.UserRole.OWNER;
+import static com.foodcourt.foodcourt.domain.model.auth.UserRole.OWNER;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 

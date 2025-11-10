@@ -1,7 +1,7 @@
 package com.foodcourt.foodcourt.infrastructure.adapters.persistence;
 
 import com.foodcourt.foodcourt.domain.exception.TechnicalException;
-import com.foodcourt.foodcourt.domain.model.Dish;
+import com.foodcourt.foodcourt.domain.model.dish.Dish;
 import com.foodcourt.foodcourt.infrastructure.adapters.persistence.entities.CategoryData;
 import com.foodcourt.foodcourt.infrastructure.adapters.persistence.entities.DishData;
 import com.foodcourt.foodcourt.infrastructure.adapters.persistence.jpa.CategoryJpaRepository;

@@ -1,6 +1,6 @@
 package com.foodcourt.foodcourt.domain.gateways;
 
-import com.foodcourt.foodcourt.domain.model.Dish;
+import com.foodcourt.foodcourt.domain.model.dish.Dish;
 
 public interface DishRepositoryGateway {
 	

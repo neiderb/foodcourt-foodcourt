@@ -1,8 +1,8 @@
 package com.foodcourt.foodcourt.infrastructure.rest.filters;
 
 import com.foodcourt.foodcourt.domain.gateways.TokenServiceGateway;
-import com.foodcourt.foodcourt.domain.model.UserClaims;
-import com.foodcourt.foodcourt.domain.model.UserRole;
+import com.foodcourt.foodcourt.domain.model.auth.UserClaims;
+import com.foodcourt.foodcourt.domain.model.auth.UserRole;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

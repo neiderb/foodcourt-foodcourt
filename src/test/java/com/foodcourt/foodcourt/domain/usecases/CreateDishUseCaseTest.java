@@ -3,7 +3,7 @@ package com.foodcourt.foodcourt.domain.usecases;
 import com.foodcourt.foodcourt.domain.exception.user.InvalidUserException;
 import com.foodcourt.foodcourt.domain.gateways.DishRepositoryGateway;
 import com.foodcourt.foodcourt.domain.gateways.RestaurantRepositoryGateway;
-import com.foodcourt.foodcourt.domain.model.Dish;
+import com.foodcourt.foodcourt.domain.model.dish.Dish;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

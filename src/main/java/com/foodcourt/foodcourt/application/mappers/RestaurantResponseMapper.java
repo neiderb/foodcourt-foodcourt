@@ -1,7 +1,7 @@
 package com.foodcourt.foodcourt.application.mappers;
 
 import com.foodcourt.foodcourt.application.dto.response.RestaurantResponse;
-import com.foodcourt.foodcourt.domain.model.Restaurant;
+import com.foodcourt.foodcourt.domain.model.restaurant.Restaurant;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

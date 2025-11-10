@@ -19,12 +19,10 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static com.foodcourt.foodcourt.domain.model.UserRole.ADMIN;
-import static com.foodcourt.foodcourt.domain.model.UserRole.OWNER;
+import static com.foodcourt.foodcourt.domain.model.auth.UserRole.*;
 import static com.foodcourt.foodcourt.infrastructure.rest.constants.ErrorMessage.ACCESS_DENIED;
 import static com.foodcourt.foodcourt.infrastructure.rest.constants.ErrorMessage.UNAUTHORIZED;
-import static org.springframework.http.HttpMethod.PATCH;
-import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.*;
 
 @Configuration
 @EnableWebSecurity
@@ -52,6 +50,7 @@ public class SecurityConfig {
 				.requestMatchers(ALLOWED_PATHS_SWAGGER).permitAll()
 				.requestMatchers(ALLOWED_PATHS_ACTUATOR).permitAll()
 				.requestMatchers(POST, RestaurantPath.BASE).hasRole(ADMIN.name())
+				.requestMatchers(GET, RestaurantPath.BASE).hasRole(CLIENT.name())
 				.requestMatchers(POST, DishPath.BASE).hasRole(OWNER.name())
 				.requestMatchers(PATCH, DishPath.BASE).hasRole(OWNER.name())
 				.requestMatchers(PATCH, DishPath.TOGGLE_AVAILABILITY).hasRole(OWNER.name())

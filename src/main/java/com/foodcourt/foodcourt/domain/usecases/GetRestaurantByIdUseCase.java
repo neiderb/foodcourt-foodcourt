@@ -2,7 +2,7 @@ package com.foodcourt.foodcourt.domain.usecases;
 
 import com.foodcourt.foodcourt.domain.exception.restaurant.RestaurantNotFoundException;
 import com.foodcourt.foodcourt.domain.gateways.RestaurantRepositoryGateway;
-import com.foodcourt.foodcourt.domain.model.Restaurant;
+import com.foodcourt.foodcourt.domain.model.restaurant.Restaurant;
 import com.foodcourt.foodcourt.domain.ports.GetRestaurantByIdPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

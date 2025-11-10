@@ -1,6 +1,6 @@
 package com.foodcourt.foodcourt.infrastructure.adapters.user.mappers;
 
-import com.foodcourt.foodcourt.domain.model.User;
+import com.foodcourt.foodcourt.domain.model.auth.User;
 import com.foodcourt.foodcourt.infrastructure.adapters.user.dto.UserExternalResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

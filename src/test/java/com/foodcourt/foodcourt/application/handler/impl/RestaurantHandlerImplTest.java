@@ -2,7 +2,7 @@ package com.foodcourt.foodcourt.application.handler.impl;
 
 import com.foodcourt.foodcourt.application.dto.request.CreateRestaurantRequest;
 import com.foodcourt.foodcourt.application.dto.response.CreateRestaurantResponse;
-import com.foodcourt.foodcourt.domain.model.Restaurant;
+import com.foodcourt.foodcourt.domain.model.restaurant.Restaurant;
 import com.foodcourt.foodcourt.domain.ports.CreateRestaurantPort;
 import com.foodcourt.foodcourt.domain.ports.GetRestaurantByIdPort;
 import org.junit.jupiter.api.Test;

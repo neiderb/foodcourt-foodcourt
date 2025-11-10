@@ -3,7 +3,7 @@ package com.foodcourt.foodcourt.domain.usecases;
 import com.foodcourt.foodcourt.domain.exception.user.InvalidUserException;
 import com.foodcourt.foodcourt.domain.gateways.DishRepositoryGateway;
 import com.foodcourt.foodcourt.domain.gateways.RestaurantRepositoryGateway;
-import com.foodcourt.foodcourt.domain.model.Dish;
+import com.foodcourt.foodcourt.domain.model.dish.Dish;
 import com.foodcourt.foodcourt.domain.ports.CreateDishPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

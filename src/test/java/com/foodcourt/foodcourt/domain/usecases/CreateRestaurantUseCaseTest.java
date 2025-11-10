@@ -4,9 +4,9 @@ import com.foodcourt.foodcourt.domain.exception.restaurant.InvalidRestaurantExce
 import com.foodcourt.foodcourt.domain.exception.user.InvalidRoleException;
 import com.foodcourt.foodcourt.domain.gateways.RestaurantRepositoryGateway;
 import com.foodcourt.foodcourt.domain.gateways.UserServiceGateway;
-import com.foodcourt.foodcourt.domain.model.Restaurant;
-import com.foodcourt.foodcourt.domain.model.User;
-import com.foodcourt.foodcourt.domain.model.UserRole;
+import com.foodcourt.foodcourt.domain.model.restaurant.Restaurant;
+import com.foodcourt.foodcourt.domain.model.auth.User;
+import com.foodcourt.foodcourt.domain.model.auth.UserRole;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

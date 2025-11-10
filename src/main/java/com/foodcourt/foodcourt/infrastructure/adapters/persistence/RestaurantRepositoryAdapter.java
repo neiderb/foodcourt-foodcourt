@@ -2,15 +2,24 @@ package com.foodcourt.foodcourt.infrastructure.adapters.persistence;
 
 import com.foodcourt.foodcourt.domain.exception.restaurant.InvalidRestaurantException;
 import com.foodcourt.foodcourt.domain.gateways.RestaurantRepositoryGateway;
-import com.foodcourt.foodcourt.domain.model.Restaurant;
+import com.foodcourt.foodcourt.domain.model.PaginationFilter;
+import com.foodcourt.foodcourt.domain.model.PaginationResponse;
+import com.foodcourt.foodcourt.domain.model.restaurant.Restaurant;
+import com.foodcourt.foodcourt.domain.model.restaurant.RestaurantSummary;
 import com.foodcourt.foodcourt.infrastructure.adapters.persistence.entities.RestaurantData;
 import com.foodcourt.foodcourt.infrastructure.adapters.persistence.jpa.RestaurantJpaRepository;
+import com.foodcourt.foodcourt.infrastructure.adapters.persistence.mappers.PaginationFilterMapper;
 import com.foodcourt.foodcourt.infrastructure.adapters.persistence.mappers.RestaurantMapper;
+import com.foodcourt.foodcourt.infrastructure.adapters.persistence.projection.RestaurantSummaryProjection;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import static com.foodcourt.foodcourt.domain.constants.RestaurantErrorMessage.RESTAURANT_ALREADY_EXISTS;
+import static com.foodcourt.foodcourt.infrastructure.adapters.persistence.constants.RestaurantPaginationColumn.NAME;
 import static java.util.Objects.isNull;
 
 @Slf4j
@@ -19,6 +28,7 @@ import static java.util.Objects.isNull;
 public class RestaurantRepositoryAdapter implements RestaurantRepositoryGateway {
 	
 	private final RestaurantJpaRepository restaurantJpaRepository;
+	private final PaginationFilterMapper paginationFilterMapper;
 	
 	@Override
 	public Restaurant save(Restaurant restaurant) {
@@ -55,5 +65,42 @@ public class RestaurantRepositoryAdapter implements RestaurantRepositoryGateway 
 		if (isNull(existingRestaurant)) return false;
 		log.debug("Found restaurant: {}", existingRestaurant);
 		return existingRestaurant.getOwnerId().equals(idUser);
+	}
+	
+	@Override
+	public PaginationResponse<RestaurantSummary> getAllRestaurantSummaries(PaginationFilter filter) {
+		Pageable pageable = paginationFilterMapper.toPageable(
+			filter,
+			this::sanitizeSortBy
+		);
+		
+		Page<RestaurantSummaryProjection> resultPage = restaurantJpaRepository.findRestaurantPaginatedBy(pageable);
+		log.debug("Retrieved restaurant summaries page {} with {} elements", resultPage.getNumber(), resultPage.getContent().size());
+		return mapToPaginationResponse(resultPage);
+	}
+	
+	private String sanitizeSortBy(String sortBy) {
+		log.trace("Sanitizing sortBy parameter: {}", sortBy);
+		if (!StringUtils.hasText(sortBy) || !(sortBy.equalsIgnoreCase(NAME))) {
+			return NAME;
+		}
+		return sortBy;
+	}
+	
+	private PaginationResponse<RestaurantSummary> mapToPaginationResponse(Page<RestaurantSummaryProjection> page) {
+		return PaginationResponse.<RestaurantSummary>builder()
+			.totalPages(page.getTotalPages())
+			.totalElements(page.getTotalElements())
+			.pageNumber(page.getNumber())
+			.pageSize(page.getSize())
+			.content(
+				page.map(projection -> RestaurantSummary.builder()
+					.idRestaurant(projection.getId())
+					.name(projection.getName())
+					.urlLogo(projection.getUrlLogo())
+					.build()
+				).getContent()
+			)
+			.build();
 	}
 }

@@ -2,7 +2,7 @@ package com.foodcourt.foodcourt.domain.usecases;
 
 import com.foodcourt.foodcourt.domain.exception.restaurant.RestaurantNotFoundException;
 import com.foodcourt.foodcourt.domain.gateways.RestaurantRepositoryGateway;
-import com.foodcourt.foodcourt.domain.model.Restaurant;
+import com.foodcourt.foodcourt.domain.model.restaurant.Restaurant;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

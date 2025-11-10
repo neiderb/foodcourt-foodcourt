@@ -1,6 +1,6 @@
 package com.foodcourt.foodcourt.infrastructure.adapters.persistence.mappers;
 
-import com.foodcourt.foodcourt.domain.model.Dish;
+import com.foodcourt.foodcourt.domain.model.dish.Dish;
 import com.foodcourt.foodcourt.infrastructure.adapters.persistence.entities.DishData;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

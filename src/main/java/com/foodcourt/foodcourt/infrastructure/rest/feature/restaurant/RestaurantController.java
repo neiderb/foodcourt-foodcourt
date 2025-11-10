@@ -1,9 +1,12 @@
 package com.foodcourt.foodcourt.infrastructure.rest.feature.restaurant;
 
 import com.foodcourt.foodcourt.application.dto.request.CreateRestaurantRequest;
+import com.foodcourt.foodcourt.application.dto.request.GetAllRestaurantRequest;
 import com.foodcourt.foodcourt.application.dto.response.CreateRestaurantResponse;
 import com.foodcourt.foodcourt.application.dto.response.RestaurantResponse;
 import com.foodcourt.foodcourt.application.handler.RestaurantHandler;
+import com.foodcourt.foodcourt.domain.model.PaginationResponse;
+import com.foodcourt.foodcourt.domain.model.restaurant.RestaurantSummary;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -62,6 +65,28 @@ public class RestaurantController {
 	ResponseEntity<RestaurantResponse> getById(@PathVariable Long id) {
 		log.trace("getById: {}", id);
 		return ResponseEntity.ok(restaurantHandler.getRestaurantById(id));
+	}
+	
+	@Operation(summary = LIST_RESTAURANTS_SUMMARY)
+	@ApiResponse(
+		responseCode = "200",
+		description = LIST_RESTAURANTS_DESCRIPTION
+	)
+	@GetMapping
+	ResponseEntity<PaginationResponse<RestaurantSummary>> getAll(
+		@RequestParam(defaultValue = "0") int page,
+		@RequestParam(defaultValue = "10") int size,
+		@RequestParam(required = false) String sortBy,
+		@RequestParam(required = false) String sortDirection
+	) {
+		log.trace("getAllRestaurants");
+		var request = new GetAllRestaurantRequest(
+			page,
+			size,
+			sortBy,
+			sortDirection
+		);
+		return ResponseEntity.ok(restaurantHandler.getAllRestaurants(request));
 	}
 	
 }

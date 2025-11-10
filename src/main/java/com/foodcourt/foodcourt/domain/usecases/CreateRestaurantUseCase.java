@@ -4,8 +4,8 @@ import com.foodcourt.foodcourt.domain.exception.restaurant.InvalidRestaurantExce
 import com.foodcourt.foodcourt.domain.exception.user.InvalidRoleException;
 import com.foodcourt.foodcourt.domain.gateways.RestaurantRepositoryGateway;
 import com.foodcourt.foodcourt.domain.gateways.UserServiceGateway;
-import com.foodcourt.foodcourt.domain.model.Restaurant;
-import com.foodcourt.foodcourt.domain.model.User;
+import com.foodcourt.foodcourt.domain.model.restaurant.Restaurant;
+import com.foodcourt.foodcourt.domain.model.auth.User;
 import com.foodcourt.foodcourt.domain.ports.CreateRestaurantPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import static com.foodcourt.foodcourt.domain.constants.Regex.JUST_NUMBERS;
 import static com.foodcourt.foodcourt.domain.constants.RestaurantErrorMessage.RESTAURANT_NAME_CANNOT_BE_ONLY_NUMBERS;
 import static com.foodcourt.foodcourt.domain.constants.UserErrorMessage.USER_HAS_NO_VALID_ROLE;
-import static com.foodcourt.foodcourt.domain.model.UserRole.OWNER;
+import static com.foodcourt.foodcourt.domain.model.auth.UserRole.OWNER;
 
 @Slf4j
 @RequiredArgsConstructor
