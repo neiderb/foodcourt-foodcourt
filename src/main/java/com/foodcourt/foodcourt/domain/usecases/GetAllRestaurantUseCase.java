@@ -9,7 +9,7 @@ import com.foodcourt.foodcourt.domain.ports.GetAllRestaurantPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import static com.foodcourt.foodcourt.domain.constants.PaginationErrorMessage.*;
+import static com.foodcourt.foodcourt.domain.constants.PaginationErrorMessage.FILTER_CANNOT_BE_NULL;
 import static java.util.Objects.isNull;
 
 @Slf4j
@@ -27,18 +27,7 @@ public class GetAllRestaurantUseCase implements GetAllRestaurantPort {
 	private void validatePaginationFilter(RestaurantPaginationFilter filter) {
 		log.trace("Validating pagination filter");
 		if (isNull(filter)) throw new InvalidPaginationFilterException(FILTER_CANNOT_BE_NULL);
-		validatePage(filter.getPage());
-		validateSize(filter.getSize());
-	}
-	
-	private void validateSize(int size) {
-		log.trace("Validating page size: {}", size);
-		if (size <= 0) throw new InvalidPaginationFilterException(INVALID_PAGE_SIZE);
-	}
-	
-	private void validatePage(int page) {
-		log.trace("Validating page number: {}", page);
-		if (page < 0) throw new InvalidPaginationFilterException(INVALID_PAGE_NUMBER);
+		filter.validateFilter();
 	}
 	
 }

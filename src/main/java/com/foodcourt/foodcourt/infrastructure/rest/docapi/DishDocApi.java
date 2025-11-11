@@ -16,4 +16,7 @@ public class DishDocApi {
 	public static final String TOGGLE_DISH_AVAILABILITY_SUMMARY = "Toggle dish availability";
 	public static final String TOGGLE_DISH_AVAILABILITY_DESCRIPTION = "Dish availability toggled successfully";
 	
+	public static final String LIST_DISH_BY_RESTAURANT_SUMMARY = "List all dishes by restaurant ID";
+	public static final String LIST_DISH_BY_RESTAURANT_DESCRIPTION = "List of dishes by restaurant retrieved successfully";
+	
 }

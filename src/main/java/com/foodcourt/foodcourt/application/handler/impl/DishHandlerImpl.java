@@ -1,14 +1,19 @@
 package com.foodcourt.foodcourt.application.handler.impl;
 
 import com.foodcourt.foodcourt.application.dto.request.CreateDishRequest;
+import com.foodcourt.foodcourt.application.dto.request.GetAllDishByRestaurantIdRequest;
 import com.foodcourt.foodcourt.application.dto.request.UpdateDishRequest;
 import com.foodcourt.foodcourt.application.dto.response.CreateDishResponse;
 import com.foodcourt.foodcourt.application.handler.DishHandler;
 import com.foodcourt.foodcourt.application.mappers.CreateDishRequestMapper;
 import com.foodcourt.foodcourt.application.mappers.UpdateDishRequestMapper;
-import com.foodcourt.foodcourt.domain.model.dish.Dish;
+import com.foodcourt.foodcourt.domain.model.PaginationResponse;
 import com.foodcourt.foodcourt.domain.model.auth.UserClaims;
+import com.foodcourt.foodcourt.domain.model.dish.Dish;
+import com.foodcourt.foodcourt.domain.model.dish.DishPaginationFilter;
+import com.foodcourt.foodcourt.domain.model.dish.DishSummary;
 import com.foodcourt.foodcourt.domain.ports.CreateDishPort;
+import com.foodcourt.foodcourt.domain.ports.GetAllDishByRestaurantIdPort;
 import com.foodcourt.foodcourt.domain.ports.ToggleDishAvailabilityPort;
 import com.foodcourt.foodcourt.domain.ports.UpdateDishPort;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +29,7 @@ public class DishHandlerImpl implements DishHandler {
 	private final CreateDishPort createDishPort;
 	private final UpdateDishPort updateDishPort;
 	private final ToggleDishAvailabilityPort toggleDishAvailabilityPort;
+	private final GetAllDishByRestaurantIdPort getAllDishByRestaurantIdPort;
 	
 	@Override
 	public CreateDishResponse createDish(CreateDishRequest request) {
@@ -47,6 +53,22 @@ public class DishHandlerImpl implements DishHandler {
 		log.trace("Toggling availability for dish with ID: {}", idDish);
 		toggleDishAvailabilityPort.execute(idDish, getIdUserCreator());
 		log.debug("Toggled availability for dish with ID: {}", idDish);
+	}
+	
+	@Override
+	public PaginationResponse<DishSummary> getDishesByIdRestaurant(Long idRestaurant, GetAllDishByRestaurantIdRequest request) {
+		log.trace("Getting dishes for restaurant ID {} - Page: {}, Size: {}",
+			idRestaurant, request.page(), request.size()
+		);
+		var filter = DishPaginationFilter.builder()
+			.page(request.page())
+			.size(request.size())
+			.sortBy(request.sortBy())
+			.sortDirection(request.sortDirection())
+			.idCategory(request.idCategory())
+			.build();
+		
+		return getAllDishByRestaurantIdPort.execute(idRestaurant, filter);
 	}
 	
 	private Long getIdUserCreator() {

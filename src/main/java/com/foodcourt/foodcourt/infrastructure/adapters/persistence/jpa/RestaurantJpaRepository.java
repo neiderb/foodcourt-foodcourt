@@ -15,9 +15,9 @@ public interface RestaurantJpaRepository extends JpaRepository<RestaurantData, L
 		nativeQuery = true,
 		value = """
 			SELECT
-			r.id AS id,
-			r.name AS name,
-			r.url_logo AS urlLogo
+			    r.id AS id,
+			    r.name AS name,
+			    r.url_logo AS urlLogo
 			FROM restaurant r
 			"""
 	)

@@ -1,16 +1,20 @@
-package com.foodcourt.foodcourt.domain.model.restaurant;
+package com.foodcourt.foodcourt.domain.model.dish;
 
 import com.foodcourt.foodcourt.domain.model.PaginationFilter;
 import com.foodcourt.foodcourt.domain.model.SortDirection;
 import lombok.Builder;
+import lombok.Getter;
 
 @Builder
-public class RestaurantPaginationFilter extends PaginationFilter {
+public class DishPaginationFilter extends PaginationFilter {
 	
 	private Integer size;
 	private Integer page;
 	private String sortBy;
 	private String sortDirection;
+	
+	@Getter
+	private Long idCategory;
 	
 	@Override
 	public int getPage() {
@@ -24,7 +28,7 @@ public class RestaurantPaginationFilter extends PaginationFilter {
 	
 	@Override
 	public String getSortBy() {
-		return fetchRestaurantByEnum().getValue();
+		return fetchDishSortByEnum().getValue();
 	}
 	
 	@Override
@@ -32,8 +36,8 @@ public class RestaurantPaginationFilter extends PaginationFilter {
 		return SortDirection.of(this.sortDirection);
 	}
 	
-	private RestaurantSortBy fetchRestaurantByEnum() {
-		return RestaurantSortBy.of(this.sortBy);
+	private DishSortBy fetchDishSortByEnum() {
+		return DishSortBy.of(this.sortBy);
 	}
 	
 }

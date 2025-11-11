@@ -5,6 +5,7 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class RestaurantValidationMessage {
 	
+	public static final String INVALID_RESTAURANT_ID = "The provided restaurant ID is invalid";
 	public static final String NAME_REQUIRED = "Name is required";
 	public static final String NIT_REQUIRED = "Nit is required";
 	public static final String ADDRESS_REQUIRED = "Address is required";
