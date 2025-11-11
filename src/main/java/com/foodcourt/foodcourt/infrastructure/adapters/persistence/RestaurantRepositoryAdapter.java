@@ -74,6 +74,11 @@ public class RestaurantRepositoryAdapter implements RestaurantRepositoryGateway 
 		return mapToPaginationResponse(resultPage);
 	}
 	
+	@Override
+	public boolean existById(Long id) {
+		return restaurantJpaRepository.existsById(id);
+	}
+	
 	private PaginationResponse<RestaurantSummary> mapToPaginationResponse(Page<RestaurantSummaryProjection> page) {
 		return PaginationResponse.<RestaurantSummary>builder()
 			.totalPages(page.getTotalPages())

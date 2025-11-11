@@ -8,6 +8,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+
 public interface DishJpaRepository extends JpaRepository<DishData, Long> {
 	
 	@Query(nativeQuery = true, value = """
@@ -21,8 +23,11 @@ public interface DishJpaRepository extends JpaRepository<DishData, Long> {
 		JOIN category c ON d.id_category = c.id
 		JOIN restaurant r ON r.id = d.id_restaurant
 		WHERE r.id = :#{#filter.idRestaurant}
+		    AND r.is_available IS TRUE
 		    AND (:#{#filter.idCategory} = 0 OR c.id = :#{#filter.idCategory})
 		""")
 	Page<DishSummaryProjection> findDishPaginatedBy(Pageable pageable, DishFilter filter);
+	
+	boolean existsAllByIdInAndIdRestaurantAndIsAvailableIsTrue(List<Long> ids, Long idRestaurant);
 	
 }

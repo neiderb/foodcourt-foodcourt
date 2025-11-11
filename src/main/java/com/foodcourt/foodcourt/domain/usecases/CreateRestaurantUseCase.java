@@ -36,9 +36,7 @@ public class CreateRestaurantUseCase implements CreateRestaurantPort {
 	
 	private void validateUser(Long userId) {
 		log.trace("Validating role owner with user ID: {}", userId);
-		User user = userServiceGateway.findById(userId);
-		
-		if (!OWNER.equals(user.getRole())) throw new InvalidRoleException(USER_HAS_NO_VALID_ROLE);
+		if (!userServiceGateway.isOwner(userId)) throw new InvalidRoleException(USER_HAS_NO_VALID_ROLE);
 	}
 	
 }

@@ -5,11 +5,9 @@ import com.foodcourt.foodcourt.domain.exception.BusinessException;
 import com.foodcourt.foodcourt.domain.exception.TechnicalException;
 import com.foodcourt.foodcourt.domain.exception.user.InvalidUserException;
 import com.foodcourt.foodcourt.domain.gateways.UserServiceGateway;
-import com.foodcourt.foodcourt.domain.model.auth.User;
 import com.foodcourt.foodcourt.domain.model.auth.UserRole;
 import com.foodcourt.foodcourt.infrastructure.adapters.user.dto.ErrorExternalResponse;
 import com.foodcourt.foodcourt.infrastructure.adapters.user.dto.UserExternalResponse;
-import com.foodcourt.foodcourt.infrastructure.adapters.user.mappers.UserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
@@ -22,6 +20,8 @@ import org.springframework.web.client.RestClient;
 import java.util.function.Consumer;
 
 import static com.foodcourt.foodcourt.domain.constants.UserErrorMessage.USER_NOT_FOUND;
+import static com.foodcourt.foodcourt.domain.model.auth.UserRole.CLIENT;
+import static com.foodcourt.foodcourt.domain.model.auth.UserRole.OWNER;
 import static com.foodcourt.foodcourt.infrastructure.adapters.user.constants.ErrorMessage.EXTERNAL_SERVICE_ERROR;
 import static com.foodcourt.foodcourt.infrastructure.adapters.user.constants.ErrorMessage.UNMAPPING_RESPONSE;
 import static java.util.Objects.isNull;
@@ -43,8 +43,21 @@ public class UserServiceImpl implements UserServiceGateway {
 	}
 	
 	@Override
-	public User findById(Long id) {
-		UserExternalResponse response = restClient.get()
+	public boolean isOwner(Long idUser) {
+		UserExternalResponse user = findById(idUser);
+		if (isNull(user)) throw new InvalidUserException(USER_NOT_FOUND);
+		return OWNER.equals(UserRole.getRoleof(user.role()));
+	}
+	
+	@Override
+	public boolean isClient(Long idUser) {
+		UserExternalResponse user = findById(idUser);
+		if (isNull(user)) throw new InvalidUserException(USER_NOT_FOUND);
+		return CLIENT.equals(UserRole.getRoleof(user.role()));
+	}
+	
+	private UserExternalResponse findById(Long id) {
+		return restClient.get()
 			.uri("/api/v1/user/{id}", id)
 			.headers(buildHeaders())
 			.retrieve()
@@ -56,9 +69,6 @@ public class UserServiceImpl implements UserServiceGateway {
 				throw new TechnicalException(EXTERNAL_SERVICE_ERROR);
 			})
 			.body(UserExternalResponse.class);
-		
-		if (isNull(response)) throw new InvalidUserException(USER_NOT_FOUND);
-		return mapToDomain(response);
 	}
 	
 	private ErrorExternalResponse mapErrorResponse(ClientHttpResponse response) {
@@ -71,13 +81,6 @@ public class UserServiceImpl implements UserServiceGateway {
 			log.error("Error mapping error response", e);
 			throw new TechnicalException(UNMAPPING_RESPONSE);
 		}
-	}
-	
-	private User mapToDomain(UserExternalResponse response) {
-		UserRole role = UserRole.getRoleof(response.role());
-		User user = UserMapper.INSTANCE.toDomain(response);
-		user.setRole(role);
-		return user;
 	}
 	
 	private Consumer<HttpHeaders> buildHeaders() {

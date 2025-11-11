@@ -5,6 +5,8 @@ import com.foodcourt.foodcourt.domain.model.dish.Dish;
 import com.foodcourt.foodcourt.domain.model.dish.DishPaginationFilter;
 import com.foodcourt.foodcourt.domain.model.dish.DishSummary;
 
+import java.util.List;
+
 public interface DishRepositoryGateway {
 	
 	Dish save(Dish dish);
@@ -12,5 +14,7 @@ public interface DishRepositoryGateway {
 	Dish findById(Long idDish);
 	
 	PaginationResponse<DishSummary> getDishesSummaryByIdRestaurant(Long idRestaurant, DishPaginationFilter filter);
+	
+	boolean existAllByIdsInAndRestaurantId(List<Long> ids, Long idRestaurant);
 	
 }

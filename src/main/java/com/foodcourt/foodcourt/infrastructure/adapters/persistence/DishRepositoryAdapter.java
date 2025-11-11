@@ -18,6 +18,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 import static com.foodcourt.foodcourt.domain.constants.DishErrorMessage.INVALID_CATEGORY;
 
 @Slf4j
@@ -56,6 +58,11 @@ public class DishRepositoryAdapter implements DishRepositoryGateway {
 		Page<DishSummaryProjection> resultPage = dishJpaRepository.findDishPaginatedBy(pageable, dishFilter);
 		log.debug("Retrieved {} dishes for restaurant ID: {}", resultPage.getTotalElements(), idRestaurant);
 		return mapToPaginationResponse(resultPage);
+	}
+	
+	@Override
+	public boolean existAllByIdsInAndRestaurantId(List<Long> ids, Long idRestaurant) {
+		return dishJpaRepository.existsAllByIdInAndIdRestaurantAndIsAvailableIsTrue(ids, idRestaurant);
 	}
 	
 	private PaginationResponse<DishSummary> mapToPaginationResponse(Page<DishSummaryProjection> page) {
