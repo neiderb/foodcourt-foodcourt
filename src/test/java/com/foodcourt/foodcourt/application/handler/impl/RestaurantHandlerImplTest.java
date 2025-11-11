@@ -129,7 +129,7 @@ class RestaurantHandlerImplTest {
 		verify(getAllRestaurantPort).execute(assertArg(filter -> {
 			assertEquals(expectedReq.page(), filter.getPage());
 			assertEquals(expectedReq.size(), filter.getSize());
-			assertEquals(RestaurantSortBy.of(expectedReq.sortBy()), filter.getSortBy());
+			assertEquals(RestaurantSortBy.of(expectedReq.sortBy()).getValue(), filter.getSortBy());
 			assertTrue(filter.isAscending());
 		}));
 	}

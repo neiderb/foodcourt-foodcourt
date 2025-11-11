@@ -1,5 +1,6 @@
 package com.foodcourt.foodcourt.domain.usecases;
 
+import com.foodcourt.foodcourt.domain.exception.dish.InvalidCategoryException;
 import com.foodcourt.foodcourt.domain.exception.user.InvalidUserException;
 import com.foodcourt.foodcourt.domain.gateways.DishRepositoryGateway;
 import com.foodcourt.foodcourt.domain.gateways.RestaurantRepositoryGateway;
@@ -12,6 +13,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.assertArg;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -60,6 +63,33 @@ class CreateDishUseCaseTest {
 		when(restaurantRepositoryGateway.isRestaurantOwner(any(Long.class), any(Long.class))).thenReturn(false);
 		
 		assertThrows(InvalidUserException.class, () -> createDishUseCase.execute(dishToCreate, 1L));
+	}
+	
+	@Test
+	void shouldThrowExceptionWhenCategoryIsInvalid() {
+		Dish dishToCreate = validDish();
+		dishToCreate.setIdCategory(null);
+		
+		assertThrows(InvalidCategoryException.class, () -> createDishUseCase.execute(dishToCreate, 1L));
+		
+		dishToCreate.setIdCategory(0L);
+		assertThrows(InvalidCategoryException.class, () -> createDishUseCase.execute(dishToCreate, 1L));
+		
+		dishToCreate.setIdCategory(-5L);
+		assertThrows(InvalidCategoryException.class, () -> createDishUseCase.execute(dishToCreate, 1L));
+	}
+	
+	@Test
+	void shouldSetDishAsAvailableWhenIsAvailableIsNull() {
+		final Long idUserCreator = 2L;
+		Dish dishToCreate = validDish();
+		dishToCreate.setIsAvailable(null);
+		
+		when(restaurantRepositoryGateway.isRestaurantOwner(any(Long.class), any(Long.class))).thenReturn(true);
+		
+		createDishUseCase.execute(dishToCreate, idUserCreator);
+		
+		verify(dishRepositoryGateway).save(assertArg(dish -> assertTrue(dish.getIsAvailable())));
 	}
 	
 	private Dish validDish() {

@@ -1,12 +1,18 @@
 package com.foodcourt.foodcourt.application.handler.impl;
 
 import com.foodcourt.foodcourt.application.dto.request.CreateDishRequest;
+import com.foodcourt.foodcourt.application.dto.request.GetAllDishByRestaurantIdRequest;
 import com.foodcourt.foodcourt.application.dto.request.UpdateDishRequest;
 import com.foodcourt.foodcourt.application.dto.response.CreateDishResponse;
-import com.foodcourt.foodcourt.domain.model.dish.Dish;
+import com.foodcourt.foodcourt.domain.model.PaginationResponse;
 import com.foodcourt.foodcourt.domain.model.auth.UserClaims;
 import com.foodcourt.foodcourt.domain.model.auth.UserRole;
+import com.foodcourt.foodcourt.domain.model.dish.Dish;
+import com.foodcourt.foodcourt.domain.model.dish.DishPaginationFilter;
+import com.foodcourt.foodcourt.domain.model.dish.DishSortBy;
+import com.foodcourt.foodcourt.domain.model.dish.DishSummary;
 import com.foodcourt.foodcourt.domain.ports.CreateDishPort;
+import com.foodcourt.foodcourt.domain.ports.GetAllDishByRestaurantIdPort;
 import com.foodcourt.foodcourt.domain.ports.ToggleDishAvailabilityPort;
 import com.foodcourt.foodcourt.domain.ports.UpdateDishPort;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,8 +25,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import java.util.Collections;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.assertArg;
 import static org.mockito.Mockito.*;
@@ -39,6 +46,9 @@ class DishHandlerImplTest {
 	
 	@Mock
 	private ToggleDishAvailabilityPort toggleDishAvailabilityPort;
+	
+	@Mock
+	private GetAllDishByRestaurantIdPort getAllDishByRestaurantIdPort;
 	
 	@BeforeEach
 	void setUp() {
@@ -113,6 +123,50 @@ class DishHandlerImplTest {
 		verify(toggleDishAvailabilityPort).execute(assertArg(id -> assertEquals(dishIdToToggle, id)), any(Long.class));
 	}
 	
+	@Test
+	void shouldReturnPaginationWhenGetAllDishesByRestaurantId() {
+		final Long restaurantId = 10L;
+		final int page = 0;
+		final int size = 10;
+		var testReq = new GetAllDishByRestaurantIdRequest(
+			page,
+			size,
+			"name",
+			"asc",
+			null
+		);
+		var expectedResponse = PaginationResponse.<DishSummary>builder()
+			.pageSize(size)
+			.pageNumber(page)
+			.content(Collections.emptyList())
+			.totalElements(0L)
+			.totalPages(0)
+			.build();
+		
+		when(getAllDishByRestaurantIdPort.execute(any(Long.class), any(DishPaginationFilter.class)))
+			.thenReturn(expectedResponse);
+		
+		var actualResponse = dishHandlerImpl.getDishesByIdRestaurant(restaurantId, testReq);
+		
+		assertNotNull(actualResponse);
+		assertEquals(expectedResponse.getPageNumber(), actualResponse.getPageNumber());
+		assertEquals(expectedResponse.getPageSize(), actualResponse.getPageSize());
+		assertEquals(expectedResponse.getTotalElements(), actualResponse.getTotalElements());
+		assertEquals(expectedResponse.getTotalPages(), actualResponse.getTotalPages());
+		assertEquals(expectedResponse.getContent().size(), actualResponse.getContent().size());
+		
+		verify(getAllDishByRestaurantIdPort).execute(
+			assertArg(idRestaurant -> assertEquals(restaurantId, idRestaurant)),
+			assertArg(filter -> {
+				assertEquals(expectedResponse.getPageNumber(), filter.getPage());
+				assertEquals(expectedResponse.getPageSize(), filter.getSize());
+				assertEquals(DishSortBy.of(testReq.sortBy()).getValue(), filter.getSortBy());
+				assertTrue(filter.isAscending());
+				assertNull(filter.getIdCategory());
+			})
+		);
+	}
+	
 	private void initSecurityContext() {
 		UserClaims userClaims = new UserClaims(
 			999L,
@@ -120,10 +174,10 @@ class DishHandlerImplTest {
 			UserRole.OWNER
 		);
 		Authentication authentication = mock(Authentication.class);
-		when(authentication.getPrincipal()).thenReturn(userClaims);
+		lenient().when(authentication.getPrincipal()).thenReturn(userClaims);
 		
 		SecurityContext securityContext = mock(SecurityContext.class);
-		when(securityContext.getAuthentication()).thenReturn(authentication);
+		lenient().when(securityContext.getAuthentication()).thenReturn(authentication);
 		
 		SecurityContextHolder.setContext(securityContext);
 	}

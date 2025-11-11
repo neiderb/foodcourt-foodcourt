@@ -4,10 +4,10 @@ import com.foodcourt.foodcourt.domain.exception.restaurant.InvalidRestaurantExce
 import com.foodcourt.foodcourt.domain.model.PaginationResponse;
 import com.foodcourt.foodcourt.domain.model.restaurant.Restaurant;
 import com.foodcourt.foodcourt.domain.model.restaurant.RestaurantPaginationFilter;
-import com.foodcourt.foodcourt.domain.model.restaurant.RestaurantSortBy;
 import com.foodcourt.foodcourt.domain.model.restaurant.RestaurantSummary;
 import com.foodcourt.foodcourt.infrastructure.adapters.persistence.entities.RestaurantData;
 import com.foodcourt.foodcourt.infrastructure.adapters.persistence.jpa.RestaurantJpaRepository;
+import com.foodcourt.foodcourt.infrastructure.adapters.persistence.mappers.PaginationFilterMapper;
 import com.foodcourt.foodcourt.infrastructure.adapters.persistence.projection.RestaurantSummaryProjection;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,10 +21,11 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 
+import static com.foodcourt.foodcourt.domain.model.restaurant.RestaurantSortBy.NAME;
+import static com.foodcourt.foodcourt.domain.model.restaurant.RestaurantSortBy.URL_LOGO;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class RestaurantRepositoryAdapterTest {
@@ -34,6 +35,9 @@ class RestaurantRepositoryAdapterTest {
 	
 	@Mock
 	private RestaurantJpaRepository restaurantJpaRepository;
+	
+	@Mock
+	private PaginationFilterMapper paginationFilterMapper;
 
 	private static final Long RESTAURANT_ID = 1L;
 	private static final String RESTAURANT_NAME = "Gourmet Bites";
@@ -132,6 +136,7 @@ class RestaurantRepositoryAdapterTest {
 		List<RestaurantSummaryProjection> projections = mockSummaryResults();
 		PageImpl<RestaurantSummaryProjection> page = new PageImpl<>(projections, pageable, projections.size());
 		when(restaurantJpaRepository.findRestaurantPaginatedBy(any(Pageable.class))).thenReturn(page);
+		when(paginationFilterMapper.toPageable(any(RestaurantPaginationFilter.class))).thenReturn(pageable);
 		
 		PaginationResponse<RestaurantSummary> response = restaurantRepositoryAdapter.getAllRestaurantSummaries(filter);
 		
@@ -150,7 +155,7 @@ class RestaurantRepositoryAdapterTest {
 		RestaurantPaginationFilter filter = RestaurantPaginationFilter.builder()
 			.page(0)
 			.size(2)
-			.sortBy(RestaurantSortBy.NAME.getValue())
+			.sortBy("order-property")
 			.sortDirection("desc")
 			.build();
 		Pageable pageable = PageRequest.of(filter.getPage(), filter.getSize());
@@ -158,6 +163,7 @@ class RestaurantRepositoryAdapterTest {
 		List<RestaurantSummaryProjection> projections = mockSummaryResults().reversed();
 		PageImpl<RestaurantSummaryProjection> page = new PageImpl<>(projections, pageable, projections.size());
 		when(restaurantJpaRepository.findRestaurantPaginatedBy(any(Pageable.class))).thenReturn(page);
+		when(paginationFilterMapper.toPageable(any(RestaurantPaginationFilter.class))).thenReturn(pageable);
 		
 		PaginationResponse<RestaurantSummary> response = restaurantRepositoryAdapter.getAllRestaurantSummaries(filter);
 		
@@ -170,6 +176,8 @@ class RestaurantRepositoryAdapterTest {
 		assertEquals(2L, response.getContent().getFirst().getIdRestaurant());
 		assertEquals("Resto 2", response.getContent().getFirst().getName());
 		assertEquals("url2", response.getContent().getFirst().getUrlLogo());
+		
+		verify(paginationFilterMapper).toPageable(assertArg(filterArg -> assertEquals(NAME.getValue(), filterArg.getSortBy())));
 	}
 
 	@Test
@@ -177,17 +185,21 @@ class RestaurantRepositoryAdapterTest {
 		RestaurantPaginationFilter filter = RestaurantPaginationFilter.builder()
 			.page(0)
 			.size(5)
+			.sortBy("urlLogo")
 			.build();
 		Pageable pageable = PageRequest.of(filter.getPage(), filter.getSize());
 		
 		PageImpl<RestaurantSummaryProjection> emptyPage = new PageImpl<>(List.of(), pageable, 0);
 		when(restaurantJpaRepository.findRestaurantPaginatedBy(any(Pageable.class))).thenReturn(emptyPage);
+		when(paginationFilterMapper.toPageable(any(RestaurantPaginationFilter.class))).thenReturn(pageable);
 		
 		PaginationResponse<RestaurantSummary> response = restaurantRepositoryAdapter.getAllRestaurantSummaries(filter);
 		
 		assertNotNull(response);
 		assertEquals(0, response.getContent().size());
 		assertEquals(0, response.getTotalElements());
+		
+		verify(paginationFilterMapper).toPageable(assertArg(filterArg -> assertEquals(URL_LOGO.getValue(), filterArg.getSortBy())));
 	}
 	
 	private Restaurant validRestaurant() {

@@ -1,10 +1,13 @@
 package com.foodcourt.foodcourt.infrastructure.rest.feature.dish;
 
 import com.foodcourt.foodcourt.application.dto.request.CreateDishRequest;
+import com.foodcourt.foodcourt.application.dto.request.GetAllDishByRestaurantIdRequest;
 import com.foodcourt.foodcourt.application.dto.response.CreateDishResponse;
 import com.foodcourt.foodcourt.application.handler.DishHandler;
 import com.foodcourt.foodcourt.domain.exception.BusinessException;
 import com.foodcourt.foodcourt.domain.exception.TechnicalException;
+import com.foodcourt.foodcourt.domain.model.PaginationResponse;
+import com.foodcourt.foodcourt.domain.model.dish.DishSummary;
 import com.foodcourt.foodcourt.infrastructure.rest.config.TestSecurityConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +19,14 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static com.foodcourt.foodcourt.infrastructure.rest.constants.paths.DishPath.BASE;
-import static com.foodcourt.foodcourt.infrastructure.rest.constants.paths.DishPath.TOGGLE_AVAILABILITY;
-import static org.mockito.ArgumentMatchers.any;
+import java.util.Collections;
+
+import static com.foodcourt.foodcourt.infrastructure.rest.constants.paths.DishPath.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -180,6 +185,61 @@ class DishControllerTest {
 		
 		mockMvc.perform(patch(BASE.concat(TOGGLE_AVAILABILITY), dishIdToToggle))
 		.andExpect(status().isNoContent());
+	}
+	
+	@Test
+	void shouldReturnPaginationWhenGetAllDishesByRestaurant() throws Exception {
+		final Long restaurantId = 3L;
+		final int page = 0;
+		final int size = 10;
+		final String sortBy = "name";
+		final String sortDirection = "asc";
+		final Long idCategory = 2L;
+		
+		var testReq = new GetAllDishByRestaurantIdRequest(
+			page,
+			size,
+			sortBy,
+			sortDirection,
+			idCategory
+		);
+		var expectedResponse = PaginationResponse.<DishSummary>builder()
+			.pageNumber(page)
+			.pageSize(size)
+			.totalElements(0L)
+			.totalPages(0)
+			.content(Collections.emptyList())
+			.build();
+		
+		when(dishHandler.getDishesByIdRestaurant(any(Long.class), any(GetAllDishByRestaurantIdRequest.class)))
+			.thenReturn(expectedResponse);
+		
+		mockMvc.perform(get(BASE.concat(BY_RESTAURANT), restaurantId)
+			.param("page", String.valueOf(page))
+			.param("size",  String.valueOf(size))
+			.param("sortBy", sortBy)
+			.param("sortDirection", sortDirection)
+			.param("idCategory", String.valueOf(idCategory))
+			.contentType(MediaType.APPLICATION_JSON.toString())
+		)
+		.andExpect(status().isOk())
+		.andExpect(jsonPath("$.pageNumber").value(page))
+		.andExpect(jsonPath("$.pageSize").value(size))
+		.andExpect(jsonPath("$.totalElements").value(0))
+		.andExpect(jsonPath("$.totalPages").value(0))
+		.andExpect(jsonPath("$.content").isArray())
+		.andExpect(jsonPath("$.content").isEmpty());
+		
+		verify(dishHandler).getDishesByIdRestaurant(
+			eq(restaurantId),
+			assertArg(reqArg -> {
+				assertEquals(testReq.page(), reqArg.page());
+				assertEquals(testReq.size(), reqArg.size());
+				assertEquals(testReq.sortBy(), reqArg.sortBy());
+				assertEquals(testReq.sortDirection(), reqArg.sortDirection());
+				assertEquals(testReq.idCategory(), reqArg.idCategory());
+			})
+		);
 	}
 	
 	private String validJsonDishRequest() {
