@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import java.util.List;
+import java.util.Set;
 
 public interface DishJpaRepository extends JpaRepository<DishData, Long> {
 	
@@ -28,6 +28,6 @@ public interface DishJpaRepository extends JpaRepository<DishData, Long> {
 		""")
 	Page<DishSummaryProjection> findDishPaginatedBy(Pageable pageable, DishFilter filter);
 	
-	boolean existsAllByIdInAndIdRestaurantAndIsAvailableIsTrue(List<Long> ids, Long idRestaurant);
+	boolean existsAllByIdInAndIdRestaurantAndIsAvailableIsTrue(Set<Long> ids, Long idRestaurant);
 	
 }

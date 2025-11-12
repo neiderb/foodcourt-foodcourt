@@ -21,6 +21,7 @@ public interface CreateOrderRequestMapper {
 	@Mapping(target = "status", ignore = true)
 	@Mapping(target = "orderDate", ignore = true)
 	@Mapping(target = "idChef", ignore = true)
+	@Mapping(target = "idClient", ignore = true)
 	Order toDomain(CreateOrderRequest request);
 	
 }

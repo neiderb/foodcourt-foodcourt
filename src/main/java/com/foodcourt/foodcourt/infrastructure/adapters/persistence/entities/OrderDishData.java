@@ -3,28 +3,29 @@ package com.foodcourt.foodcourt.infrastructure.adapters.persistence.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Getter
-@Setter
+@Data
 @Entity
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "order_dish")
 public class OrderDishData {
 	
-	@EmbeddedId
-	private OrderDishKey id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 	
-	@ManyToOne
-	@MapsId("idOrder")
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_order")
 	private OrderData order;
 	
 	@ManyToOne
-	@MapsId("idDish")
 	@JoinColumn(name = "id_dish")
 	private DishData dish;
 	
 	private Integer quantity;
 	
+	@Override
+	public String toString() {
+		return "OrderDishData{" + "id=" + id + ", order=" + order.getId() + ", dish=" + dish + ", quantity=" + quantity + '}';
+	}
 }

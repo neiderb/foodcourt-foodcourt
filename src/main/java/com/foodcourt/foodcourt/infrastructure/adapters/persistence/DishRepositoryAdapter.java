@@ -18,7 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.Set;
 
 import static com.foodcourt.foodcourt.domain.constants.DishErrorMessage.INVALID_CATEGORY;
 
@@ -61,7 +61,7 @@ public class DishRepositoryAdapter implements DishRepositoryGateway {
 	}
 	
 	@Override
-	public boolean existAllByIdsInAndRestaurantId(List<Long> ids, Long idRestaurant) {
+	public boolean existAllByIdsInAndRestaurantId(Set<Long> ids, Long idRestaurant) {
 		return dishJpaRepository.existsAllByIdInAndIdRestaurantAndIsAvailableIsTrue(ids, idRestaurant);
 	}
 	

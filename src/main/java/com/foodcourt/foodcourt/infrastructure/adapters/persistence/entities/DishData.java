@@ -1,10 +1,12 @@
 package com.foodcourt.foodcourt.infrastructure.adapters.persistence.entities;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
+@Data
 @Entity
 @Builder
 @NoArgsConstructor
@@ -14,20 +16,16 @@ public class DishData {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
 	private Long id;
 	
-	@Column(name = "name")
 	private String name;
 	
 	@ManyToOne
 	@JoinColumn(name = "id_category")
 	private CategoryData category;
 	
-	@Column(name = "description")
 	private String description;
 	
-	@Column(name = "price")
 	private Long price;
 	
 	@Column(name = "id_restaurant")

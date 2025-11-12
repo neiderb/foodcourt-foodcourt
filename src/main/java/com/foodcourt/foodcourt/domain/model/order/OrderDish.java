@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class OrderDish {
 	
+	private Long id;
 	private Long idOrder;
 	private Dish dish;
 	private Integer quantity;

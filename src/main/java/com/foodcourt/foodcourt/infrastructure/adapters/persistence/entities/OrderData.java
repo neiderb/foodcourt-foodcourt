@@ -6,8 +6,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 @Entity
 @Builder
 @NoArgsConstructor
@@ -36,4 +35,9 @@ public class OrderData {
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<OrderDishData> items;
 	
+	@Override
+	public String toString() {
+		return "OrderData{" + "id=" + id + ", idClient=" + idClient + ", orderDate=" + orderDate + ", status='" + status + '\'' + ", idChef=" + idChef + ", idRestaurant=" +
+			idRestaurant + ", items=" + items + '}';
+	}
 }

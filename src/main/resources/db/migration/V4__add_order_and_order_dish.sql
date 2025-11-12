@@ -8,8 +8,8 @@ CREATE TABLE foodcourt_order (
 );
 
 CREATE TABLE order_dish (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     id_order BIGINT REFERENCES foodcourt_order (id) NOT NULL,
     id_dish BIGINT REFERENCES dish (id) NOT NULL,
-    quantity INT NOT NULL,
-    PRIMARY KEY (id_order, id_dish)
+    quantity INT NOT NULL
 );
