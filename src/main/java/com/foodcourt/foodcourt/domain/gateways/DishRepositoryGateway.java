@@ -15,6 +15,6 @@ public interface DishRepositoryGateway {
 	
 	PaginationResponse<DishSummary> getDishesSummaryByIdRestaurant(Long idRestaurant, DishPaginationFilter filter);
 	
-	boolean existAllByIdsInAndRestaurantId(Set<Long> ids, Long idRestaurant);
+	boolean existsAllByIdsInAndRestaurantId(Set<Long> ids, Long idRestaurant);
 	
 }

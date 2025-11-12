@@ -75,7 +75,7 @@ public class RestaurantRepositoryAdapter implements RestaurantRepositoryGateway 
 	}
 	
 	@Override
-	public boolean existById(Long id) {
+	public boolean existsById(Long id) {
 		return restaurantJpaRepository.existsById(id);
 	}
 	

@@ -61,7 +61,7 @@ public class DishRepositoryAdapter implements DishRepositoryGateway {
 	}
 	
 	@Override
-	public boolean existAllByIdsInAndRestaurantId(Set<Long> ids, Long idRestaurant) {
+	public boolean existsAllByIdsInAndRestaurantId(Set<Long> ids, Long idRestaurant) {
 		return dishJpaRepository.existsAllByIdInAndIdRestaurantAndIsAvailableIsTrue(ids, idRestaurant);
 	}
 	

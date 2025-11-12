@@ -17,6 +17,6 @@ public interface RestaurantRepositoryGateway {
 	
 	PaginationResponse<RestaurantSummary> getAllRestaurantSummaries(RestaurantPaginationFilter filter);
 	
-	boolean existById(Long id);
+	boolean existsById(Long id);
 	
 }

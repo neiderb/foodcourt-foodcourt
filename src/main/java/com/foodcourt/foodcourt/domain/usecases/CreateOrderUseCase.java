@@ -55,7 +55,7 @@ public class CreateOrderUseCase implements CreateOrderPort {
 	}
 	
 	private void validateClient(Long idClient) {
-		if (isNull(idClient)) throw new InvalidClientException(INVALID_CLIENT);
+		if (isNull(idClient) || idClient <= 0) throw new InvalidClientException(INVALID_CLIENT);
 		if (!userServiceGateway.isClient(idClient)) throw new InvalidClientException(INVALID_CLIENT);
 		if (orderRepositoryGateway.existActiveOrderByClientId(idClient, activeStatus))
 			throw new InvalidOrderException(CLIENT_HAS_ACTIVE_ORDER);
@@ -63,7 +63,7 @@ public class CreateOrderUseCase implements CreateOrderPort {
 	
 	private void validateRestaurant(Long idRestaurant) {
 		if (isNull(idRestaurant)) throw new InvalidOrderException(RESTAURANT_IS_REQUIRED);
-		if (!restaurantRepositoryGateway.existById(idRestaurant))
+		if (!restaurantRepositoryGateway.existsById(idRestaurant))
 			throw new RestaurantNotFoundException(RESTAURANT_NOT_FOUND);
 	}
 	
@@ -82,7 +82,7 @@ public class CreateOrderUseCase implements CreateOrderPort {
 			.anyMatch(item -> isNull(item.getQuantity()) || item.getQuantity() <= 0);
 		if (invalidQuantity) throw new InvalidOrderException(ITEM_QUANTITY_MUST_BE_GREATER_THAN_ZERO);
 		
-		boolean allDishesAvailable = dishRepositoryGateway.existAllByIdsInAndRestaurantId(
+		boolean allDishesAvailable = dishRepositoryGateway.existsAllByIdsInAndRestaurantId(
 			distinctDishIds,
 			idRestaurant
 		);
