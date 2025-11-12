@@ -2,11 +2,9 @@ package com.foodcourt.foodcourt.infrastructure.adapters.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.foodcourt.foodcourt.domain.exception.BusinessException;
+import com.foodcourt.foodcourt.domain.exception.TechnicalException;
 import com.foodcourt.foodcourt.domain.exception.user.InvalidRoleException;
 import com.foodcourt.foodcourt.domain.exception.user.InvalidUserException;
-import com.foodcourt.foodcourt.domain.exception.TechnicalException;
-import com.foodcourt.foodcourt.domain.model.auth.User;
-import com.foodcourt.foodcourt.domain.model.auth.UserRole;
 import com.foodcourt.foodcourt.infrastructure.adapters.user.dto.ErrorExternalResponse;
 import com.foodcourt.foodcourt.infrastructure.adapters.user.dto.UserExternalResponse;
 import org.junit.jupiter.api.AfterEach;
@@ -78,7 +76,6 @@ class UserServiceImplTest {
 	void shouldFindUserByIdSuccessfully() {
 		Long id = 1L;
 		UserExternalResponse externalResponse = validUserExternalResponse();
-		User expectedUser = validOwner();
 		
 		when(restClient.get()).thenReturn(requestHeadersUriSpec);
 		when(requestHeadersUriSpec.uri("/api/v1/user/{id}", id)).thenReturn(requestHeadersSpec);
@@ -87,12 +84,9 @@ class UserServiceImplTest {
 		when(responseSpec.onStatus(any(), any())).thenReturn(responseSpec);
 		when(responseSpec.body(UserExternalResponse.class)).thenReturn(externalResponse);
 		
-		User foundUser = userServiceImpl.findById(id);
+		boolean foundUser = userServiceImpl.isOwner(id);
 		
-		assertNotNull(foundUser);
-		assertEquals(id, foundUser.getId());
-		assertEquals(expectedUser.getName(), foundUser.getName());
-		assertEquals(expectedUser.getRole(), foundUser.getRole());
+		assertTrue(foundUser);
 	}
 
 	@Test
@@ -111,7 +105,7 @@ class UserServiceImplTest {
 		when(responseSpec.onStatus(any(), any())).thenReturn(responseSpec);
 		when(responseSpec.body(UserExternalResponse.class)).thenReturn(externalResponse);
 		
-		userServiceImpl.findById(id);
+		userServiceImpl.isOwner(id);
 		
 		HttpHeaders headers = new HttpHeaders();
 		Consumer<HttpHeaders> consumer = headersConsumer.get();
@@ -143,7 +137,7 @@ class UserServiceImplTest {
 		when(responseSpec.onStatus(any(), any())).thenReturn(responseSpec);
 		when(responseSpec.body(UserExternalResponse.class)).thenReturn(externalResponse);
 		
-		userServiceImpl.findById(id);
+		userServiceImpl.isOwner(id);
 		
 		HttpHeaders headers = new HttpHeaders();
 		Consumer<HttpHeaders> consumer = headersConsumer.get();
@@ -162,7 +156,7 @@ class UserServiceImplTest {
 		when(responseSpec.onStatus(any(), any())).thenReturn(responseSpec);
 		when(responseSpec.body(UserExternalResponse.class)).thenReturn(null);
 		
-		assertThrows(InvalidUserException.class, () -> userServiceImpl.findById(id));
+		assertThrows(InvalidUserException.class, () -> userServiceImpl.isOwner(id));
 	}
 	
 	@Test
@@ -192,7 +186,7 @@ class UserServiceImplTest {
 			return responseSpec;
 		});
 		
-		assertThrows(BusinessException.class, () -> userServiceImpl.findById(id));
+		assertThrows(BusinessException.class, () -> userServiceImpl.isOwner(id));
 	}
 	
 	@Test
@@ -221,7 +215,7 @@ class UserServiceImplTest {
 		when(objectMapper.readValue(any(InputStream.class), eq(ErrorExternalResponse.class)))
 			.thenThrow(new RuntimeException("Mapping error"));
 		
-		assertThrows(TechnicalException.class, () -> userServiceImpl.findById(id));
+		assertThrows(TechnicalException.class, () -> userServiceImpl.isOwner(id));
 	}
 	
 	@Test
@@ -240,7 +234,7 @@ class UserServiceImplTest {
 		when(responseSpec.onStatus(any(), any())).thenReturn(responseSpec);
 		when(responseSpec.body(UserExternalResponse.class)).thenReturn(externalResponse);
 		
-		assertThrows(InvalidRoleException.class, () -> userServiceImpl.findById(id));
+		assertThrows(InvalidRoleException.class, () -> userServiceImpl.isOwner(id));
 	}
 	
 	@Test
@@ -253,7 +247,7 @@ class UserServiceImplTest {
 		
 		when(responseSpec.onStatus(any(), any())).thenThrow(new TechnicalException("EXTERNAL_SERVICE_ERROR"));
 		
-		assertThrows(TechnicalException.class, () -> userServiceImpl.findById(id));
+		assertThrows(TechnicalException.class, () -> userServiceImpl.isOwner(id));
 	}
 	
 	private UserExternalResponse validUserExternalResponse() {
@@ -264,11 +258,4 @@ class UserServiceImplTest {
 		);
 	}
 	
-	private User validOwner() {
-		return User.builder()
-			.id(1L)
-			.name("John")
-			.role(UserRole.OWNER)
-			.build();
-	}
 }

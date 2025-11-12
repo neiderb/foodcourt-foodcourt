@@ -4,9 +4,9 @@ import com.foodcourt.foodcourt.domain.exception.restaurant.InvalidRestaurantExce
 import com.foodcourt.foodcourt.domain.exception.user.InvalidRoleException;
 import com.foodcourt.foodcourt.domain.gateways.RestaurantRepositoryGateway;
 import com.foodcourt.foodcourt.domain.gateways.UserServiceGateway;
-import com.foodcourt.foodcourt.domain.model.restaurant.Restaurant;
 import com.foodcourt.foodcourt.domain.model.auth.User;
 import com.foodcourt.foodcourt.domain.model.auth.UserRole;
+import com.foodcourt.foodcourt.domain.model.restaurant.Restaurant;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -34,9 +34,8 @@ class CreateRestaurantUseCaseTest {
 		Restaurant restaurantToCreate = validRestaurant();
 		Restaurant expectedRestaurant = validRestaurant();
 		expectedRestaurant.setId(1L);
-		User validOwner = validOwner();
 		
-		when(userServiceGateway.findById(restaurantToCreate.getOwnerId())).thenReturn(validOwner);
+		when(userServiceGateway.isOwner(restaurantToCreate.getOwnerId())).thenReturn(true);
 		when(restaurantRepositoryGateway.save(restaurantToCreate)).thenReturn(expectedRestaurant);
 		
 		Restaurant restaurantCreated = createRestaurantUseCase.execute(restaurantToCreate);
@@ -60,10 +59,8 @@ class CreateRestaurantUseCaseTest {
 	@Test
 	void shouldThrowExceptionWhenOwnerIsNotValid() {
 		Restaurant restaurantToCreate = validRestaurant();
-		User invalidOwner = validOwner();
-		invalidOwner.setRole(UserRole.CLIENT);
 		
-		when(userServiceGateway.findById(restaurantToCreate.getOwnerId())).thenReturn(invalidOwner);
+		when(userServiceGateway.isOwner(restaurantToCreate.getOwnerId())).thenReturn(false);
 		
 		assertThrows(InvalidRoleException.class, () -> createRestaurantUseCase.execute(restaurantToCreate));
 	}

@@ -69,12 +69,8 @@ jacocoTestReport {
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.collect {
             fileTree(dir: it, exclude: [
-                    '**/mappers/*Impl.class',
-                    'com/foodcourt/foodcourt/infrastructure/config/**',
-                    'com/foodcourt/foodcourt/infrastructure/adapters/persistence/config/**',
-                    'com/foodcourt/foodcourt/infrastructure/adapters/user/config/**',
-                    'com/foodcourt/foodcourt/infrastructure/rest/config/**',
-                    'com/foodcourt/foodcourt/infrastructure/rest/docapi/**',
+                    'com/foodcourt/foodcourt/infrastructure/**',
+                    'com/foodcourt/foodcourt/application/**',
                     '**/*$*.*',
             ])
         }))
