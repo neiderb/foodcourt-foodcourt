@@ -45,7 +45,7 @@ public class RestaurantController {
 		)
 	)
 	@PostMapping
-	ResponseEntity<CreateRestaurantResponse> createUser(@RequestBody @Valid CreateRestaurantRequest createRestaurantRequest) {
+	ResponseEntity<CreateRestaurantResponse> createRestaurant(@RequestBody @Valid CreateRestaurantRequest createRestaurantRequest) {
 		log.trace("createRestaurant: {}", createRestaurantRequest);
 		return ResponseEntity.status(HttpStatus.CREATED).body(restaurantHandler.createRestaurant(createRestaurantRequest));
 	}

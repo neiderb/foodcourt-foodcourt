@@ -2,6 +2,7 @@ package com.foodcourt.foodcourt.infrastructure.rest.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.foodcourt.foodcourt.infrastructure.rest.constants.paths.DishPath;
+import com.foodcourt.foodcourt.infrastructure.rest.constants.paths.OrderPath;
 import com.foodcourt.foodcourt.infrastructure.rest.constants.paths.RestaurantPath;
 import com.foodcourt.foodcourt.infrastructure.rest.dto.ErrorApiResponse;
 import com.foodcourt.foodcourt.infrastructure.rest.filters.JwtFilter;
@@ -49,14 +50,18 @@ public class SecurityConfig {
 			.authorizeHttpRequests(auth -> auth
 				.requestMatchers(ALLOWED_PATHS_SWAGGER).permitAll()
 				.requestMatchers(ALLOWED_PATHS_ACTUATOR).permitAll()
+				// Restaurant endpoints
 				.requestMatchers(POST, RestaurantPath.BASE).hasRole(ADMIN.name())
 				.requestMatchers(GET, RestaurantPath.BASE.concat(RestaurantPath.FIND_BY_ID))
 					.hasAnyRole(ADMIN.name(), OWNER.name())
 				.requestMatchers(GET, RestaurantPath.BASE).hasRole(CLIENT.name())
+				// Dish endpoints
 				.requestMatchers(POST, DishPath.BASE).hasRole(OWNER.name())
 				.requestMatchers(PATCH, DishPath.BASE).hasRole(OWNER.name())
 				.requestMatchers(PATCH, DishPath.BASE.concat(DishPath.TOGGLE_AVAILABILITY)).hasRole(OWNER.name())
 				.requestMatchers(GET, DishPath.BASE.concat(DishPath.BY_RESTAURANT)).hasRole(CLIENT.name())
+				// Order endpoints
+				.requestMatchers(POST, OrderPath.BASE).hasRole(CLIENT.name())
 				.anyRequest().authenticated())
 			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)

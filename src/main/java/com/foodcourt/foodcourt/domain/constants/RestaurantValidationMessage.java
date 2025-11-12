@@ -15,5 +15,6 @@ public class RestaurantValidationMessage {
 	
 	public static final String NIT_JUST_NUMBERS = "Nit must contain just numbers";
 	public static final String PHONE_NUMBER_JUST_NUMBERS_AND_SYMBOL_PLUS_IS_PERMITTED = "Phone number must contain just numbers and the symbol + is permitted";
+	public static final String RESTAURANT_NAME_CANNOT_BE_ONLY_NUMBERS = "Restaurant name cannot contain only numbers";
 	
 }

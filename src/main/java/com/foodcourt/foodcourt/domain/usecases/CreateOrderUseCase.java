@@ -55,6 +55,11 @@ public class CreateOrderUseCase implements CreateOrderPort {
 	
 	private void validateItems(List<OrderDish> items, Long idRestaurant) {
 		if (CollectionUtils.isEmpty(items)) throw new InvalidOrderException(ORDER_MUST_HAVE_AT_LEAST_ONE_ITEM);
+		
+		boolean invalidQuantity = items.stream()
+			.anyMatch(item -> isNull(item.getQuantity()) || item.getQuantity() <= 0);
+		if (invalidQuantity) throw new InvalidOrderException(ITEM_QUANTITY_MUST_BE_GREATER_THAN_ZERO);
+		
 		boolean allDishesAvailable = dishRepositoryGateway.existAllByIdsInAndRestaurantId(
 			items.stream().map(item -> item.getDish().getId()).toList(),
 			idRestaurant
