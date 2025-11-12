@@ -5,6 +5,8 @@ import com.foodcourt.foodcourt.domain.model.SortDirection;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.function.UnaryOperator;
+
 @Builder
 public class DishPaginationFilter extends PaginationFilter {
 	
@@ -34,6 +36,11 @@ public class DishPaginationFilter extends PaginationFilter {
 	@Override
 	public SortDirection getSortDirection() {
 		return SortDirection.of(this.sortDirection);
+	}
+	
+	@Override
+	public void sanitizeSortBy(UnaryOperator<String> sanitizer) {
+		// Not implemented
 	}
 	
 	private DishSortBy fetchDishSortByEnum() {

@@ -1,4 +1,4 @@
-package com.foodcourt.foodcourt.domain.model.restaurant;
+package com.foodcourt.foodcourt.domain.model.order;
 
 import com.foodcourt.foodcourt.domain.model.PaginationFilter;
 import com.foodcourt.foodcourt.domain.model.SortDirection;
@@ -7,10 +7,10 @@ import lombok.Builder;
 import java.util.function.UnaryOperator;
 
 @Builder
-public class RestaurantPaginationFilter extends PaginationFilter {
+public class OrderPaginationFilter extends PaginationFilter {
 	
-	private Integer size;
 	private Integer page;
+	private Integer size;
 	private String sortBy;
 	private String sortDirection;
 	
@@ -26,7 +26,7 @@ public class RestaurantPaginationFilter extends PaginationFilter {
 	
 	@Override
 	public String getSortBy() {
-		return fetchRestaurantByEnum().getValue();
+		return this.sortBy;
 	}
 	
 	@Override
@@ -36,11 +36,11 @@ public class RestaurantPaginationFilter extends PaginationFilter {
 	
 	@Override
 	public void sanitizeSortBy(UnaryOperator<String> sanitizer) {
-		// Not implemented
+		this.sortBy = sanitizer.apply(fetchOrderSortByEnum());
 	}
 	
-	private RestaurantSortBy fetchRestaurantByEnum() {
-		return RestaurantSortBy.of(this.sortBy);
+	private String fetchOrderSortByEnum() {
+		return OrderSortBy.of(this.sortBy).getValue();
 	}
 	
 }

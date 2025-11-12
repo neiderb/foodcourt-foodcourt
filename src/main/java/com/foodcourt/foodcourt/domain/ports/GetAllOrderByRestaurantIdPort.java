@@ -4,7 +4,7 @@ import com.foodcourt.foodcourt.domain.model.PaginationResponse;
 import com.foodcourt.foodcourt.domain.model.order.OrderPaginationFilter;
 import com.foodcourt.foodcourt.domain.model.order.OrderSummary;
 
-public interface GetAllDishByRestaurantIdPort {
+public interface GetAllOrderByRestaurantIdPort {
 	
 	PaginationResponse<OrderSummary> execute(Long idRestaurant, OrderPaginationFilter filter);
 	
