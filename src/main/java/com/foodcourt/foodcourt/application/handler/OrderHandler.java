@@ -1,10 +1,15 @@
 package com.foodcourt.foodcourt.application.handler;
 
 import com.foodcourt.foodcourt.application.dto.request.CreateOrderRequest;
+import com.foodcourt.foodcourt.application.dto.request.GetAllOrderByRestaurantIdRequest;
 import com.foodcourt.foodcourt.application.dto.response.CreateOrderResponse;
+import com.foodcourt.foodcourt.domain.model.PaginationResponse;
+import com.foodcourt.foodcourt.domain.model.order.OrderSummary;
 
 public interface OrderHandler {
 	
 	CreateOrderResponse createOrder(CreateOrderRequest request);
+	
+	PaginationResponse<OrderSummary> getAllOrdersByRestaurantId(GetAllOrderByRestaurantIdRequest request);
 	
 }

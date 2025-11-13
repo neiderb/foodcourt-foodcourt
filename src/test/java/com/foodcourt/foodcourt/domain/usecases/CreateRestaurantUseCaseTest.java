@@ -4,8 +4,6 @@ import com.foodcourt.foodcourt.domain.exception.restaurant.InvalidRestaurantExce
 import com.foodcourt.foodcourt.domain.exception.user.InvalidRoleException;
 import com.foodcourt.foodcourt.domain.gateways.RestaurantRepositoryGateway;
 import com.foodcourt.foodcourt.domain.gateways.UserServiceGateway;
-import com.foodcourt.foodcourt.domain.model.auth.User;
-import com.foodcourt.foodcourt.domain.model.auth.UserRole;
 import com.foodcourt.foodcourt.domain.model.restaurant.Restaurant;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -72,15 +70,8 @@ class CreateRestaurantUseCaseTest {
 			.address("123 Food St, Flavor Town")
 			.phoneNumber("+1234567890")
 			.urlLogo("http://example.com/logo.png")
-			.ownerId(validOwner().getId())
+			.ownerId(1L)
 			.build();
 	}
 	
-	private User validOwner() {
-		return User.builder()
-			.id(1L)
-			.name("Alice Addams")
-			.role(UserRole.OWNER)
-			.build();
-	}
 }

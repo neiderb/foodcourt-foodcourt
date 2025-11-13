@@ -1,5 +1,6 @@
 package com.foodcourt.foodcourt.infrastructure.adapters.persistence.jpa;
 
+import com.foodcourt.foodcourt.infrastructure.adapters.persistence.dto.OrderFilter;
 import com.foodcourt.foodcourt.infrastructure.adapters.persistence.entities.OrderData;
 import com.foodcourt.foodcourt.infrastructure.adapters.persistence.projection.OrderSummaryProjection;
 import org.springframework.data.domain.Page;
@@ -15,11 +16,13 @@ public interface OrderJpaRepository extends JpaRepository<OrderData, Long> {
 	
 	@Query(nativeQuery = true, value = """
 		SELECT
-		    o.id AS irOrder,
+		    o.id AS idOrder,
 		    o.order_date AS orderDate,
 		    o.status AS status
 		FROM foodcourt_order o
-		WHERE o.id_restaurant = :idRestaurant
+		WHERE o.id_restaurant = :#{#filter.idRestaurant}
+		    AND (:#{#filter.status} = '' OR o.status = :#{#filter.status})
 		""")
-	Page<OrderSummaryProjection> findOrderPaginatedBy(Pageable pageable, Long idRestaurant);
+	Page<OrderSummaryProjection> findOrderPaginatedBy(Pageable pageable, OrderFilter filter);
+	
 }

@@ -171,7 +171,8 @@ class DishHandlerImplTest {
 		UserClaims userClaims = new UserClaims(
 			999L,
 			"test.user@mail.com",
-			UserRole.OWNER
+			UserRole.OWNER,
+			null
 		);
 		Authentication authentication = mock(Authentication.class);
 		lenient().when(authentication.getPrincipal()).thenReturn(userClaims);

@@ -62,6 +62,7 @@ public class SecurityConfig {
 				.requestMatchers(GET, DishPath.BASE.concat(DishPath.BY_RESTAURANT)).hasRole(CLIENT.name())
 				// Order endpoints
 				.requestMatchers(POST, OrderPath.BASE).hasRole(CLIENT.name())
+				.requestMatchers(GET, OrderPath.BASE).hasRole(EMPLOYEE.name())
 				.anyRequest().authenticated())
 			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)

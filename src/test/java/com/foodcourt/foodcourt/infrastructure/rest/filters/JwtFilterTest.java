@@ -53,7 +53,7 @@ class JwtFilterTest {
     void shouldSetAuthenticationWhenValidBearerToken() throws ServletException, IOException {
         final String token = "valid-token";
         final String bearerHeader = BEARER_PREFIX.concat(token);
-        final UserClaims claims = new UserClaims(1L, "john.doe@mail.com", OWNER);
+        final UserClaims claims = new UserClaims(1L, "john.doe@mail.com", OWNER, null);
 
         when(request.getHeader(AUTHORIZATION_HEADER)).thenReturn(bearerHeader);
         when(tokenServiceGateway.parseToken(token)).thenReturn(claims);

@@ -3,6 +3,7 @@ package com.foodcourt.foodcourt.infrastructure.adapters.persistence;
 import com.foodcourt.foodcourt.domain.gateways.OrderRepositoryGateway;
 import com.foodcourt.foodcourt.domain.model.PaginationResponse;
 import com.foodcourt.foodcourt.domain.model.order.*;
+import com.foodcourt.foodcourt.infrastructure.adapters.persistence.dto.OrderFilter;
 import com.foodcourt.foodcourt.infrastructure.adapters.persistence.entities.OrderData;
 import com.foodcourt.foodcourt.infrastructure.adapters.persistence.enumerators.OrderSummaryColumn;
 import com.foodcourt.foodcourt.infrastructure.adapters.persistence.jpa.OrderJpaRepository;
@@ -17,6 +18,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static java.util.Objects.nonNull;
 
 @Slf4j
 @Repository
@@ -47,9 +50,13 @@ public class OrderRepositoryAdapter implements OrderRepositoryGateway {
 	public PaginationResponse<OrderSummary> findAllByRestaurantId(Long idRestaurant, OrderPaginationFilter filter) {
 		log.trace("Finding orders for restaurant ID: {} with filter: {}", idRestaurant, filter);
 		filter.sanitizeSortBy(this::mapColumn);
+		OrderFilter orderFilter = new OrderFilter(
+			idRestaurant,
+			nonNull(filter.getStatus()) ? filter.getStatus().name() : null
+		);
 		
 		Pageable pageable = paginationFilterMapper.toPageable(filter);
-		Page<OrderSummaryProjection> resultPage = orderJpaRepository.findOrderPaginatedBy(pageable, idRestaurant);
+		Page<OrderSummaryProjection> resultPage = orderJpaRepository.findOrderPaginatedBy(pageable, orderFilter);
 		log.debug("Retrieved {} orders for restaurant ID: {}", resultPage.getTotalElements(), idRestaurant);
 		return mapToPaginationResponse(resultPage);
 	}

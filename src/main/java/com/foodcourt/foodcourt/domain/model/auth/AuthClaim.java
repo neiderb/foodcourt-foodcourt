@@ -2,8 +2,8 @@ package com.foodcourt.foodcourt.domain.model.auth;
 
 public enum AuthClaim {
 	USER_ID("userId"),
-	USER_EMAIL("email"),
-	ROLE("role");
+	ROLE("role"),
+	RESTAURANT_ID("restaurantId");
 	
 	public final String value;
 	

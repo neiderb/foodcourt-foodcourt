@@ -1,8 +1,11 @@
 package com.foodcourt.foodcourt.infrastructure.rest.feature.order;
 
 import com.foodcourt.foodcourt.application.dto.request.CreateOrderRequest;
+import com.foodcourt.foodcourt.application.dto.request.GetAllOrderByRestaurantIdRequest;
 import com.foodcourt.foodcourt.application.dto.response.CreateOrderResponse;
 import com.foodcourt.foodcourt.application.handler.OrderHandler;
+import com.foodcourt.foodcourt.domain.model.PaginationResponse;
+import com.foodcourt.foodcourt.domain.model.order.OrderSummary;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -14,10 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static com.foodcourt.foodcourt.infrastructure.rest.constants.paths.OrderPath.BASE;
 import static com.foodcourt.foodcourt.infrastructure.rest.docapi.OrderDocApi.*;
@@ -47,6 +47,30 @@ public class OrderController {
 	ResponseEntity<CreateOrderResponse> createOrder(@RequestBody @Valid CreateOrderRequest createOrderRequest) {
 		log.trace("createOrder: {}", createOrderRequest);
 		return ResponseEntity.status(HttpStatus.CREATED).body(orderHandler.createOrder(createOrderRequest));
+	}
+	
+	@Operation(summary = LIST_ORDER_BY_RESTAURANT_SUMMARY)
+	@ApiResponse(
+		responseCode = "200",
+		description = LIST_ORDER_BY_RESTAURANT_DESCRIPTION
+	)
+	@GetMapping(BASE)
+	ResponseEntity<PaginationResponse<OrderSummary>> getAll(
+		@RequestParam(defaultValue = "0") int page,
+		@RequestParam(defaultValue = "10") int size,
+		@RequestParam(required = false) String sortBy,
+		@RequestParam(required = false) String sortDirection,
+		@RequestParam(required = false) String status
+	) {
+		log.trace("getAllRestaurants");
+		var request = new GetAllOrderByRestaurantIdRequest(
+			page,
+			size,
+			sortBy,
+			sortDirection,
+			status
+		);
+		return ResponseEntity.ok(orderHandler.getAllOrdersByRestaurantId(request));
 	}
 	
 }

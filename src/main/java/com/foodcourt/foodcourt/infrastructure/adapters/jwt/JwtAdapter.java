@@ -14,8 +14,7 @@ import org.springframework.stereotype.Service;
 import java.security.Key;
 
 import static com.foodcourt.foodcourt.domain.constants.UserErrorMessage.INVALID_TOKEN;
-import static com.foodcourt.foodcourt.domain.model.auth.AuthClaim.ROLE;
-import static com.foodcourt.foodcourt.domain.model.auth.AuthClaim.USER_ID;
+import static com.foodcourt.foodcourt.domain.model.auth.AuthClaim.*;
 
 @Service
 public class JwtAdapter implements TokenServiceGateway {
@@ -35,7 +34,8 @@ public class JwtAdapter implements TokenServiceGateway {
 			return new UserClaims(
 				claims.get(USER_ID.value, Long.class),
 				claims.getSubject(),
-				UserRole.getRoleof(claims.get(ROLE.value, String.class))
+				UserRole.getRoleof(claims.get(ROLE.value, String.class)),
+				claims.get(RESTAURANT_ID.value, Long.class)
 			);
 		} catch (Exception e) {
 			throw new InvalidTokenException(INVALID_TOKEN);

@@ -1,11 +1,11 @@
 package com.foodcourt.foodcourt.domain.ports;
 
 import com.foodcourt.foodcourt.domain.model.PaginationResponse;
-import com.foodcourt.foodcourt.domain.model.order.OrderPaginationFilter;
-import com.foodcourt.foodcourt.domain.model.order.OrderSummary;
+import com.foodcourt.foodcourt.domain.model.dish.DishPaginationFilter;
+import com.foodcourt.foodcourt.domain.model.dish.DishSummary;
 
 public interface GetAllDishByRestaurantIdPort {
 	
-	PaginationResponse<OrderSummary> execute(Long idRestaurant, OrderPaginationFilter filter);
+	PaginationResponse<DishSummary> execute(Long idRestaurant, DishPaginationFilter filter);
 	
 }
