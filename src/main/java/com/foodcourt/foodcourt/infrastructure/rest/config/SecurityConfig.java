@@ -64,6 +64,7 @@ public class SecurityConfig {
 				.requestMatchers(POST, OrderPath.BASE).hasRole(CLIENT.name())
 				.requestMatchers(GET, OrderPath.BASE).hasRole(EMPLOYEE.name())
 				.requestMatchers(GET, OrderPath.BASE.concat(OrderPath.ORDER_BY_ID)).hasRole(EMPLOYEE.name())
+				.requestMatchers(PATCH, OrderPath.BASE.concat(OrderPath.ASSIGN_ORDER_BY_ID)).hasRole(EMPLOYEE.name())
 				.anyRequest().authenticated())
 			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)

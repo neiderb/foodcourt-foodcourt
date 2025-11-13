@@ -9,5 +9,6 @@ public class OrderErrorMessage {
 	public static final String DISH_NOT_AVAILABLE = "One or more dishes in the order are not available";
 	public static final String CLIENT_HAS_ACTIVE_ORDER = "The client already has an active order";
 	public static final String ORDER_NOT_FOUND = "Order not found";
+	public static final String ORDER_STATUS_MUST_BE_PENDING = "Order status must be PENDING to perform this action";
 	
 }

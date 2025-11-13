@@ -2,12 +2,12 @@ package com.foodcourt.foodcourt.infrastructure.config;
 
 import com.foodcourt.foodcourt.domain.gateways.RestaurantRepositoryGateway;
 import com.foodcourt.foodcourt.domain.gateways.UserServiceGateway;
-import com.foodcourt.foodcourt.domain.ports.CreateRestaurantPort;
-import com.foodcourt.foodcourt.domain.ports.GetAllRestaurantPort;
-import com.foodcourt.foodcourt.domain.ports.GetRestaurantByIdPort;
-import com.foodcourt.foodcourt.domain.usecases.CreateRestaurantUseCase;
-import com.foodcourt.foodcourt.domain.usecases.GetAllRestaurantUseCase;
-import com.foodcourt.foodcourt.domain.usecases.GetRestaurantByIdUseCase;
+import com.foodcourt.foodcourt.domain.ports.restaurant.CreateRestaurantPort;
+import com.foodcourt.foodcourt.domain.ports.restaurant.GetAllRestaurantPort;
+import com.foodcourt.foodcourt.domain.ports.restaurant.GetRestaurantByIdPort;
+import com.foodcourt.foodcourt.domain.usecases.restaurant.CreateRestaurantUseCase;
+import com.foodcourt.foodcourt.domain.usecases.restaurant.GetAllRestaurantUseCase;
+import com.foodcourt.foodcourt.domain.usecases.restaurant.GetRestaurantByIdUseCase;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

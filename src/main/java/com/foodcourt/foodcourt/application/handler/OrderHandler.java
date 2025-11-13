@@ -15,4 +15,6 @@ public interface OrderHandler {
 	
 	GetOrderResponse getOrderById(Long idOrder);
 	
+	void assignOrder(Long idOrder);
+	
 }

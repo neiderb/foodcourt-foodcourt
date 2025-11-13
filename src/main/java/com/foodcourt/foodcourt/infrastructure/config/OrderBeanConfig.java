@@ -4,12 +4,14 @@ import com.foodcourt.foodcourt.domain.gateways.DishRepositoryGateway;
 import com.foodcourt.foodcourt.domain.gateways.OrderRepositoryGateway;
 import com.foodcourt.foodcourt.domain.gateways.RestaurantRepositoryGateway;
 import com.foodcourt.foodcourt.domain.gateways.UserServiceGateway;
-import com.foodcourt.foodcourt.domain.ports.CreateOrderPort;
-import com.foodcourt.foodcourt.domain.ports.GetAllOrderByRestaurantIdPort;
-import com.foodcourt.foodcourt.domain.ports.GetOrderByIdPort;
-import com.foodcourt.foodcourt.domain.usecases.CreateOrderUseCase;
-import com.foodcourt.foodcourt.domain.usecases.GetAllOrderByRestaurantIdUseCase;
-import com.foodcourt.foodcourt.domain.usecases.GetOrderByIdUseCase;
+import com.foodcourt.foodcourt.domain.ports.order.AssignOrderPort;
+import com.foodcourt.foodcourt.domain.ports.order.CreateOrderPort;
+import com.foodcourt.foodcourt.domain.ports.order.GetAllOrderByRestaurantIdPort;
+import com.foodcourt.foodcourt.domain.ports.order.GetOrderByIdPort;
+import com.foodcourt.foodcourt.domain.usecases.order.AssignOrderUseCase;
+import com.foodcourt.foodcourt.domain.usecases.order.CreateOrderUseCase;
+import com.foodcourt.foodcourt.domain.usecases.order.GetAllOrderByRestaurantIdUseCase;
+import com.foodcourt.foodcourt.domain.usecases.order.GetOrderByIdUseCase;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -49,6 +51,15 @@ public class OrderBeanConfig {
 	) {
 		return new GetOrderByIdUseCase(
 			restaurantRepositoryGateway,
+			orderRepositoryGateway
+		);
+	}
+	
+	@Bean
+	public AssignOrderPort asignOrderPort(
+		OrderRepositoryGateway orderRepositoryGateway
+	) {
+		return new AssignOrderUseCase(
 			orderRepositoryGateway
 		);
 	}

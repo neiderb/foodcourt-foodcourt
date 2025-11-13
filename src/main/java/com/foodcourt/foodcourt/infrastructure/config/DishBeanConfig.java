@@ -2,14 +2,14 @@ package com.foodcourt.foodcourt.infrastructure.config;
 
 import com.foodcourt.foodcourt.domain.gateways.DishRepositoryGateway;
 import com.foodcourt.foodcourt.domain.gateways.RestaurantRepositoryGateway;
-import com.foodcourt.foodcourt.domain.ports.CreateDishPort;
-import com.foodcourt.foodcourt.domain.ports.GetAllDishByRestaurantIdPort;
-import com.foodcourt.foodcourt.domain.ports.ToggleDishAvailabilityPort;
-import com.foodcourt.foodcourt.domain.ports.UpdateDishPort;
-import com.foodcourt.foodcourt.domain.usecases.CreateDishUseCase;
-import com.foodcourt.foodcourt.domain.usecases.GetAllDishByRestaurantIdUseCase;
-import com.foodcourt.foodcourt.domain.usecases.ToggleDishAvailabilityUseCase;
-import com.foodcourt.foodcourt.domain.usecases.UpdateDishUseCase;
+import com.foodcourt.foodcourt.domain.ports.dish.CreateDishPort;
+import com.foodcourt.foodcourt.domain.ports.dish.GetAllDishByRestaurantIdPort;
+import com.foodcourt.foodcourt.domain.ports.dish.ToggleDishAvailabilityPort;
+import com.foodcourt.foodcourt.domain.ports.dish.UpdateDishPort;
+import com.foodcourt.foodcourt.domain.usecases.dish.CreateDishUseCase;
+import com.foodcourt.foodcourt.domain.usecases.dish.GetAllDishByRestaurantIdUseCase;
+import com.foodcourt.foodcourt.domain.usecases.dish.ToggleDishAvailabilityUseCase;
+import com.foodcourt.foodcourt.domain.usecases.dish.UpdateDishUseCase;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

@@ -20,8 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static com.foodcourt.foodcourt.infrastructure.rest.constants.paths.OrderPath.BASE;
-import static com.foodcourt.foodcourt.infrastructure.rest.constants.paths.OrderPath.ORDER_BY_ID;
+import static com.foodcourt.foodcourt.infrastructure.rest.constants.paths.OrderPath.*;
 import static com.foodcourt.foodcourt.infrastructure.rest.docapi.OrderDocApi.*;
 
 
@@ -84,6 +83,18 @@ public class OrderController {
 	ResponseEntity<GetOrderResponse> getById(@PathVariable Long idOrder) {
 		log.trace("getById: {}", idOrder);
 		return ResponseEntity.ok(orderHandler.getOrderById(idOrder));
+	}
+	
+	@Operation(summary = ASSIGN_ORDER_BY_ID_SUMMARY)
+	@ApiResponse(
+		responseCode = "204",
+		description = ASSIGN_ORDER_BY_ID_DESCRIPTION
+	)
+	@PatchMapping(ASSIGN_ORDER_BY_ID)
+	ResponseEntity<Void> assignById(@PathVariable Long idOrder) {
+		log.trace("assignById: {}", idOrder);
+		orderHandler.assignOrder(idOrder);
+		return ResponseEntity.noContent().build();
 	}
 	
 }

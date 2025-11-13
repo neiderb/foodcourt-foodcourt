@@ -16,4 +16,7 @@ public class OrderDocApi {
 	public static final String GET_ORDER_BY_ID_SUMMARY = "Get order by ID";
 	public static final String GET_ORDER_BY_ID_DESCRIPTION = "Order retrieved successfully by ID";
 	
+	public static final String ASSIGN_ORDER_BY_ID_SUMMARY = "Assign order by ID";
+	public static final String ASSIGN_ORDER_BY_ID_DESCRIPTION = "Order assigned successfully by ID";
+	
 }
