@@ -1,4 +1,4 @@
-package com.foodcourt.foodcourt.domain.model.auth;
+package com.foodcourt.foodcourt.domain.model.auth.enums;
 
 import com.foodcourt.foodcourt.domain.exception.user.InvalidRoleException;
 

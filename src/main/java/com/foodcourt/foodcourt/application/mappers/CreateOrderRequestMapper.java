@@ -13,6 +13,7 @@ public interface CreateOrderRequestMapper {
 	
 	CreateOrderRequestMapper INSTANCE = Mappers.getMapper(CreateOrderRequestMapper.class);
 	
+	@Mapping(target = "id", ignore = true)
 	@Mapping(target = "idOrder", ignore = true)
 	@Mapping(target = "dish.id", source = "idDish")
 	OrderDish toDomain(CreateOrderDishRequest request);

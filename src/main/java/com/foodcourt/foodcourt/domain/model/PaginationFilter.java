@@ -1,6 +1,7 @@
 package com.foodcourt.foodcourt.domain.model;
 
 import com.foodcourt.foodcourt.domain.exception.InvalidPaginationFilterException;
+import com.foodcourt.foodcourt.domain.model.enums.SortDirection;
 
 import java.util.function.UnaryOperator;
 

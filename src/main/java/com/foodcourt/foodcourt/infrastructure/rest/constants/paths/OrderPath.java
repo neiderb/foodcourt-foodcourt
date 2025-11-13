@@ -7,4 +7,6 @@ public class OrderPath {
 	
 	public static final String BASE = "/api/v1/order";
 	
+	public static final String ORDER_BY_ID = "/{idOrder}";
+	
 }

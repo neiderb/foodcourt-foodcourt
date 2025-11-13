@@ -3,7 +3,7 @@ package com.foodcourt.foodcourt.infrastructure.adapters.jwt;
 import com.foodcourt.foodcourt.domain.exception.user.InvalidTokenException;
 import com.foodcourt.foodcourt.domain.gateways.TokenServiceGateway;
 import com.foodcourt.foodcourt.domain.model.auth.UserClaims;
-import com.foodcourt.foodcourt.domain.model.auth.UserRole;
+import com.foodcourt.foodcourt.domain.model.auth.enums.UserRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.security.Key;
 
 import static com.foodcourt.foodcourt.domain.constants.UserErrorMessage.INVALID_TOKEN;
-import static com.foodcourt.foodcourt.domain.model.auth.AuthClaim.*;
+import static com.foodcourt.foodcourt.domain.model.auth.enums.AuthClaim.*;
 
 @Service
 public class JwtAdapter implements TokenServiceGateway {

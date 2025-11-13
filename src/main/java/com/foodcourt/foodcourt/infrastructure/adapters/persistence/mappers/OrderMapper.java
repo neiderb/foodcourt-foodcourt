@@ -2,7 +2,7 @@ package com.foodcourt.foodcourt.infrastructure.adapters.persistence.mappers;
 
 import com.foodcourt.foodcourt.domain.model.order.Order;
 import com.foodcourt.foodcourt.domain.model.order.OrderDish;
-import com.foodcourt.foodcourt.domain.model.order.OrderStatus;
+import com.foodcourt.foodcourt.domain.model.order.enums.OrderStatus;
 import com.foodcourt.foodcourt.infrastructure.adapters.persistence.entities.OrderData;
 import com.foodcourt.foodcourt.infrastructure.adapters.persistence.entities.OrderDishData;
 import org.mapstruct.AfterMapping;

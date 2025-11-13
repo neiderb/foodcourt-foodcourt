@@ -1,4 +1,4 @@
-package com.foodcourt.foodcourt.domain.model.auth;
+package com.foodcourt.foodcourt.domain.model.auth.enums;
 
 public enum AuthClaim {
 	USER_ID("userId"),

@@ -1,5 +1,6 @@
 package com.foodcourt.foodcourt.domain.model.order;
 
+import com.foodcourt.foodcourt.domain.model.order.enums.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -1,7 +1,8 @@
 package com.foodcourt.foodcourt.domain.model.restaurant;
 
 import com.foodcourt.foodcourt.domain.model.PaginationFilter;
-import com.foodcourt.foodcourt.domain.model.SortDirection;
+import com.foodcourt.foodcourt.domain.model.enums.SortDirection;
+import com.foodcourt.foodcourt.domain.model.restaurant.enums.RestaurantSortBy;
 import lombok.Builder;
 
 import java.util.function.UnaryOperator;

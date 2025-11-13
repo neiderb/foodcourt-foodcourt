@@ -3,6 +3,7 @@ package com.foodcourt.foodcourt.infrastructure.rest.feature.order;
 import com.foodcourt.foodcourt.application.dto.request.CreateOrderRequest;
 import com.foodcourt.foodcourt.application.dto.request.GetAllOrderByRestaurantIdRequest;
 import com.foodcourt.foodcourt.application.dto.response.CreateOrderResponse;
+import com.foodcourt.foodcourt.application.dto.response.GetOrderResponse;
 import com.foodcourt.foodcourt.application.handler.OrderHandler;
 import com.foodcourt.foodcourt.domain.model.PaginationResponse;
 import com.foodcourt.foodcourt.domain.model.order.OrderSummary;
@@ -20,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import static com.foodcourt.foodcourt.infrastructure.rest.constants.paths.OrderPath.BASE;
+import static com.foodcourt.foodcourt.infrastructure.rest.constants.paths.OrderPath.ORDER_BY_ID;
 import static com.foodcourt.foodcourt.infrastructure.rest.docapi.OrderDocApi.*;
 
 
@@ -71,6 +73,17 @@ public class OrderController {
 			status
 		);
 		return ResponseEntity.ok(orderHandler.getAllOrdersByRestaurantId(request));
+	}
+	
+	@Operation(summary = GET_ORDER_BY_ID_SUMMARY)
+	@ApiResponse(
+		responseCode = "200",
+		description = GET_ORDER_BY_ID_DESCRIPTION
+	)
+	@GetMapping(ORDER_BY_ID)
+	ResponseEntity<GetOrderResponse> getById(@PathVariable Long idOrder) {
+		log.trace("getById: {}", idOrder);
+		return ResponseEntity.ok(orderHandler.getOrderById(idOrder));
 	}
 	
 }

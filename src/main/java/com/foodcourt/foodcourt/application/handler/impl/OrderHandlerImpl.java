@@ -3,17 +3,20 @@ package com.foodcourt.foodcourt.application.handler.impl;
 import com.foodcourt.foodcourt.application.dto.request.CreateOrderRequest;
 import com.foodcourt.foodcourt.application.dto.request.GetAllOrderByRestaurantIdRequest;
 import com.foodcourt.foodcourt.application.dto.response.CreateOrderResponse;
+import com.foodcourt.foodcourt.application.dto.response.GetOrderResponse;
 import com.foodcourt.foodcourt.application.handler.OrderHandler;
 import com.foodcourt.foodcourt.application.mappers.CreateOrderRequestMapper;
+import com.foodcourt.foodcourt.application.mappers.GetOrderResponseMapper;
 import com.foodcourt.foodcourt.domain.exception.order.InvalidOrderStatusException;
 import com.foodcourt.foodcourt.domain.model.PaginationResponse;
 import com.foodcourt.foodcourt.domain.model.auth.UserClaims;
 import com.foodcourt.foodcourt.domain.model.order.Order;
 import com.foodcourt.foodcourt.domain.model.order.OrderPaginationFilter;
-import com.foodcourt.foodcourt.domain.model.order.OrderStatus;
+import com.foodcourt.foodcourt.domain.model.order.enums.OrderStatus;
 import com.foodcourt.foodcourt.domain.model.order.OrderSummary;
 import com.foodcourt.foodcourt.domain.ports.CreateOrderPort;
 import com.foodcourt.foodcourt.domain.ports.GetAllOrderByRestaurantIdPort;
+import com.foodcourt.foodcourt.domain.ports.GetOrderByIdPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,6 +29,7 @@ public class OrderHandlerImpl implements OrderHandler {
 	
 	private final CreateOrderPort createOrderPort;
 	private final GetAllOrderByRestaurantIdPort getAllOrderByRestaurantIdPort;
+	private final GetOrderByIdPort getOrderByIdPort;
 	
 	@Override
 	public CreateOrderResponse createOrder(CreateOrderRequest request) {
@@ -39,6 +43,7 @@ public class OrderHandlerImpl implements OrderHandler {
 	
 	@Override
 	public PaginationResponse<OrderSummary> getAllOrdersByRestaurantId(GetAllOrderByRestaurantIdRequest request) {
+		log.trace("Getting all orders for restaurant with filter: {}", request);
 		var filter = OrderPaginationFilter.builder()
 			.page(request.page())
 			.size(request.size())
@@ -48,6 +53,14 @@ public class OrderHandlerImpl implements OrderHandler {
 			.build();
 		
 		return getAllOrderByRestaurantIdPort.execute(getIdRestaurant(), filter);
+	}
+	
+	@Override
+	public GetOrderResponse getOrderById(Long idOrder) {
+		log.trace("Getting order by ID: {}", idOrder);
+		return GetOrderResponseMapper.INSTANCE.toResponse(
+			getOrderByIdPort.execute(idOrder, getUserClaims())
+		);
 	}
 	
 	private Long getIdClient() {
@@ -66,6 +79,14 @@ public class OrderHandlerImpl implements OrderHandler {
 			idRestaurant = userClaims.idRestaurant();
 		}
 		return idRestaurant;
+	}
+	
+	private UserClaims getUserClaims() {
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (principal instanceof UserClaims userClaims) {
+			return userClaims;
+		}
+		return null;
 	}
 	
 	private OrderStatus sanitizeStatus(String status) {

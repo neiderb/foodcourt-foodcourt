@@ -1,4 +1,4 @@
-package com.foodcourt.foodcourt.domain.model.dish;
+package com.foodcourt.foodcourt.domain.model.dish.enums;
 
 import lombok.Getter;
 

@@ -10,7 +10,7 @@ import com.foodcourt.foodcourt.domain.gateways.UserServiceGateway;
 import com.foodcourt.foodcourt.domain.model.dish.Dish;
 import com.foodcourt.foodcourt.domain.model.order.Order;
 import com.foodcourt.foodcourt.domain.model.order.OrderDish;
-import com.foodcourt.foodcourt.domain.model.order.OrderStatus;
+import com.foodcourt.foodcourt.domain.model.order.enums.OrderStatus;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

@@ -18,7 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.io.IOException;
 
-import static com.foodcourt.foodcourt.domain.model.auth.UserRole.OWNER;
+import static com.foodcourt.foodcourt.domain.model.auth.enums.UserRole.OWNER;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 

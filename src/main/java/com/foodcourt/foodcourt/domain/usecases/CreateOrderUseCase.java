@@ -9,7 +9,7 @@ import com.foodcourt.foodcourt.domain.gateways.RestaurantRepositoryGateway;
 import com.foodcourt.foodcourt.domain.gateways.UserServiceGateway;
 import com.foodcourt.foodcourt.domain.model.order.Order;
 import com.foodcourt.foodcourt.domain.model.order.OrderDish;
-import com.foodcourt.foodcourt.domain.model.order.OrderStatus;
+import com.foodcourt.foodcourt.domain.model.order.enums.OrderStatus;
 import com.foodcourt.foodcourt.domain.ports.CreateOrderPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.foodcourt.foodcourt.domain.constants.OrderErrorMessage.CLIENT_HAS_ACTIVE_ORDER;
+import static com.foodcourt.foodcourt.domain.constants.OrderErrorMessage.DISH_NOT_AVAILABLE;
 import static com.foodcourt.foodcourt.domain.constants.OrderValidationMessage.*;
 import static com.foodcourt.foodcourt.domain.constants.RestaurantErrorMessage.RESTAURANT_NOT_FOUND;
 import static java.util.Objects.isNull;

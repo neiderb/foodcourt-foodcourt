@@ -1,4 +1,4 @@
-package com.foodcourt.foodcourt.domain.model;
+package com.foodcourt.foodcourt.domain.model.enums;
 
 public enum SortDirection {
 	ASC, DESC;

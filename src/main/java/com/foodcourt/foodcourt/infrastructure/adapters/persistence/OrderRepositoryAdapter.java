@@ -3,6 +3,8 @@ package com.foodcourt.foodcourt.infrastructure.adapters.persistence;
 import com.foodcourt.foodcourt.domain.gateways.OrderRepositoryGateway;
 import com.foodcourt.foodcourt.domain.model.PaginationResponse;
 import com.foodcourt.foodcourt.domain.model.order.*;
+import com.foodcourt.foodcourt.domain.model.order.enums.OrderSortBy;
+import com.foodcourt.foodcourt.domain.model.order.enums.OrderStatus;
 import com.foodcourt.foodcourt.infrastructure.adapters.persistence.dto.OrderFilter;
 import com.foodcourt.foodcourt.infrastructure.adapters.persistence.entities.OrderData;
 import com.foodcourt.foodcourt.infrastructure.adapters.persistence.enumerators.OrderSummaryColumn;
@@ -59,6 +61,13 @@ public class OrderRepositoryAdapter implements OrderRepositoryGateway {
 		Page<OrderSummaryProjection> resultPage = orderJpaRepository.findOrderPaginatedBy(pageable, orderFilter);
 		log.debug("Retrieved {} orders for restaurant ID: {}", resultPage.getTotalElements(), idRestaurant);
 		return mapToPaginationResponse(resultPage);
+	}
+	
+	@Override
+	public Order findById(Long idOrder) {
+		return orderJpaRepository.findById(idOrder)
+			.map(OrderMapper.INSTANCE::toDomain)
+			.orElse(null);
 	}
 	
 	private String mapColumn(String sortBy) {

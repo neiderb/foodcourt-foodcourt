@@ -20,7 +20,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static com.foodcourt.foodcourt.domain.model.auth.UserRole.*;
+import static com.foodcourt.foodcourt.domain.model.auth.enums.UserRole.*;
 import static com.foodcourt.foodcourt.infrastructure.rest.constants.ErrorMessage.ACCESS_DENIED;
 import static com.foodcourt.foodcourt.infrastructure.rest.constants.ErrorMessage.UNAUTHORIZED;
 import static org.springframework.http.HttpMethod.*;
@@ -63,6 +63,7 @@ public class SecurityConfig {
 				// Order endpoints
 				.requestMatchers(POST, OrderPath.BASE).hasRole(CLIENT.name())
 				.requestMatchers(GET, OrderPath.BASE).hasRole(EMPLOYEE.name())
+				.requestMatchers(GET, OrderPath.BASE.concat(OrderPath.ORDER_BY_ID)).hasRole(EMPLOYEE.name())
 				.anyRequest().authenticated())
 			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)

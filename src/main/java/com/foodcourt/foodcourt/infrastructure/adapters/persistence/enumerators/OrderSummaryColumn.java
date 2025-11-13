@@ -1,6 +1,6 @@
 package com.foodcourt.foodcourt.infrastructure.adapters.persistence.enumerators;
 
-import com.foodcourt.foodcourt.domain.model.order.OrderSortBy;
+import com.foodcourt.foodcourt.domain.model.order.enums.OrderSortBy;
 import lombok.Getter;
 
 @Getter

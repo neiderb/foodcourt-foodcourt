@@ -1,7 +1,9 @@
 package com.foodcourt.foodcourt.domain.model.order;
 
 import com.foodcourt.foodcourt.domain.model.PaginationFilter;
-import com.foodcourt.foodcourt.domain.model.SortDirection;
+import com.foodcourt.foodcourt.domain.model.enums.SortDirection;
+import com.foodcourt.foodcourt.domain.model.order.enums.OrderSortBy;
+import com.foodcourt.foodcourt.domain.model.order.enums.OrderStatus;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;

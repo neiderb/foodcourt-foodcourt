@@ -6,7 +6,7 @@ import com.foodcourt.foodcourt.application.dto.response.CreateRestaurantResponse
 import com.foodcourt.foodcourt.domain.model.PaginationResponse;
 import com.foodcourt.foodcourt.domain.model.restaurant.Restaurant;
 import com.foodcourt.foodcourt.domain.model.restaurant.RestaurantPaginationFilter;
-import com.foodcourt.foodcourt.domain.model.restaurant.RestaurantSortBy;
+import com.foodcourt.foodcourt.domain.model.restaurant.enums.RestaurantSortBy;
 import com.foodcourt.foodcourt.domain.model.restaurant.RestaurantSummary;
 import com.foodcourt.foodcourt.domain.ports.CreateRestaurantPort;
 import com.foodcourt.foodcourt.domain.ports.GetAllRestaurantPort;

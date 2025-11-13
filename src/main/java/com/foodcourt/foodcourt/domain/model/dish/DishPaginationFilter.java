@@ -1,7 +1,8 @@
 package com.foodcourt.foodcourt.domain.model.dish;
 
 import com.foodcourt.foodcourt.domain.model.PaginationFilter;
-import com.foodcourt.foodcourt.domain.model.SortDirection;
+import com.foodcourt.foodcourt.domain.model.enums.SortDirection;
+import com.foodcourt.foodcourt.domain.model.dish.enums.DishSortBy;
 import lombok.Builder;
 import lombok.Getter;
 
