@@ -1,4 +1,4 @@
-package com.foodcourt.foodcourt.infrastructure.config;
+package com.foodcourt.foodcourt.application.config;
 
 import com.foodcourt.foodcourt.domain.gateways.DishRepositoryGateway;
 import com.foodcourt.foodcourt.domain.gateways.RestaurantRepositoryGateway;

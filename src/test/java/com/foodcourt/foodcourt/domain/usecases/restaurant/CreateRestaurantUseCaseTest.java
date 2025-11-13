@@ -1,7 +1,7 @@
 package com.foodcourt.foodcourt.domain.usecases.restaurant;
 
 import com.foodcourt.foodcourt.domain.exception.restaurant.InvalidRestaurantException;
-import com.foodcourt.foodcourt.domain.exception.user.InvalidRoleException;
+import com.foodcourt.foodcourt.domain.exception.auth.InvalidRoleException;
 import com.foodcourt.foodcourt.domain.gateways.RestaurantRepositoryGateway;
 import com.foodcourt.foodcourt.domain.gateways.UserServiceGateway;
 import com.foodcourt.foodcourt.domain.model.restaurant.Restaurant;

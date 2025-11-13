@@ -1,6 +1,6 @@
 package com.foodcourt.foodcourt.infrastructure.adapters.jwt;
 
-import com.foodcourt.foodcourt.domain.exception.user.InvalidTokenException;
+import com.foodcourt.foodcourt.domain.exception.auth.InvalidTokenException;
 import com.foodcourt.foodcourt.domain.model.auth.UserClaims;
 import com.foodcourt.foodcourt.domain.model.auth.enums.UserRole;
 import io.jsonwebtoken.Jwts;

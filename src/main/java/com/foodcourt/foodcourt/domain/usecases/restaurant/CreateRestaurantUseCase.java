@@ -1,7 +1,7 @@
 package com.foodcourt.foodcourt.domain.usecases.restaurant;
 
 import com.foodcourt.foodcourt.domain.exception.restaurant.InvalidRestaurantException;
-import com.foodcourt.foodcourt.domain.exception.user.InvalidRoleException;
+import com.foodcourt.foodcourt.domain.exception.auth.InvalidRoleException;
 import com.foodcourt.foodcourt.domain.gateways.RestaurantRepositoryGateway;
 import com.foodcourt.foodcourt.domain.gateways.UserServiceGateway;
 import com.foodcourt.foodcourt.domain.model.restaurant.Restaurant;
@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import static com.foodcourt.foodcourt.domain.constants.Regex.JUST_NUMBERS;
 import static com.foodcourt.foodcourt.domain.constants.RestaurantValidationMessage.RESTAURANT_NAME_CANNOT_BE_ONLY_NUMBERS;
-import static com.foodcourt.foodcourt.domain.constants.UserErrorMessage.USER_HAS_NO_VALID_ROLE;
+import static com.foodcourt.foodcourt.domain.constants.AuthErrorMessage.USER_HAS_NO_VALID_ROLE;
 
 @Slf4j
 @RequiredArgsConstructor

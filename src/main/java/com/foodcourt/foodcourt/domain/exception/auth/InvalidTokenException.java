@@ -1,4 +1,4 @@
-package com.foodcourt.foodcourt.domain.exception.user;
+package com.foodcourt.foodcourt.domain.exception.auth;
 
 import com.foodcourt.foodcourt.domain.exception.BusinessException;
 

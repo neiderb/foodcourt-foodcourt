@@ -1,17 +1,11 @@
-package com.foodcourt.foodcourt.infrastructure.config;
+package com.foodcourt.foodcourt.application.config;
 
 import com.foodcourt.foodcourt.domain.gateways.DishRepositoryGateway;
 import com.foodcourt.foodcourt.domain.gateways.OrderRepositoryGateway;
 import com.foodcourt.foodcourt.domain.gateways.RestaurantRepositoryGateway;
 import com.foodcourt.foodcourt.domain.gateways.UserServiceGateway;
-import com.foodcourt.foodcourt.domain.ports.order.AssignOrderPort;
-import com.foodcourt.foodcourt.domain.ports.order.CreateOrderPort;
-import com.foodcourt.foodcourt.domain.ports.order.GetAllOrderByRestaurantIdPort;
-import com.foodcourt.foodcourt.domain.ports.order.GetOrderByIdPort;
-import com.foodcourt.foodcourt.domain.usecases.order.AssignOrderUseCase;
-import com.foodcourt.foodcourt.domain.usecases.order.CreateOrderUseCase;
-import com.foodcourt.foodcourt.domain.usecases.order.GetAllOrderByRestaurantIdUseCase;
-import com.foodcourt.foodcourt.domain.usecases.order.GetOrderByIdUseCase;
+import com.foodcourt.foodcourt.domain.ports.order.*;
+import com.foodcourt.foodcourt.domain.usecases.order.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -61,6 +55,17 @@ public class OrderBeanConfig {
 	) {
 		return new AssignOrderUseCase(
 			orderRepositoryGateway
+		);
+	}
+	
+	@Bean
+	public CompleteOrderPort completeOrderPort(
+		OrderRepositoryGateway orderRepositoryGateway,
+		UserServiceGateway userServiceGateway
+	) {
+		return new CompleteOrderUseCase(
+			orderRepositoryGateway,
+			userServiceGateway
 		);
 	}
 	

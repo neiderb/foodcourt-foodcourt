@@ -1,6 +1,6 @@
 package com.foodcourt.foodcourt.infrastructure.rest.filters;
 
-import com.foodcourt.foodcourt.domain.exception.user.InvalidTokenException;
+import com.foodcourt.foodcourt.domain.exception.auth.InvalidTokenException;
 import com.foodcourt.foodcourt.domain.gateways.TokenServiceGateway;
 import com.foodcourt.foodcourt.domain.model.auth.UserClaims;
 import jakarta.servlet.FilterChain;

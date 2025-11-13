@@ -1,7 +1,7 @@
 package com.foodcourt.foodcourt.domain.usecases.dish;
 
 import com.foodcourt.foodcourt.domain.exception.dish.InvalidCategoryException;
-import com.foodcourt.foodcourt.domain.exception.user.InvalidUserException;
+import com.foodcourt.foodcourt.domain.exception.auth.InvalidUserException;
 import com.foodcourt.foodcourt.domain.gateways.DishRepositoryGateway;
 import com.foodcourt.foodcourt.domain.gateways.RestaurantRepositoryGateway;
 import com.foodcourt.foodcourt.domain.model.dish.Dish;

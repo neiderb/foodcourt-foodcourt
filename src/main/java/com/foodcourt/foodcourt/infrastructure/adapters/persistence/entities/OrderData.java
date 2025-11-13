@@ -35,6 +35,9 @@ public class OrderData {
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<OrderDishData> items;
 	
+	@Column(name = "secure_pin")
+	private String securePin;
+	
 	@Override
 	public String toString() {
 		return "OrderData{" + "id=" + id + ", idClient=" + idClient + ", orderDate=" + orderDate + ", status='" + status + '\'' + ", idChef=" + idChef + ", idRestaurant=" +

@@ -17,4 +17,6 @@ public interface OrderHandler {
 	
 	void assignOrder(Long idOrder);
 	
+	void completeOrder(Long idOrder);
+	
 }

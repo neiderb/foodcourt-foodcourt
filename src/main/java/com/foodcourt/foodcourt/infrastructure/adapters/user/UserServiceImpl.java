@@ -3,7 +3,7 @@ package com.foodcourt.foodcourt.infrastructure.adapters.user;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.foodcourt.foodcourt.domain.exception.BusinessException;
 import com.foodcourt.foodcourt.domain.exception.TechnicalException;
-import com.foodcourt.foodcourt.domain.exception.user.InvalidUserException;
+import com.foodcourt.foodcourt.domain.exception.auth.InvalidUserException;
 import com.foodcourt.foodcourt.domain.gateways.UserServiceGateway;
 import com.foodcourt.foodcourt.domain.model.auth.enums.UserRole;
 import com.foodcourt.foodcourt.infrastructure.adapters.user.dto.ErrorExternalResponse;
@@ -19,7 +19,7 @@ import org.springframework.web.client.RestClient;
 
 import java.util.function.Consumer;
 
-import static com.foodcourt.foodcourt.domain.constants.UserErrorMessage.USER_NOT_FOUND;
+import static com.foodcourt.foodcourt.domain.constants.AuthErrorMessage.USER_NOT_FOUND;
 import static com.foodcourt.foodcourt.domain.model.auth.enums.UserRole.CLIENT;
 import static com.foodcourt.foodcourt.domain.model.auth.enums.UserRole.OWNER;
 import static com.foodcourt.foodcourt.infrastructure.adapters.user.constants.ErrorMessage.EXTERNAL_SERVICE_ERROR;
@@ -54,6 +54,13 @@ public class UserServiceImpl implements UserServiceGateway {
 		UserExternalResponse user = findById(idUser);
 		if (isNull(user)) throw new InvalidUserException(USER_NOT_FOUND);
 		return CLIENT.equals(UserRole.getRoleof(user.role()));
+	}
+	
+	@Override
+	public String getUserPhone(Long idUser) {
+		UserExternalResponse user = findById(idUser);
+		if (isNull(user)) throw new InvalidUserException(USER_NOT_FOUND);
+		return user.phone();
 	}
 	
 	private UserExternalResponse findById(Long id) {

@@ -23,6 +23,7 @@ public interface CreateOrderRequestMapper {
 	@Mapping(target = "orderDate", ignore = true)
 	@Mapping(target = "idChef", ignore = true)
 	@Mapping(target = "idClient", ignore = true)
+	@Mapping(target = "securePin", ignore = true)
 	Order toDomain(CreateOrderRequest request);
 	
 }

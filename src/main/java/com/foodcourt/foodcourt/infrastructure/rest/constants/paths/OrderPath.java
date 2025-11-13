@@ -9,5 +9,6 @@ public class OrderPath {
 	
 	public static final String ORDER_BY_ID = "/{idOrder}";
 	public static final String ASSIGN_ORDER_BY_ID = "/assign/{idOrder}";
+	public static final String COMPLETE_ORDER_BY_ID = "/complete/{idOrder}";
 	
 }

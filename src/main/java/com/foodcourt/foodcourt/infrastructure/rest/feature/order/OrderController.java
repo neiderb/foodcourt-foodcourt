@@ -97,4 +97,16 @@ public class OrderController {
 		return ResponseEntity.noContent().build();
 	}
 	
+	@Operation(summary = COMPLETE_ORDER_BY_ID_SUMMARY)
+	@ApiResponse(
+		responseCode = "204",
+		description = COMPLETE_ORDER_BY_ID_DESCRIPTION
+	)
+	@PatchMapping(COMPLETE_ORDER_BY_ID)
+	ResponseEntity<Void> completeById(@PathVariable Long idOrder) {
+		log.trace("completeById: {}", idOrder);
+		orderHandler.completeOrder(idOrder);
+		return ResponseEntity.noContent().build();
+	}
+	
 }

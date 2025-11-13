@@ -1,50 +1,55 @@
 package com.foodcourt.foodcourt.domain.usecases.order;
 
+import com.foodcourt.foodcourt.domain.exception.auth.InvalidUserException;
 import com.foodcourt.foodcourt.domain.exception.order.InvalidOrderException;
 import com.foodcourt.foodcourt.domain.exception.order.InvalidOrderStatusException;
 import com.foodcourt.foodcourt.domain.exception.order.OrderNotFoundException;
-import com.foodcourt.foodcourt.domain.exception.auth.InvalidUserException;
 import com.foodcourt.foodcourt.domain.gateways.OrderRepositoryGateway;
+import com.foodcourt.foodcourt.domain.gateways.UserServiceGateway;
 import com.foodcourt.foodcourt.domain.model.auth.UserClaims;
 import com.foodcourt.foodcourt.domain.model.order.Order;
-import com.foodcourt.foodcourt.domain.ports.order.AssignOrderPort;
+import com.foodcourt.foodcourt.domain.ports.order.CompleteOrderPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import static com.foodcourt.foodcourt.domain.constants.OrderErrorMessage.ORDER_NOT_FOUND;
-import static com.foodcourt.foodcourt.domain.constants.OrderErrorMessage.ORDER_STATUS_MUST_BE_PENDING;
-import static com.foodcourt.foodcourt.domain.constants.OrderValidationMessage.INVALID_ORDER_ID;
+import java.security.SecureRandom;
+
 import static com.foodcourt.foodcourt.domain.constants.AuthErrorMessage.UNAUTHORIZED_ACTION;
-import static com.foodcourt.foodcourt.domain.model.auth.enums.UserRole.EMPLOYEE;
-import static com.foodcourt.foodcourt.domain.model.order.enums.OrderStatus.PENDING;
+import static com.foodcourt.foodcourt.domain.constants.OrderErrorMessage.ORDER_NOT_FOUND;
+import static com.foodcourt.foodcourt.domain.constants.OrderErrorMessage.ORDER_STATUS_MUST_BE_PROCESSING;
+import static com.foodcourt.foodcourt.domain.constants.OrderValidationMessage.INVALID_ORDER_ID;
+import static com.foodcourt.foodcourt.domain.model.order.enums.OrderStatus.COMPLETED;
 import static com.foodcourt.foodcourt.domain.model.order.enums.OrderStatus.PROCESSING;
 import static java.util.Objects.isNull;
 
 @Slf4j
 @RequiredArgsConstructor
-public class AssignOrderUseCase implements AssignOrderPort {
+public class CompleteOrderUseCase implements CompleteOrderPort {
 	
 	private final OrderRepositoryGateway orderRepositoryGateway;
+	private final UserServiceGateway userServiceGateway;
 	
 	@Override
 	public void execute(Long idOrder, UserClaims userClaims) {
 		Long idUser = getIdUser(userClaims);
-		Order existingOrder = validateOrder(idOrder);
-		existingOrder.setIdChef(idUser);
-		existingOrder.setStatus(PROCESSING);
+		Order existingOrder = validateOrder(idOrder, idUser);
+		existingOrder.setStatus(COMPLETED);
+		existingOrder.setSecurePin(generateSecurePin());
 		
-		log.trace("Assigning order ID: {} to chef ID: {}", idOrder, idUser);
+		log.trace("Updating order status to COMPLETED for order ID: {}", idOrder);
 		orderRepositoryGateway.save(existingOrder);
+		
+		String phoneClient = getPhoneClient(existingOrder.getIdClient());
+		log.trace("Notifying client at phone number: {}", phoneClient);
 	}
 	
 	private Long getIdUser(UserClaims userClaims) {
 		log.trace("Getting user ID from user claims");
 		if (isNull(userClaims)) throw new InvalidUserException(UNAUTHORIZED_ACTION);
-		if (!EMPLOYEE.equals(userClaims.role())) throw new InvalidUserException(UNAUTHORIZED_ACTION);
 		return userClaims.id();
 	}
 	
-	private Order validateOrder(Long idOrder) {
+	private Order validateOrder(Long idOrder, Long idUser) {
 		log.trace("Validating order ID: {}", idOrder);
 		if (isNull(idOrder) || idOrder <= 0)
 			throw new InvalidOrderException(INVALID_ORDER_ID);
@@ -52,10 +57,24 @@ public class AssignOrderUseCase implements AssignOrderPort {
 		Order existingOrder = orderRepositoryGateway.findById(idOrder);
 		if (isNull(existingOrder))
 			throw new OrderNotFoundException(ORDER_NOT_FOUND);
-		if (!PENDING.equals(existingOrder.getStatus()))
-			throw new InvalidOrderStatusException(ORDER_STATUS_MUST_BE_PENDING);
+		if (!PROCESSING.equals(existingOrder.getStatus()))
+			throw new InvalidOrderStatusException(ORDER_STATUS_MUST_BE_PROCESSING);
+		if (!existingOrder.getIdChef().equals(idUser))
+			throw new InvalidUserException(UNAUTHORIZED_ACTION);
 		
 		return existingOrder;
+	}
+	
+	private String generateSecurePin() {
+		SecureRandom secureRandom = new SecureRandom();
+		int min = 100_000;
+		int max = 1_000_000;
+		int pin = secureRandom.nextInt(min, max) + min;
+		return String.valueOf(pin);
+	}
+	
+	private String getPhoneClient(Long idClient) {
+		return userServiceGateway.getUserPhone(idClient);
 	}
 	
 }

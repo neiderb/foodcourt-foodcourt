@@ -22,5 +22,6 @@ public class Order {
 	private Long idChef;
 	private Long idRestaurant;
 	private List<OrderDish> items;
+	private String securePin;
 	
 }

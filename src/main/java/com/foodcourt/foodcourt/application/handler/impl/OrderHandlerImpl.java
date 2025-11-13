@@ -14,10 +14,8 @@ import com.foodcourt.foodcourt.domain.model.order.Order;
 import com.foodcourt.foodcourt.domain.model.order.OrderPaginationFilter;
 import com.foodcourt.foodcourt.domain.model.order.enums.OrderStatus;
 import com.foodcourt.foodcourt.domain.model.order.OrderSummary;
-import com.foodcourt.foodcourt.domain.ports.order.AssignOrderPort;
-import com.foodcourt.foodcourt.domain.ports.order.CreateOrderPort;
-import com.foodcourt.foodcourt.domain.ports.order.GetAllOrderByRestaurantIdPort;
-import com.foodcourt.foodcourt.domain.ports.order.GetOrderByIdPort;
+import com.foodcourt.foodcourt.domain.ports.order.*;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,6 +30,7 @@ public class OrderHandlerImpl implements OrderHandler {
 	private final GetAllOrderByRestaurantIdPort getAllOrderByRestaurantIdPort;
 	private final GetOrderByIdPort getOrderByIdPort;
 	private final AssignOrderPort assignOrderPort;
+	private final CompleteOrderPort completeOrderPort;
 	
 	@Override
 	public CreateOrderResponse createOrder(CreateOrderRequest request) {
@@ -67,8 +66,15 @@ public class OrderHandlerImpl implements OrderHandler {
 	
 	@Override
 	public void assignOrder(Long idOrder) {
-		log.trace("Asigning order by ID: {}", idOrder);
+		log.trace("Assigning order by ID: {}", idOrder);
 		assignOrderPort.execute(idOrder, getUserClaims());
+	}
+	
+	@Override
+	@Transactional
+	public void completeOrder(Long idOrder) {
+		log.trace("Completing order by ID: {}", idOrder);
+		completeOrderPort.execute(idOrder, getUserClaims());
 	}
 	
 	private Long getIdClient() {

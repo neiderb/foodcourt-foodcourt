@@ -1,7 +1,7 @@
 package com.foodcourt.foodcourt.domain.usecases.dish;
 
 import com.foodcourt.foodcourt.domain.exception.dish.DishNotFoundException;
-import com.foodcourt.foodcourt.domain.exception.user.InvalidUserException;
+import com.foodcourt.foodcourt.domain.exception.auth.InvalidUserException;
 import com.foodcourt.foodcourt.domain.gateways.DishRepositoryGateway;
 import com.foodcourt.foodcourt.domain.gateways.RestaurantRepositoryGateway;
 import com.foodcourt.foodcourt.domain.model.dish.Dish;
@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import static com.foodcourt.foodcourt.domain.constants.DishErrorMessage.DISH_NOT_FOUND;
-import static com.foodcourt.foodcourt.domain.constants.UserErrorMessage.UNAUTHORIZED_ACTION;
+import static com.foodcourt.foodcourt.domain.constants.AuthErrorMessage.UNAUTHORIZED_ACTION;
 import static java.util.Objects.isNull;
 
 @Slf4j

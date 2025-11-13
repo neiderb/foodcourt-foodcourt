@@ -4,7 +4,7 @@ import com.foodcourt.foodcourt.domain.exception.order.InvalidOrderException;
 import com.foodcourt.foodcourt.domain.exception.order.OrderNotFoundException;
 import com.foodcourt.foodcourt.domain.exception.restaurant.InvalidRestaurantException;
 import com.foodcourt.foodcourt.domain.exception.restaurant.RestaurantNotFoundException;
-import com.foodcourt.foodcourt.domain.exception.user.InvalidUserException;
+import com.foodcourt.foodcourt.domain.exception.auth.InvalidUserException;
 import com.foodcourt.foodcourt.domain.gateways.OrderRepositoryGateway;
 import com.foodcourt.foodcourt.domain.gateways.RestaurantRepositoryGateway;
 import com.foodcourt.foodcourt.domain.model.auth.UserClaims;
@@ -17,7 +17,7 @@ import static com.foodcourt.foodcourt.domain.constants.OrderErrorMessage.ORDER_N
 import static com.foodcourt.foodcourt.domain.constants.OrderValidationMessage.INVALID_ORDER_ID;
 import static com.foodcourt.foodcourt.domain.constants.RestaurantErrorMessage.RESTAURANT_NOT_FOUND;
 import static com.foodcourt.foodcourt.domain.constants.RestaurantValidationMessage.INVALID_RESTAURANT_ID;
-import static com.foodcourt.foodcourt.domain.constants.UserErrorMessage.UNAUTHORIZED_ACTION;
+import static com.foodcourt.foodcourt.domain.constants.AuthErrorMessage.UNAUTHORIZED_ACTION;
 import static java.util.Objects.isNull;
 
 @Slf4j

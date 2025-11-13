@@ -3,8 +3,8 @@ package com.foodcourt.foodcourt.infrastructure.adapters.user;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.foodcourt.foodcourt.domain.exception.BusinessException;
 import com.foodcourt.foodcourt.domain.exception.TechnicalException;
-import com.foodcourt.foodcourt.domain.exception.user.InvalidRoleException;
-import com.foodcourt.foodcourt.domain.exception.user.InvalidUserException;
+import com.foodcourt.foodcourt.domain.exception.auth.InvalidRoleException;
+import com.foodcourt.foodcourt.domain.exception.auth.InvalidUserException;
 import com.foodcourt.foodcourt.infrastructure.adapters.user.dto.ErrorExternalResponse;
 import com.foodcourt.foodcourt.infrastructure.adapters.user.dto.UserExternalResponse;
 import org.junit.jupiter.api.AfterEach;
@@ -224,7 +224,8 @@ class UserServiceImplTest {
 		UserExternalResponse externalResponse = new UserExternalResponse(
 			1L,
 			"John",
-			"not_included_role"
+			"not_included_role",
+			"333333333"
 		);
 		
 		when(restClient.get()).thenReturn(requestHeadersUriSpec);
@@ -254,7 +255,8 @@ class UserServiceImplTest {
 		return new UserExternalResponse(
 			1L,
 			"John",
-			"owner"
+			"owner",
+			"333333333"
 		);
 	}
 	

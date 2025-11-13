@@ -6,4 +6,6 @@ public interface UserServiceGateway {
 	
 	boolean isClient(Long idUser);
 	
+	String getUserPhone(Long idUser);
+	
 }

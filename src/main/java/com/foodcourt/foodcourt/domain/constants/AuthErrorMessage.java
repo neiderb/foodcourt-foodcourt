@@ -3,7 +3,7 @@ package com.foodcourt.foodcourt.domain.constants;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
-public class UserErrorMessage {
+public class AuthErrorMessage {
 	
 	public static final String USER_NOT_FOUND = "User not found with the provided ID";
 	public static final String USER_HAS_NO_VALID_ROLE = "User does not have a valid role assigned";
