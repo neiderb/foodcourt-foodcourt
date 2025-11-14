@@ -32,6 +32,7 @@ public class OrderHandlerImpl implements OrderHandler {
 	private final AssignOrderPort assignOrderPort;
 	private final CompleteOrderPort completeOrderPort;
 	private final DeliverOrderPort deliverOrderPort;
+	private final CancelOrderPort cancelOrderPort;
 	
 	@Override
 	public CreateOrderResponse createOrder(CreateOrderRequest request) {
@@ -82,6 +83,12 @@ public class OrderHandlerImpl implements OrderHandler {
 	public void deliverOrder(Long idOrder, String code) {
 		log.trace("Delivering order by ID: {}", idOrder);
 		deliverOrderPort.execute(idOrder, code, getUserClaims());
+	}
+	
+	@Override
+	public void cancelOrder(Long idOrder) {
+		log.trace("Cancelling order by ID: {}", idOrder);
+		cancelOrderPort.execute(idOrder, getUserClaims());
 	}
 	
 	private Long getIdClient() {

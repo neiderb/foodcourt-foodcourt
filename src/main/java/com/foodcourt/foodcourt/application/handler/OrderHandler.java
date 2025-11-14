@@ -21,4 +21,6 @@ public interface OrderHandler {
 	
 	void deliverOrder(Long idOrder, String code);
 	
+	void cancelOrder(Long idOrder);
+	
 }

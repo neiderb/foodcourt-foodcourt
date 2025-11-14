@@ -121,4 +121,16 @@ public class OrderController {
 		return ResponseEntity.noContent().build();
 	}
 	
+	@Operation(summary = CANCEL_ORDER_BY_ID_SUMMARY)
+	@ApiResponse(
+		responseCode = "204",
+		description = CANCEL_ORDER_BY_ID_DESCRIPTION
+	)
+	@PatchMapping(CANCEL_ORDER_BY_ID)
+	ResponseEntity<Void> cancelById(@PathVariable Long idOrder) {
+		log.trace("cancelById id: {}", idOrder);
+		orderHandler.cancelOrder(idOrder);
+		return ResponseEntity.noContent().build();
+	}
+	
 }

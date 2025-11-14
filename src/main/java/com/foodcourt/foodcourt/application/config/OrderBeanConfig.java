@@ -77,4 +77,13 @@ public class OrderBeanConfig {
 		);
 	}
 	
+	@Bean
+	public CancelOrderPort cancelOrderPort(
+		OrderRepositoryGateway orderRepositoryGateway
+	) {
+		return new CancelOrderUseCase(
+			orderRepositoryGateway
+		);
+	}
+	
 }
