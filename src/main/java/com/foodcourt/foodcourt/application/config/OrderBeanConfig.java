@@ -1,9 +1,6 @@
 package com.foodcourt.foodcourt.application.config;
 
-import com.foodcourt.foodcourt.domain.gateways.DishRepositoryGateway;
-import com.foodcourt.foodcourt.domain.gateways.OrderRepositoryGateway;
-import com.foodcourt.foodcourt.domain.gateways.RestaurantRepositoryGateway;
-import com.foodcourt.foodcourt.domain.gateways.UserServiceGateway;
+import com.foodcourt.foodcourt.domain.gateways.*;
 import com.foodcourt.foodcourt.domain.ports.order.*;
 import com.foodcourt.foodcourt.domain.usecases.order.*;
 import org.springframework.context.annotation.Bean;
@@ -61,11 +58,13 @@ public class OrderBeanConfig {
 	@Bean
 	public CompleteOrderPort completeOrderPort(
 		OrderRepositoryGateway orderRepositoryGateway,
-		UserServiceGateway userServiceGateway
+		UserServiceGateway userServiceGateway,
+		NotificationServiceGateway notificationServiceGateway
 	) {
 		return new CompleteOrderUseCase(
 			orderRepositoryGateway,
-			userServiceGateway
+			userServiceGateway,
+			notificationServiceGateway
 		);
 	}
 	

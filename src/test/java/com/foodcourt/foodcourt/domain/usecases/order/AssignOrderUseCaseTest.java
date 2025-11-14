@@ -1,9 +1,9 @@
 package com.foodcourt.foodcourt.domain.usecases.order;
 
+import com.foodcourt.foodcourt.domain.exception.auth.InvalidUserException;
 import com.foodcourt.foodcourt.domain.exception.order.InvalidOrderException;
 import com.foodcourt.foodcourt.domain.exception.order.InvalidOrderStatusException;
 import com.foodcourt.foodcourt.domain.exception.order.OrderNotFoundException;
-import com.foodcourt.foodcourt.domain.exception.auth.InvalidUserException;
 import com.foodcourt.foodcourt.domain.gateways.OrderRepositoryGateway;
 import com.foodcourt.foodcourt.domain.model.auth.UserClaims;
 import com.foodcourt.foodcourt.domain.model.auth.enums.UserRole;
@@ -41,7 +41,7 @@ class AssignOrderUseCaseTest {
 			.build();
 		Order orderToBeAssigned = Order.builder()
 			.id(idOrder)
-			.status(status)
+			.status(OrderStatus.PROCESSING)
 			.idChef(userClaims.id())
 			.build();
 		

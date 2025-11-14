@@ -4,6 +4,7 @@ import com.foodcourt.foodcourt.domain.exception.auth.InvalidUserException;
 import com.foodcourt.foodcourt.domain.exception.order.InvalidOrderException;
 import com.foodcourt.foodcourt.domain.exception.order.InvalidOrderStatusException;
 import com.foodcourt.foodcourt.domain.exception.order.OrderNotFoundException;
+import com.foodcourt.foodcourt.domain.gateways.NotificationServiceGateway;
 import com.foodcourt.foodcourt.domain.gateways.OrderRepositoryGateway;
 import com.foodcourt.foodcourt.domain.gateways.UserServiceGateway;
 import com.foodcourt.foodcourt.domain.model.auth.UserClaims;
@@ -28,19 +29,23 @@ public class CompleteOrderUseCase implements CompleteOrderPort {
 	
 	private final OrderRepositoryGateway orderRepositoryGateway;
 	private final UserServiceGateway userServiceGateway;
+	private final NotificationServiceGateway notificationServiceGateway;
 	
 	@Override
 	public void execute(Long idOrder, UserClaims userClaims) {
 		Long idUser = getIdUser(userClaims);
 		Order existingOrder = validateOrder(idOrder, idUser);
 		existingOrder.setStatus(COMPLETED);
-		existingOrder.setSecurePin(generateSecurePin());
+		
+		String securePin = generateSecurePin();
+		existingOrder.setSecurePin(securePin);
 		
 		log.trace("Updating order status to COMPLETED for order ID: {}", idOrder);
 		orderRepositoryGateway.save(existingOrder);
 		
 		String phoneClient = getPhoneClient(existingOrder.getIdClient());
 		log.trace("Notifying client at phone number: {}", phoneClient);
+		notificationServiceGateway.sendOrderCompletedNotification(phoneClient, securePin);
 	}
 	
 	private Long getIdUser(UserClaims userClaims) {
