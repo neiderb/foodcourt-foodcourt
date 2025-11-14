@@ -31,6 +31,7 @@ public class OrderHandlerImpl implements OrderHandler {
 	private final GetOrderByIdPort getOrderByIdPort;
 	private final AssignOrderPort assignOrderPort;
 	private final CompleteOrderPort completeOrderPort;
+	private final DeliverOrderPort deliverOrderPort;
 	
 	@Override
 	public CreateOrderResponse createOrder(CreateOrderRequest request) {
@@ -75,6 +76,12 @@ public class OrderHandlerImpl implements OrderHandler {
 	public void completeOrder(Long idOrder) {
 		log.trace("Completing order by ID: {}", idOrder);
 		completeOrderPort.execute(idOrder, getUserClaims());
+	}
+	
+	@Override
+	public void deliverOrder(Long idOrder, String code) {
+		log.trace("Delivering order by ID: {}", idOrder);
+		deliverOrderPort.execute(idOrder, code, getUserClaims());
 	}
 	
 	private Long getIdClient() {

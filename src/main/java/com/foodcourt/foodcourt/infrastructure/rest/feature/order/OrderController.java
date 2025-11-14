@@ -109,4 +109,16 @@ public class OrderController {
 		return ResponseEntity.noContent().build();
 	}
 	
+	@Operation(summary = DELIVER_ORDER_BY_ID_SUMMARY)
+	@ApiResponse(
+		responseCode = "204",
+		description = DELIVER_ORDER_BY_ID_DESCRIPTION
+	)
+	@PatchMapping(DELIVER_ORDER_BY_ID)
+	ResponseEntity<Void> deliverById(@PathVariable Long idOrder, @PathVariable String code) {
+		log.trace("deliverById id: {} - code: {}", idOrder, code);
+		orderHandler.deliverOrder(idOrder, code);
+		return ResponseEntity.noContent().build();
+	}
+	
 }

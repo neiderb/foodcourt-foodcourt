@@ -22,4 +22,7 @@ public class OrderDocApi {
 	public static final String COMPLETE_ORDER_BY_ID_SUMMARY = "Complete order by ID";
 	public static final String COMPLETE_ORDER_BY_ID_DESCRIPTION = "Order completed successfully by ID";
 	
+	public static final String DELIVER_ORDER_BY_ID_SUMMARY = "Deliver order by ID";
+	public static final String DELIVER_ORDER_BY_ID_DESCRIPTION = "Order delivered successfully by ID";
+	
 }

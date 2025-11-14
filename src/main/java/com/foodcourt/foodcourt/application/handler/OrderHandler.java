@@ -19,4 +19,6 @@ public interface OrderHandler {
 	
 	void completeOrder(Long idOrder);
 	
+	void deliverOrder(Long idOrder, String code);
+	
 }

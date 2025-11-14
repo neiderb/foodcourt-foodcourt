@@ -11,5 +11,7 @@ public class OrderErrorMessage {
 	public static final String ORDER_NOT_FOUND = "Order not found";
 	public static final String ORDER_STATUS_MUST_BE_PENDING = "Order status must be PENDING to perform this action";
 	public static final String ORDER_STATUS_MUST_BE_PROCESSING = "Order status must be PROCESSING to perform this action";
+	public static final String ORDER_STATUS_MUST_BE_COMPLETED = "Order status must be COMPLETED to perform this action";
+	public static final String INVALID_SECURE_PIN = "Invalid secure PIN provided";
 	
 }

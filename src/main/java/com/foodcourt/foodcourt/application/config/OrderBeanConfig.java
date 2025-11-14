@@ -68,4 +68,13 @@ public class OrderBeanConfig {
 		);
 	}
 	
+	@Bean
+	public DeliverOrderPort deliverOrderPort(
+		OrderRepositoryGateway orderRepositoryGateway
+	) {
+		return new DeliverOrderUseCase(
+			orderRepositoryGateway
+		);
+	}
+	
 }
