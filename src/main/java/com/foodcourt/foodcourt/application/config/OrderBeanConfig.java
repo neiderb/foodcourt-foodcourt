@@ -48,10 +48,14 @@ public class OrderBeanConfig {
 	
 	@Bean
 	public AssignOrderPort asignOrderPort(
-		OrderRepositoryGateway orderRepositoryGateway
+		OrderRepositoryGateway orderRepositoryGateway,
+		TraceServiceGateway traceServiceGateway,
+		UserServiceGateway userServiceGateway
 	) {
 		return new AssignOrderUseCase(
-			orderRepositoryGateway
+			orderRepositoryGateway,
+			traceServiceGateway,
+			userServiceGateway
 		);
 	}
 	
@@ -59,30 +63,38 @@ public class OrderBeanConfig {
 	public CompleteOrderPort completeOrderPort(
 		OrderRepositoryGateway orderRepositoryGateway,
 		UserServiceGateway userServiceGateway,
-		NotificationServiceGateway notificationServiceGateway
+		NotificationServiceGateway notificationServiceGateway,
+		TraceServiceGateway traceServiceGateway
 	) {
 		return new CompleteOrderUseCase(
 			orderRepositoryGateway,
 			userServiceGateway,
-			notificationServiceGateway
+			notificationServiceGateway,
+			traceServiceGateway
 		);
 	}
 	
 	@Bean
 	public DeliverOrderPort deliverOrderPort(
-		OrderRepositoryGateway orderRepositoryGateway
+		OrderRepositoryGateway orderRepositoryGateway,
+		UserServiceGateway userServiceGateway,
+		TraceServiceGateway traceServiceGateway
 	) {
 		return new DeliverOrderUseCase(
-			orderRepositoryGateway
+			orderRepositoryGateway,
+			userServiceGateway,
+			traceServiceGateway
 		);
 	}
 	
 	@Bean
 	public CancelOrderPort cancelOrderPort(
-		OrderRepositoryGateway orderRepositoryGateway
+		OrderRepositoryGateway orderRepositoryGateway,
+		TraceServiceGateway traceServiceGateway
 	) {
 		return new CancelOrderUseCase(
-			orderRepositoryGateway
+			orderRepositoryGateway,
+			traceServiceGateway
 		);
 	}
 	

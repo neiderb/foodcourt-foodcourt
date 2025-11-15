@@ -55,7 +55,7 @@ public class OrderController {
 		responseCode = "200",
 		description = LIST_ORDER_BY_RESTAURANT_DESCRIPTION
 	)
-	@GetMapping(BASE)
+	@GetMapping
 	ResponseEntity<PaginationResponse<OrderSummary>> getAll(
 		@RequestParam(defaultValue = "0") int page,
 		@RequestParam(defaultValue = "10") int size,

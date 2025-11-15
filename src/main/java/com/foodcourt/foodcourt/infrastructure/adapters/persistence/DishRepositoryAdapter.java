@@ -62,7 +62,8 @@ public class DishRepositoryAdapter implements DishRepositoryGateway {
 	
 	@Override
 	public boolean existsAllByIdsInAndRestaurantId(Set<Long> ids, Long idRestaurant) {
-		return dishJpaRepository.existsAllByIdInAndIdRestaurantAndIsAvailableIsTrue(ids, idRestaurant);
+		int count = dishJpaRepository.countByIdInAndIdRestaurantAndIsAvailableIsTrue(ids, idRestaurant);
+		return count == ids.size();
 	}
 	
 	private PaginationResponse<DishSummary> mapToPaginationResponse(Page<DishSummaryProjection> page) {

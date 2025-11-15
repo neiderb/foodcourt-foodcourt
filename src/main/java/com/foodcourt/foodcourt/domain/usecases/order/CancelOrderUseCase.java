@@ -5,8 +5,10 @@ import com.foodcourt.foodcourt.domain.exception.order.InvalidOrderException;
 import com.foodcourt.foodcourt.domain.exception.order.InvalidOrderStatusException;
 import com.foodcourt.foodcourt.domain.exception.order.OrderNotFoundException;
 import com.foodcourt.foodcourt.domain.gateways.OrderRepositoryGateway;
+import com.foodcourt.foodcourt.domain.gateways.TraceServiceGateway;
 import com.foodcourt.foodcourt.domain.model.auth.UserClaims;
 import com.foodcourt.foodcourt.domain.model.order.Order;
+import com.foodcourt.foodcourt.domain.model.order.OrderTrace;
 import com.foodcourt.foodcourt.domain.ports.order.CancelOrderPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +27,7 @@ import static java.util.Objects.isNull;
 public class CancelOrderUseCase implements CancelOrderPort {
 	
 	private final OrderRepositoryGateway orderRepositoryGateway;
+	private final TraceServiceGateway traceServiceGateway;
 	
 	@Override
 	public void execute(Long idOrder, UserClaims userClaims) {
@@ -32,6 +35,8 @@ public class CancelOrderUseCase implements CancelOrderPort {
 		Order existingOrder = validateOrder(idOrder, idUser);
 		existingOrder.setStatus(CANCELLED);
 		orderRepositoryGateway.save(existingOrder);
+		log.debug("Order ID: {} has been cancelled by user ID: {}", idOrder, idUser);
+		saveOrderTrace(existingOrder, userClaims);
 	}
 	
 	private Long getIdUser(UserClaims userClaims) {
@@ -55,6 +60,18 @@ public class CancelOrderUseCase implements CancelOrderPort {
 			throw new InvalidOrderStatusException(ORDER_MUST_BE_PENDING_TO_CANCEL);
 		
 		return existingOrder;
+	}
+	
+	private void saveOrderTrace(Order order, UserClaims userClaims) {
+		traceServiceGateway.saveOrderTrace(new OrderTrace(
+			order.getId(),
+			order.getIdClient(),
+			userClaims.email(),
+			PENDING,
+			CANCELLED,
+			null,
+			null
+		));
 	}
 	
 }

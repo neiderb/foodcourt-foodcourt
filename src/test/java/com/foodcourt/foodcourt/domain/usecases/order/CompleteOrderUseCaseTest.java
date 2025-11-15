@@ -7,6 +7,7 @@ import com.foodcourt.foodcourt.domain.exception.order.OrderNotFoundException;
 import com.foodcourt.foodcourt.domain.gateways.NotificationServiceGateway;
 import com.foodcourt.foodcourt.domain.gateways.OrderRepositoryGateway;
 import com.foodcourt.foodcourt.domain.gateways.UserServiceGateway;
+import com.foodcourt.foodcourt.domain.model.auth.User;
 import com.foodcourt.foodcourt.domain.model.auth.UserClaims;
 import com.foodcourt.foodcourt.domain.model.auth.enums.UserRole;
 import com.foodcourt.foodcourt.domain.model.order.Order;
@@ -56,14 +57,18 @@ class CompleteOrderUseCaseTest {
 			.idClient(20L)
 			.idChef(userClaims.id())
 			.build();
+		User user = User.builder()
+			.id(existingOrder.getIdClient())
+			.phone("4444444444")
+			.build();
 		
 		when(orderRepositoryGateway.findById(any(Long.class))).thenReturn(existingOrder);
-		when(userServiceGateway.getUserPhone(any(Long.class))).thenReturn(PHONE_NUMBER);
+		when(userServiceGateway.getUserById(any(Long.class))).thenReturn(user);
 		
 		completeOrderUseCase.execute(idOrder, userClaims);
 		
 		verify(orderRepositoryGateway).findById(idOrder);
-		verify(userServiceGateway).getUserPhone(existingOrder.getIdClient());
+		verify(userServiceGateway).getUserById(existingOrder.getIdClient());
 		verify(orderRepositoryGateway).save(assertArg(orderArg -> {
 			assertEquals(orderToBeCompleted.getId(), orderArg.getId());
 			assertEquals(orderToBeCompleted.getStatus(), orderArg.getStatus());
@@ -143,9 +148,13 @@ class CompleteOrderUseCaseTest {
 			.idClient(20L)
 			.idChef(userClaims.id())
 			.build();
+		User user = User.builder()
+			.id(existingOrder.getIdClient())
+			.phone("4444444444")
+			.build();
 		
 		when(orderRepositoryGateway.findById(any(Long.class))).thenReturn(existingOrder);
-		when(userServiceGateway.getUserPhone(any(Long.class))).thenReturn(PHONE_NUMBER);
+		when(userServiceGateway.getUserById(any(Long.class))).thenReturn(user);
 		doThrow(new RuntimeException("Notification service error"))
 			.when(notificationServiceGateway)
 			.sendOrderCompletedNotification(anyString(), anyString());

@@ -1,20 +1,24 @@
 package com.foodcourt.foodcourt.domain.usecases.order;
 
+import com.foodcourt.foodcourt.domain.exception.auth.InvalidUserException;
 import com.foodcourt.foodcourt.domain.exception.order.InvalidOrderException;
 import com.foodcourt.foodcourt.domain.exception.order.InvalidOrderStatusException;
 import com.foodcourt.foodcourt.domain.exception.order.OrderNotFoundException;
-import com.foodcourt.foodcourt.domain.exception.auth.InvalidUserException;
 import com.foodcourt.foodcourt.domain.gateways.OrderRepositoryGateway;
+import com.foodcourt.foodcourt.domain.gateways.TraceServiceGateway;
+import com.foodcourt.foodcourt.domain.gateways.UserServiceGateway;
+import com.foodcourt.foodcourt.domain.model.auth.User;
 import com.foodcourt.foodcourt.domain.model.auth.UserClaims;
 import com.foodcourt.foodcourt.domain.model.order.Order;
+import com.foodcourt.foodcourt.domain.model.order.OrderTrace;
 import com.foodcourt.foodcourt.domain.ports.order.AssignOrderPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import static com.foodcourt.foodcourt.domain.constants.AuthErrorMessage.UNAUTHORIZED_ACTION;
 import static com.foodcourt.foodcourt.domain.constants.OrderErrorMessage.ORDER_NOT_FOUND;
 import static com.foodcourt.foodcourt.domain.constants.OrderErrorMessage.ORDER_STATUS_MUST_BE_PENDING;
 import static com.foodcourt.foodcourt.domain.constants.OrderValidationMessage.INVALID_ORDER_ID;
-import static com.foodcourt.foodcourt.domain.constants.AuthErrorMessage.UNAUTHORIZED_ACTION;
 import static com.foodcourt.foodcourt.domain.model.auth.enums.UserRole.EMPLOYEE;
 import static com.foodcourt.foodcourt.domain.model.order.enums.OrderStatus.PENDING;
 import static com.foodcourt.foodcourt.domain.model.order.enums.OrderStatus.PROCESSING;
@@ -25,6 +29,8 @@ import static java.util.Objects.isNull;
 public class AssignOrderUseCase implements AssignOrderPort {
 	
 	private final OrderRepositoryGateway orderRepositoryGateway;
+	private final TraceServiceGateway traceServiceGateway;
+	private final UserServiceGateway userServiceGateway;
 	
 	@Override
 	public void execute(Long idOrder, UserClaims userClaims) {
@@ -35,6 +41,7 @@ public class AssignOrderUseCase implements AssignOrderPort {
 		
 		log.trace("Assigning order ID: {} to chef ID: {}", idOrder, idUser);
 		orderRepositoryGateway.save(existingOrder);
+		saveOrderTrace(existingOrder, userClaims);
 	}
 	
 	private Long getIdUser(UserClaims userClaims) {
@@ -56,6 +63,19 @@ public class AssignOrderUseCase implements AssignOrderPort {
 			throw new InvalidOrderStatusException(ORDER_STATUS_MUST_BE_PENDING);
 		
 		return existingOrder;
+	}
+	
+	private void saveOrderTrace(Order order, UserClaims userClaims) {
+		User client = userServiceGateway.getUserById(order.getIdClient());
+		traceServiceGateway.saveOrderTrace(new OrderTrace(
+			order.getId(),
+			order.getIdClient(),
+			client.getEmail(),
+			PENDING,
+			PROCESSING,
+			userClaims.id(),
+			userClaims.email()
+		));
 	}
 	
 }

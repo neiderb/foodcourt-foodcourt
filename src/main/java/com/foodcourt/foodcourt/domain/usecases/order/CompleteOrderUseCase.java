@@ -6,9 +6,12 @@ import com.foodcourt.foodcourt.domain.exception.order.InvalidOrderStatusExceptio
 import com.foodcourt.foodcourt.domain.exception.order.OrderNotFoundException;
 import com.foodcourt.foodcourt.domain.gateways.NotificationServiceGateway;
 import com.foodcourt.foodcourt.domain.gateways.OrderRepositoryGateway;
+import com.foodcourt.foodcourt.domain.gateways.TraceServiceGateway;
 import com.foodcourt.foodcourt.domain.gateways.UserServiceGateway;
+import com.foodcourt.foodcourt.domain.model.auth.User;
 import com.foodcourt.foodcourt.domain.model.auth.UserClaims;
 import com.foodcourt.foodcourt.domain.model.order.Order;
+import com.foodcourt.foodcourt.domain.model.order.OrderTrace;
 import com.foodcourt.foodcourt.domain.ports.order.CompleteOrderPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +33,7 @@ public class CompleteOrderUseCase implements CompleteOrderPort {
 	private final OrderRepositoryGateway orderRepositoryGateway;
 	private final UserServiceGateway userServiceGateway;
 	private final NotificationServiceGateway notificationServiceGateway;
+	private final TraceServiceGateway traceServiceGateway;
 	
 	@Override
 	public void execute(Long idOrder, UserClaims userClaims) {
@@ -43,9 +47,10 @@ public class CompleteOrderUseCase implements CompleteOrderPort {
 		log.trace("Updating order status to COMPLETED for order ID: {}", idOrder);
 		orderRepositoryGateway.save(existingOrder);
 		
-		String phoneClient = getPhoneClient(existingOrder.getIdClient());
-		log.trace("Notifying client at phone number: {}", phoneClient);
-		notificationServiceGateway.sendOrderCompletedNotification(phoneClient, securePin);
+		User client = userServiceGateway.getUserById(existingOrder.getIdClient());
+		log.trace("Notifying client at phone number: {}", client.getPhone());
+		notificationServiceGateway.sendOrderCompletedNotification(client.getPhone(), securePin);
+		saveOrderTrace(existingOrder, client, userClaims);
 	}
 	
 	private Long getIdUser(UserClaims userClaims) {
@@ -78,8 +83,16 @@ public class CompleteOrderUseCase implements CompleteOrderPort {
 		return String.valueOf(pin);
 	}
 	
-	private String getPhoneClient(Long idClient) {
-		return userServiceGateway.getUserPhone(idClient);
+	private void saveOrderTrace(Order order, User client, UserClaims userClaims) {
+		traceServiceGateway.saveOrderTrace(new OrderTrace(
+			order.getId(),
+			order.getIdClient(),
+			client.getEmail(),
+			PROCESSING,
+			COMPLETED,
+			userClaims.id(),
+			userClaims.email()
+		));
 	}
 	
 }

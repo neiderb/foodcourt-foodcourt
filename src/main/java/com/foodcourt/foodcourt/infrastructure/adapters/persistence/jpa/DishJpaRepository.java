@@ -28,6 +28,6 @@ public interface DishJpaRepository extends JpaRepository<DishData, Long> {
 		""")
 	Page<DishSummaryProjection> findDishPaginatedBy(Pageable pageable, DishFilter filter);
 	
-	boolean existsAllByIdInAndIdRestaurantAndIsAvailableIsTrue(Set<Long> ids, Long idRestaurant);
+	int countByIdInAndIdRestaurantAndIsAvailableIsTrue(Set<Long> ids, Long idRestaurant);
 	
 }

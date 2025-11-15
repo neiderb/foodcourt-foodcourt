@@ -5,8 +5,12 @@ import com.foodcourt.foodcourt.domain.exception.order.InvalidOrderException;
 import com.foodcourt.foodcourt.domain.exception.order.InvalidOrderStatusException;
 import com.foodcourt.foodcourt.domain.exception.order.OrderNotFoundException;
 import com.foodcourt.foodcourt.domain.gateways.OrderRepositoryGateway;
+import com.foodcourt.foodcourt.domain.gateways.TraceServiceGateway;
+import com.foodcourt.foodcourt.domain.gateways.UserServiceGateway;
+import com.foodcourt.foodcourt.domain.model.auth.User;
 import com.foodcourt.foodcourt.domain.model.auth.UserClaims;
 import com.foodcourt.foodcourt.domain.model.order.Order;
+import com.foodcourt.foodcourt.domain.model.order.OrderTrace;
 import com.foodcourt.foodcourt.domain.ports.order.DeliverOrderPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +29,8 @@ import static java.util.Objects.isNull;
 public class DeliverOrderUseCase implements DeliverOrderPort {
 	
 	private final OrderRepositoryGateway orderRepositoryGateway;
+	private final UserServiceGateway userServiceGateway;
+	private final TraceServiceGateway traceServiceGateway;
 	
 	@Override
 	public void execute(Long idOrder, String securePin, UserClaims userClaims) {
@@ -35,6 +41,7 @@ public class DeliverOrderUseCase implements DeliverOrderPort {
 		
 		log.trace("Updating order status to DELIVERED for order ID: {}", idOrder);
 		orderRepositoryGateway.save(existingOrder);
+		saveOrderTrace(existingOrder, userClaims);
 	}
 	
 	private Long getIdUser(UserClaims userClaims) {
@@ -64,6 +71,19 @@ public class DeliverOrderUseCase implements DeliverOrderPort {
 		log.trace("Validating secure PIN: {}", providedPin);
 		if (!StringUtils.hasText(providedPin) || !existingPin.equals(providedPin))
 			throw new InvalidOrderException(INVALID_SECURE_PIN);
+	}
+	
+	private void saveOrderTrace(Order order, UserClaims userClaims) {
+		User client = userServiceGateway.getUserById(order.getIdClient());
+		traceServiceGateway.saveOrderTrace(new OrderTrace(
+			order.getId(),
+			order.getIdClient(),
+			client.getEmail(),
+			COMPLETED,
+			DELIVERED,
+			userClaims.id(),
+			userClaims.email()
+		));
 	}
 	
 }

@@ -5,9 +5,11 @@ import com.foodcourt.foodcourt.domain.exception.BusinessException;
 import com.foodcourt.foodcourt.domain.exception.TechnicalException;
 import com.foodcourt.foodcourt.domain.exception.auth.InvalidUserException;
 import com.foodcourt.foodcourt.domain.gateways.UserServiceGateway;
+import com.foodcourt.foodcourt.domain.model.auth.User;
 import com.foodcourt.foodcourt.domain.model.auth.enums.UserRole;
 import com.foodcourt.foodcourt.infrastructure.adapters.user.dto.ErrorExternalResponse;
 import com.foodcourt.foodcourt.infrastructure.adapters.user.dto.UserExternalResponse;
+import com.foodcourt.foodcourt.infrastructure.adapters.user.mappers.ExternalUserOutputMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
@@ -57,10 +59,10 @@ public class UserServiceImpl implements UserServiceGateway {
 	}
 	
 	@Override
-	public String getUserPhone(Long idUser) {
+	public User getUserById(Long idUser) {
 		UserExternalResponse user = findById(idUser);
 		if (isNull(user)) throw new InvalidUserException(USER_NOT_FOUND);
-		return user.phone();
+		return ExternalUserOutputMapper.INSTANCE.toDomain(user);
 	}
 	
 	private UserExternalResponse findById(Long id) {
