@@ -6,11 +6,13 @@ import com.foodcourt.foodcourt.domain.exception.order.InvalidOrderStatusExceptio
 import com.foodcourt.foodcourt.domain.exception.order.OrderNotFoundException;
 import com.foodcourt.foodcourt.domain.gateways.NotificationServiceGateway;
 import com.foodcourt.foodcourt.domain.gateways.OrderRepositoryGateway;
+import com.foodcourt.foodcourt.domain.gateways.TraceServiceGateway;
 import com.foodcourt.foodcourt.domain.gateways.UserServiceGateway;
 import com.foodcourt.foodcourt.domain.model.auth.User;
 import com.foodcourt.foodcourt.domain.model.auth.UserClaims;
 import com.foodcourt.foodcourt.domain.model.auth.enums.UserRole;
 import com.foodcourt.foodcourt.domain.model.order.Order;
+import com.foodcourt.foodcourt.domain.model.order.OrderTrace;
 import com.foodcourt.foodcourt.domain.model.order.enums.OrderStatus;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,6 +40,9 @@ class CompleteOrderUseCaseTest {
 	@Mock
 	private NotificationServiceGateway notificationServiceGateway;
 	
+	@Mock
+	private TraceServiceGateway traceServiceGateway;
+	
 	private static final String PHONE_NUMBER = "+1234567890";
 	
 	@Test
@@ -59,7 +64,8 @@ class CompleteOrderUseCaseTest {
 			.build();
 		User user = User.builder()
 			.id(existingOrder.getIdClient())
-			.phone("4444444444")
+			.phone(PHONE_NUMBER)
+			.email("client.example@mail.com")
 			.build();
 		
 		when(orderRepositoryGateway.findById(any(Long.class))).thenReturn(existingOrder);
@@ -80,6 +86,7 @@ class CompleteOrderUseCaseTest {
 			eq(PHONE_NUMBER),
 			assertArg(pinArg -> assertTrue(StringUtils.hasText(pinArg)))
 		);
+		verify(traceServiceGateway).saveOrderTrace(any(OrderTrace.class));
 	}
 	
 	@Test

@@ -5,9 +5,13 @@ import com.foodcourt.foodcourt.domain.exception.order.InvalidOrderException;
 import com.foodcourt.foodcourt.domain.exception.order.InvalidOrderStatusException;
 import com.foodcourt.foodcourt.domain.exception.order.OrderNotFoundException;
 import com.foodcourt.foodcourt.domain.gateways.OrderRepositoryGateway;
+import com.foodcourt.foodcourt.domain.gateways.TraceServiceGateway;
+import com.foodcourt.foodcourt.domain.gateways.UserServiceGateway;
+import com.foodcourt.foodcourt.domain.model.auth.User;
 import com.foodcourt.foodcourt.domain.model.auth.UserClaims;
 import com.foodcourt.foodcourt.domain.model.auth.enums.UserRole;
 import com.foodcourt.foodcourt.domain.model.order.Order;
+import com.foodcourt.foodcourt.domain.model.order.OrderTrace;
 import com.foodcourt.foodcourt.domain.model.order.enums.OrderStatus;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
@@ -33,20 +37,33 @@ class DeliverOrderUseCaseTest {
 	@Mock
 	private OrderRepositoryGateway orderRepositoryGateway;
 	
+	@Mock
+	private UserServiceGateway userServiceGateway;
+	
+	@Mock
+	private TraceServiceGateway traceServiceGateway;
+	
 	private static final String VALID_SECURE_PIN = "123456";
 	
 	@Test
 	void shouldDeliverOrderSuccessfully() {
 		final Long idOrder = 1L;
+		final Long idClient = 50L;
 		final UserClaims userClaims = mockClaims();
 		Order existingOrder = Order.builder()
 			.id(idOrder)
+			.idClient(idClient)
 			.status(COMPLETED)
 			.idChef(userClaims.id())
 			.securePin(VALID_SECURE_PIN)
 			.build();
+		User client = User.builder()
+			.id(idClient)
+			.email("client.example@mail.com")
+			.build();
 		
 		when(orderRepositoryGateway.findById(any(Long.class))).thenReturn(existingOrder);
+		when(userServiceGateway.getUserById(any(Long.class))).thenReturn(client);
 		
 		deliverOrderUseCase.execute(idOrder, VALID_SECURE_PIN, userClaims);
 		
@@ -54,6 +71,7 @@ class DeliverOrderUseCaseTest {
 			assertEquals(idOrder, orderArg.getId());
 			assertEquals(DELIVERED, orderArg.getStatus());
 		}));
+		verify(traceServiceGateway).saveOrderTrace(any(OrderTrace.class));
 	}
 	
 	@Test

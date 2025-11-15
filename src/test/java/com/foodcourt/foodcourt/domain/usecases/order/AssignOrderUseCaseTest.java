@@ -5,9 +5,13 @@ import com.foodcourt.foodcourt.domain.exception.order.InvalidOrderException;
 import com.foodcourt.foodcourt.domain.exception.order.InvalidOrderStatusException;
 import com.foodcourt.foodcourt.domain.exception.order.OrderNotFoundException;
 import com.foodcourt.foodcourt.domain.gateways.OrderRepositoryGateway;
+import com.foodcourt.foodcourt.domain.gateways.TraceServiceGateway;
+import com.foodcourt.foodcourt.domain.gateways.UserServiceGateway;
+import com.foodcourt.foodcourt.domain.model.auth.User;
 import com.foodcourt.foodcourt.domain.model.auth.UserClaims;
 import com.foodcourt.foodcourt.domain.model.auth.enums.UserRole;
 import com.foodcourt.foodcourt.domain.model.order.Order;
+import com.foodcourt.foodcourt.domain.model.order.OrderTrace;
 import com.foodcourt.foodcourt.domain.model.order.enums.OrderStatus;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,22 +34,36 @@ class AssignOrderUseCaseTest {
 	@Mock
 	private OrderRepositoryGateway orderRepositoryGateway;
 	
+	@Mock
+	private UserServiceGateway userServiceGateway;
+	
+	@Mock
+	private TraceServiceGateway traceServiceGateway;
+	
 	@Test
 	void shouldAssignOrderToEmployee() {
 		final Long idOrder = 1L;
+		final Long idClient = 30L;
 		final UserClaims userClaims = mockClaims();
 		final OrderStatus status = OrderStatus.PENDING;
 		Order existingOrder = Order.builder()
 			.id(idOrder)
+			.idClient(idClient)
 			.status(status)
 			.build();
 		Order orderToBeAssigned = Order.builder()
 			.id(idOrder)
+			.idClient(idClient)
 			.status(OrderStatus.PROCESSING)
 			.idChef(userClaims.id())
 			.build();
+		User user = User.builder()
+			.id(idClient)
+			.email("client.example@mail.com")
+			.build();
 		
 		when(orderRepositoryGateway.findById(any(Long.class))).thenReturn(existingOrder);
+		when(userServiceGateway.getUserById(any(Long.class))).thenReturn(user);
 		
 		assignOrderUseCase.execute(idOrder, userClaims);
 		
@@ -54,6 +72,8 @@ class AssignOrderUseCaseTest {
 			assertEquals(orderToBeAssigned.getIdChef(), orderArg.getIdChef());
 			assertEquals(orderToBeAssigned.getStatus(), orderArg.getStatus());
 		}));
+		
+		verify(traceServiceGateway).saveOrderTrace(any(OrderTrace.class));
 	}
 	
 	@Test

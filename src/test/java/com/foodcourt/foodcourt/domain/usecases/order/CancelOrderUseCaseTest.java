@@ -5,9 +5,11 @@ import com.foodcourt.foodcourt.domain.exception.order.InvalidOrderException;
 import com.foodcourt.foodcourt.domain.exception.order.InvalidOrderStatusException;
 import com.foodcourt.foodcourt.domain.exception.order.OrderNotFoundException;
 import com.foodcourt.foodcourt.domain.gateways.OrderRepositoryGateway;
+import com.foodcourt.foodcourt.domain.gateways.TraceServiceGateway;
 import com.foodcourt.foodcourt.domain.model.auth.UserClaims;
 import com.foodcourt.foodcourt.domain.model.auth.enums.UserRole;
 import com.foodcourt.foodcourt.domain.model.order.Order;
+import com.foodcourt.foodcourt.domain.model.order.OrderTrace;
 import com.foodcourt.foodcourt.domain.model.order.enums.OrderStatus;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,6 +32,9 @@ class CancelOrderUseCaseTest {
 	@Mock
 	private OrderRepositoryGateway orderRepositoryGateway;
 	
+	@Mock
+	private TraceServiceGateway traceServiceGateway;
+	
 	@Test
 	void shouldCancelOrderSuccessfully() {
 		final Long idOrder = 1L;
@@ -48,6 +53,7 @@ class CancelOrderUseCaseTest {
 			assertEquals(existingOrder.getId(), orderArg.getId());
 			assertEquals(OrderStatus.CANCELLED, orderArg.getStatus());
 		}));
+		verify(traceServiceGateway).saveOrderTrace(any(OrderTrace.class));
 	}
 	
 	@Test
