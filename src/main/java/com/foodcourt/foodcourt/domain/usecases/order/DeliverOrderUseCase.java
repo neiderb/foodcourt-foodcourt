@@ -82,7 +82,8 @@ public class DeliverOrderUseCase implements DeliverOrderPort {
 			COMPLETED,
 			DELIVERED,
 			userClaims.id(),
-			userClaims.email()
+			userClaims.email(),
+			order.getIdRestaurant()
 		));
 	}
 	

@@ -91,7 +91,8 @@ public class CompleteOrderUseCase implements CompleteOrderPort {
 			PROCESSING,
 			COMPLETED,
 			userClaims.id(),
-			userClaims.email()
+			userClaims.email(),
+			order.getIdRestaurant()
 		));
 	}
 	

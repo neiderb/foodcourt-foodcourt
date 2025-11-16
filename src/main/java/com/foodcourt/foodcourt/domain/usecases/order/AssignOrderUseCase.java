@@ -74,7 +74,8 @@ public class AssignOrderUseCase implements AssignOrderPort {
 			PENDING,
 			PROCESSING,
 			userClaims.id(),
-			userClaims.email()
+			userClaims.email(),
+			order.getIdRestaurant()
 		));
 	}
 	

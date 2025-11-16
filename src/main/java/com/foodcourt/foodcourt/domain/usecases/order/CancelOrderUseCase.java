@@ -70,7 +70,8 @@ public class CancelOrderUseCase implements CancelOrderPort {
 			PENDING,
 			CANCELLED,
 			null,
-			null
+			null,
+			order.getIdRestaurant()
 		));
 	}
 	

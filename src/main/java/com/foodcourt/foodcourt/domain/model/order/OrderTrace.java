@@ -9,5 +9,6 @@ public record OrderTrace(
 	OrderStatus previousStatus,
 	OrderStatus newStatus,
 	Long idEmployee,
-	String emailEmployee
+	String emailEmployee,
+	Long idRestaurant
 ) {}
