@@ -79,7 +79,7 @@ public class CompleteOrderUseCase implements CompleteOrderPort {
 		SecureRandom secureRandom = new SecureRandom();
 		int min = 100_000;
 		int max = 1_000_000;
-		int pin = secureRandom.nextInt(min, max) + min;
+		int pin = secureRandom.nextInt(min, max);
 		return String.valueOf(pin);
 	}
 	
